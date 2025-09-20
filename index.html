@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Tory</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --bg-color: #ffffff;
+            --text-color: #2d3748;
+            --card-bg: #ffffff;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --border-color: #e2e8f0;
+            --heading-color: #1a202c;
+            --link-color: #667eea;
+            --font-size: 16px;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a2e;
+            --text-color: #e2e8f0;
+            --card-bg: #16213e;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --border-color: #2d3748;
+            --heading-color: #f7fafc;
+            --link-color: #9f7aea;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            font-size: var(--font-size);
+            transition: all 0.3s ease;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Scroll Progress */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-gradient);
+            transform-origin: left;
+            transform: scaleX(0);
+            z-index: 1000;
+            transition: transform 0.1s ease;
+        }
+
+        /* Header */
+        .header {
+            background: var(--primary-gradient);
+            padding: 3rem 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: gradientShift 8s ease infinite;
+            background-size: 200% 200%;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .header h1 {
+            color: white;
+            font-size: clamp(1.75rem, 5vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: clamp(1rem, 3vw, 1.25rem);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* Content Cards */
+        .content-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .content-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px var(--shadow-color);
+        }
+
+        /* Typography */
+        h2 {
+            color: var(--heading-color);
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            margin-bottom: 1rem;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--primary-gradient);
+            border-radius: 2px;
+        }
+
+        h3 {
+            color: var(--heading-color);
+            font-size: clamp(1.25rem, 3vw, 1.5rem);
+            margin: 1.5rem 0 0.75rem;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ul, ol {
+            margin: 1rem 0;
+            padding-left: 2rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            line-height: 1.7;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        a:hover {
+            opacity: 0.8;
+        }
+
+        /* Font Size Controls - Desktop Only */
+        .font-controls {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--card-bg);
+            border-radius: 25px;
+            padding: 10px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 100;
+            border: 1px solid var(--border-color);
+        }
+
+        @media (min-width: 768px) {
+            .font-controls {
+                display: flex;
+            }
+        }
+
+        .font-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: var(--primary-gradient);
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .font-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Dark Mode Toggle */
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px var(--shadow-color);
+        }
+
+        .theme-toggle svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .header {
+                padding: 2rem 1rem;
+            }
+
+            .container {
+                padding: 1.5rem 1rem;
+            }
+
+            .content-card {
+                padding: 1.5rem 1rem;
+                margin-bottom: 1.5rem;
+                border-radius: 8px;
+            }
+
+            h2::after {
+                width: 40px;
+            }
+
+            ul, ol {
+                padding-left: 1.5rem;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Selection styles */
+        ::selection {
+            background: rgba(102, 126, 234, 0.3);
+            color: var(--text-color);
+        }
+
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border-color);
+            border-radius: 50%;
+            border-top-color: var(--link-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Blockquote styling */
+        blockquote {
+            border-left: 4px solid var(--primary-gradient);
+            padding-left: 1.5rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+            color: var(--text-color);
+            opacity: 0.9;
+        }
+
+        /* Code blocks */
+        code {
+            background: var(--border-color);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            display: block;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+            font-weight: 600;
+        }
+
+        /* Responsive images */
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Header Section -->
+    <header class="header">
+        <h1>I love You Tory</h1>
+        <p>for my princess</p>
+    </header>
+
+    <!-- Main Content Container -->
+    <div class="container">
+        <div class="content-card">
+            <h2>Kichu Jinish Jeigula Tomar Jana Uchit</h2>
+            <h3>Hmmm....</h3>
+            <p>
+tofa apir cheler kotha toh shunlam oita niye akhn ar ki bolbo emnei kemon jani ekta feeling ashtese je ei note ta ektu beshi e boro hoye jabe tai joto short pari rakhar try korbo. But chele tar ar tofa apir jonno dua korbo eita sure amr bhalobashay kosto paitese tar mane ei na je karor e bhalobasha shojjo hobe nah amar lol. kno je koro eishob ulta palta chinta meye ami bujhi nah  ar dhonnobad bisshash koira bolar jonno. neshakhor toh ami nah jai hok short yeah sure shob dig diye bhalo hoile toh hoisiloi allah banay e nai amare oi rokom infact eita ekta shomossha nah onek shomossha diye e pathaise hoyto unr o amake pochondo hoynai bananor pore jai hok. judi amake na mane taile ar ki hobe bolo parba nah amake chara thakte ? eto ahamori o special toh definitely nah je parba nah kosto hobe but parba kono na konodin bhule jaba shomossha nai emneo manush morar pore keo e mone rakhe nah baicha thaklei rakhe nah mora manush toh bohut durer kotha. kintu nah ami bolbo ami manabo ami paaye dhorbo amar abbu ammu keo pathabo tarpore na manle jani nah ki hobe chinta kori nai korte chai o nah karon eitar pore jeita e hobe oitai kharap hobe ki korba bolo palay jaba ? gelam palay tumi nijer thike bolle ami na korbo nah obviously but ami nijer thike bolbo nah. ar society er chokh e toh emneo niyom bhangboi amra ekta bhangleo dosh dibe 10ta bhangleo dibe. dekha jabe tokhon er ta tokhon amar bisshash amon situation ashbei nah maina jabe shobai ami manay felte parbo tumi thakle. matha nosto korteso kn re jaan. english e baje toh ki hoise ami ki tomare diye kamla khatabo naki english likha likhi te je tomar advanced level english lagbe ???? ekdige bhaloi hoise bideshi der sathe prem korte parba nah hehe shuno nijer naam toh likhte paro english e oitai bohut, oneke oitao pare nah lol ar tumi toh college e uthso koydin pore hsc diba emne emnei ? ki je bolo ar nijeke ki je mone koro tumi meye koyjon er ei joggota ase ? shobai khali tomake emotional damage day kn jano tumi onek norom tumi onek bhalo ar innocent ei dunya er jonno. manush tomake shanti te bachte dibe nah ei nishthur dunya te etto bhalo thakle. shobai amar moto jotno kore rakhbe nah manush kosto dibe ar amakeo tomar moto keo bhalobashbe nah shobai kosto e dibe. chotobela thikei emotional damage dise shuina kharap lagse onek, jani nah bhalobashar manush er jei kono koster kotha shunlei hoyto kharap lage. ami jano age amon chilam nah ekdom e ektu o norom chilam nh ami, ulta chilam ekdom tumi aisha amake theek korso nesha tesha toh kortam nah cigerette o khaitam nah, khabo o nah smne konodin. kharap obbvash chilo nah konodin temon kintu tao eishob gali thike tumi e amake bachaiso tumi theek korso amake naile ami ager motoi thaktam karo jonno change hoitam nah kintu tomar jonno shob parbo. tumi judi jano je akhono ghumai nai eita likhtesi tumi toh maybe diba amake mair ishhh baba tomar jei ragg allah onek marta amake. Judio shomossha nai emneo biyer pore sharajibon shojjo korte hobe ei ragg ar tomake manaiteo hobe amr e. parbo shomossha nai. eijaygay o kichu likhba nah lol accha accha likho nah. tumi emn kn mane ? tumi kemon ? tumi tomar moto tumi tory sei tory jei tory ke ami pochondo kori jake amr bhalo lage. tomake keno pochondo korsi eita toh onek kothin ekta kotha jiggash koira fella eitar uttor toh amar kacheo nai tofa api o ekdin jiggash korsilo apu ke ja bolsilam ta e boli tomar hashi ta onek shundor ar tomar chokh gulao a,ar toh favorite tomar chokh gula, amar tomake dekhte onek bhalo lage shanti lage, moner bhitore heartbeat slow hoye jay matha shanto hoye jay, mone hoy sharajibon ja khujtesilam ta paisi amar khoja khuji sesh akhn. judio tofa api onno ekta kotha bolsilo ektu kharap thak tomake ar bolbo nah tumi mon kharap korba pore. tumi hoite paro nijer upor nije birokto, ami hoi nah, ami hoite parbo o nah. bhalobashar manush ke kokhono birokto lage nah. ulta tara kache thakle mon bhalo thake. jokhon kichui bhalo lage nah, tokhon o pochonder mansuh ke bhalo lage. konodin birokto lage nah. tomake tomar shojjo hoyna bhalo kotha amar toh shojjo hoy ar eikhane shojjo korar ki ase? tomake ami bhalobashi ar bhalobashar jinish ke shijjo kore keo ? oitai toh bhalo lage sudhu shojjo korar kichu nai tomake, tumi kachle thakle aro bhalo lagbe onek. tomake dekhte parbo chokh er smne thakba bhalo lagbe onek. upodesh bole nah eita.  ekjon er dhongsher jonno advice ke upodesh bole nah re meye. tumi bhalo na mane ? amake sesh kore felba ? felo shomossha nai tomake chara emneo sesh hoye e jabo tumi thakle tao kom kosto pabo. ami ki bhalo ? tomake kosto dei koydin por por ami ki tomake tumi jeibhabhe deserve koro oibhabhe bhalobashte partesi ? ajporjonto ekta jinish dite pari nai tomake amader almost 6 mash hoye ashtese tumi bolte parba je tomake kichu disi jeitar dige takay amar kotha mone korte parba tumi. ar eita kemon kotha ? "amake shob shomay bhuila jauyar ry koiro" tumi ki onno kaoke pochondo tochondo koro ? amake move on korte bolteso. shuno tumi ja iccha koro amar jonno thako na thako amake bhalobasho nah basho othoba amake bhuila jaw shob tomar upor tomar iccha kintu ami parbo nah sorry thakte na chaile thaiko nah kintu kokhono bhulte boilo nah karon tumi thako na thako tomar jonno ami thakbo sharajibon thakbo tumi na ashleo ami oppekkha korbo shob shomay eto shohoj nah bhule jawa tory eto shohoj nah. bhalobasha amar eto weak nah je bhule jabo ami hea hoyto bhulte chaile bhule jawa jay kintu ami chai nah ami morleo ei bhabhei morbo bhulbo nah ami. ar tumi na thakle amar jibon bhalo thakbe ? choila jaite chaw ? je jaite chay take atkano jay jaan ? kintu tumi choila gele ami bhalo thakte parbo nah amar jibon sesh hoye jabe tomake chara. ekta kotha konodin eita bolte chai nai ar boltam o nah bolte partam nah arki tumi jeibar amake oije text gula diye gesila nah wait korte nah break up amader moddhe kichu nai hobe o nah hen ten tofa api je dewaisilo oigular pore etoi matha nosto hoye gesilo etoi paglami kortam doctor ghum er oshud disilo jate sharadin ghumay katay dei ar shomay er sathe jate normal hoye jai kaj toh kore e nai e nai ulta liver inflammation hoisilo oshud er jonno eita bolle mone korta je suicide er humki ducchi jate thaika jaw oije manush hath kate je oirokom kintu nah humki dicchi nah please amon mone koiro nah ekta kotha share korlam tumi toh khali chinta koro tomake charai bhalo thakbo ami tomake charai bhalo thaki ami. shuno ajk boltesi likha rakho jei din ami yash tomake bhula jabo oidin dhoira niba ami mara gesi, yash e ar nai mone rakhar jonno karon tar age eita shombhob nah. ar tumi thakle jibon judi hoy sesh ? hok tomar e jibon, tumi na thakleo emneo bhalo banaite parbo nah sesh e hobe tar thike bhal otumi thaikai sesh koira daw. maa je tomake eishob bole jano amar bhalo lage nah judi amake konodin tumi biye koro ami nah unake bolte dibo nah eishob tomake ar kosto dite dibo nah. tomake eto bhalobasha dibo je jeishob shomay tumi kosto paiso oigula shob bhuila jaba oder shobar smne tomake bhalobashbo jara tomake kosto dise ar dekhabo tumi kisher joggo. ar tomake amor amon ajob e pochondo normal hoile toh shobai e normal alada hoilei toh bhalo amar jonno special jeita ar karor kache nai hehe. hea hea amio tomar motoi pagoll tomar pagol ami tory paglu yash lol. ar kicchu bolba nah mane ki dhurrrrr amake na bolle kare bolba jaan amon koiro nah. kih bole matha gese tomar ehhh amar sathe share nah korle kmne hobe sharajibon thakte hobe amader eksathe ekjon arekjon ke na bujhle hobe ? tomar feelings er daam ase toh tumi ki niye chinta korteso na korteso oita bolba nah oita ki na shuina e fele dibo ami taile toh hobe nah. ke bolse tumi kosto diso eh. ami emnei tomake niye chinta kortesilam, ektu o kosto daw nai toh tumiiiii. haire meye kosto dewa kake bole tumi jano e nah tumi. Ar Shotti bolte tumi haray Jaba naki Jaba nah eita e toh jani nah Eitar jonnoi toh eto bhoy lage ke Jane ki hobe Judi haray jaw shotti ar Ami Judi ar Kokhono khuje na pai tomake othoba tumi Judi ar konodin Amar Kache ar Ashtei na chaw ? Jano je nijer icchay haray take hajar khujleo pawa jayna nah ar Hea ei Kothay kosto paisi je koydin e kosto hobe Tarpor theek hoye jabo Tofa Apu o Eki kotha bolsilo amake eto shohoj nah Tory. tomake ami bhulte parbo nah tomake charar age prithibi chere dibo. Tumi thaka te Judi Amar kopal kharap hoy, hok. pura kopal niye o Judi tomake pai Ami khushi. bollam nah nij icchay bish khaway Maira fello Ami morte raji asi Tomar hath e. Amake je bhalo bolla chinta korso kn eto bhalo hoite parsi ami ? tomar jonnoi hoite parsi tomake chara jiboneo shombhob chilo nah
+I love you jaan i love you
+Ki hobe ami jani nah tumi kibhabhe wait korba eitao jani nah 5 bochor onek lomba shomay wait korte parba naki eitao sure nah tarpore amar nai kono jogajog aro complex situation, koydin porei tomar pichone abar chele ra ghura shuru korbe allah e jane kintu amar onek bhoy lage. Jei future e tumi nai oita kono future e nah.</p>
+            
+        </div>
+    </div>
+
+    <!-- Font Size Controls (Desktop Only) -->
+    <div class="font-controls">
+        <button class="font-btn" onclick="changeFontSize(-2)">A-</button>
+        <button class="font-btn" onclick="changeFontSize(2)">A+</button>
+    </div>
+
+    <!-- Dark Mode Toggle -->
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <svg id="themeIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+    </button>
+
+    <script>
+        // Scroll Progress Bar
+        window.addEventListener('scroll', () => {
+            const scrollProgress = document.getElementById('scrollProgress');
+            const scrollTop = window.scrollY;
+            const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercentage = (scrollTop / documentHeight);
+            scrollProgress.style.transform = `scaleX(${scrollPercentage})`;
+        });
+
+        // Dark Mode Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const html = document.documentElement;
+
+        // Check for saved theme preference
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', currentTheme);
+        updateThemeIcon(currentTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+
+        function updateThemeIcon(theme) {
+            if (theme === 'dark') {
+                themeIcon.innerHTML = '<path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>';
+            } else {
+                themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+            }
+        }
+
+        // Font Size Controls
+        let currentFontSize = 16;
+        
+        function changeFontSize(delta) {
+            currentFontSize += delta;
+            currentFontSize = Math.max(12, Math.min(24, currentFontSize));
+            document.documentElement.style.setProperty('--font-size', currentFontSize + 'px');
+            localStorage.setItem('fontSize', currentFontSize);
+        }
+
+        // Load saved font size
+        const savedFontSize = localStorage.getItem('fontSize');
+        if (savedFontSize) {
+            currentFontSize = parseInt(savedFontSize);
+            document.documentElement.style.setProperty('--font-size', currentFontSize + 'px');
+        }
+
+        // Smooth reveal animation for cards
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all content cards
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.content-card');
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.6s ease';
+                observer.observe(card);
+            });
+        });
+
+        // Mobile touch feedback
+        if ('ontouchstart' in window) {
+            document.querySelectorAll('button').forEach(btn => {
+                btn.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.95)';
+                });
+                btn.addEventListener('touchend', function() {
+                    this.style.transform = '';
+                });
+            });
+        }
+    </script>
+</body>
+</html>
