@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Love Capture ❤️</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -51,18 +51,163 @@
             66% { transform: translate(-30px, 30px) scale(0.9); }
         }
 
+        /* Loading Screen */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a0a1f 0%, #2d1b3d 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .heart-loader {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin-bottom: 30px;
+        }
+
+        .heart-loader .heart-shape {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffb3ba;
+            font-size: 80px;
+            animation: heartPulse 1.5s ease-in-out infinite;
+            filter: drop-shadow(0 0 30px rgba(255, 179, 186, 0.8));
+        }
+
+        @keyframes heartPulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+        }
+
+        .loading-text {
+            color: #ffb3ba;
+            font-size: 1.5rem;
+            letter-spacing: 3px;
+            text-align: center;
+            animation: fadeInOut 2s ease-in-out infinite;
+        }
+
+        .tory-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 1.8rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(255, 179, 186, 0.8);
+            z-index: 1;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Floating hearts and sparkles */
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .heart, .sparkle {
+            position: absolute;
+            opacity: 0;
+            animation: floatUp 15s infinite ease-in;
+        }
+
+        .heart {
+            color: rgba(255, 179, 186, 0.6);
+            font-size: 20px;
+        }
+
+        .sparkle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 12px;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ffb3ba;
+            position: absolute;
+            animation: confettiFall 3s ease-out forwards;
+            z-index: 9999;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(0) rotateZ(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotateZ(720deg);
+                opacity: 0;
+            }
+        }
+
         .container {
             max-width: 500px;
             width: 90%;
             padding: 20px;
             position: relative;
             z-index: 1;
+            transform: translateZ(0);
         }
 
         .header {
             text-align: center;
             margin-bottom: 60px;
             animation: fadeInDown 1s ease;
+            transform: translateZ(50px);
+            transition: transform 0.1s ease-out;
         }
 
         .header h1 {
@@ -382,10 +527,22 @@
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="heart-loader">
+            <i class="fas fa-heart heart-shape"></i>
+            <div class="tory-text">TORY</div>
+        </div>
+        <div class="loading-text">Loading your moments...</div>
+    </div>
+
+    <!-- Floating hearts and sparkles -->
+    <div class="floating-hearts" id="floatingHearts"></div>
+
     <div class="container">
         <div class="header">
             <h1>Love Capture</h1>
-            <p class="subtitle">MOMENTS OF LOVE❤️ </p>
+            <p class="subtitle">MOMENTS OF LOVE ❤️</p>
             <p class="dedication">❤️✨ Made with love for Tory ✨❤️</p>
         </div>
 
@@ -414,8 +571,8 @@
                 <div class="option-icon">
                     <i class="fas fa-clock"></i>
                 </div>
-                <div class="option-title">Set Time</div>
-                <div class="option-description">Schedule a special moment for later.</div>
+                <div class="option-title">Set Time ❤️</div>
+                <div class="option-description">Schedule a special moment for later</div>
             </div>
         </div>
     </div>
@@ -458,6 +615,74 @@
   let selectedFile = null;
   let selectedDurationSeconds = 0;
 
+  // Loading screen
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('loadingOverlay').classList.add('hidden');
+    }, 2000);
+  });
+
+  // Create floating hearts and sparkles
+  function createFloatingElement() {
+    const container = document.getElementById('floatingHearts');
+    const isHeart = Math.random() > 0.5;
+    const element = document.createElement('i');
+    
+    element.className = isHeart ? 'fas fa-heart heart' : 'fas fa-sparkles sparkle';
+    element.style.left = Math.random() * 100 + '%';
+    element.style.animationDelay = Math.random() * 5 + 's';
+    element.style.animationDuration = (10 + Math.random() * 10) + 's';
+    
+    container.appendChild(element);
+    
+    setTimeout(() => {
+      element.remove();
+    }, 15000);
+  }
+
+  // Create elements periodically
+  setInterval(createFloatingElement, 800);
+  
+  // Initial elements
+  for (let i = 0; i < 15; i++) {
+    setTimeout(createFloatingElement, i * 200);
+  }
+
+  // Parallax effect
+  document.addEventListener('mousemove', (e) => {
+    const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+    const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+    
+    const header = document.querySelector('.header');
+    if (header) {
+      header.style.transform = `translateZ(50px) translate(${moveX}px, ${moveY}px)`;
+    }
+  });
+
+  // Confetti function
+  function createConfetti() {
+    const colors = ['#ffb3ba', '#ba8cff', '#fff', '#ffd1dc', '#e0b3ff'];
+    const confettiCount = 100;
+    
+    for (let i = 0; i < confettiCount; i++) {
+      setTimeout(() => {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.top = '-10px';
+        confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.width = (Math.random() * 10 + 5) + 'px';
+        confetti.style.height = (Math.random() * 10 + 5) + 'px';
+        confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        confetti.style.animationDelay = (Math.random() * 0.5) + 's';
+        
+        document.body.appendChild(confetti);
+        
+        setTimeout(() => confetti.remove(), 4000);
+      }, i * 10);
+    }
+  }
+
   async function uploadImageToSupabase(file) {
     const fileName = `img_${Date.now()}.jpg`;
 
@@ -492,6 +717,7 @@
       alert("❌ Failed to save record in database");
       console.error(error);
     } else {
+      createConfetti(); // Trigger confetti on success!
       alert("✅ Photo uploaded & timer saved!");
     }
   }
