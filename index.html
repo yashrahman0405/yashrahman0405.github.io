@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Love Capture ❤️</title>
+    <title>Love Capture</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         * {
@@ -402,6 +402,108 @@
             }
         }
 
+        /* Photo Display Styles */
+        .photo-display {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .photo-display.active {
+            display: flex;
+        }
+
+        .photo-container {
+            position: relative;
+            max-width: 90%;
+            max-height: 80vh;
+            margin-bottom: 30px;
+        }
+
+        .photo-container img {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(255, 179, 186, 0.4);
+        }
+
+        .timer-overlay {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 179, 186, 0.5);
+        }
+
+        .timer-text {
+            font-size: 2.5rem;
+            color: #ffb3ba;
+            font-weight: bold;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 20px rgba(255, 179, 186, 0.8);
+        }
+
+        .timer-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            margin-top: 5px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .back-button {
+            background: linear-gradient(135deg, #ffb3ba, #ba8cff);
+            color: #fff;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(255, 179, 186, 0.4);
+            letter-spacing: 1px;
+        }
+
+        .back-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 179, 186, 0.6);
+        }
+
+        .back-button i {
+            margin-right: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .timer-text {
+                font-size: 2rem;
+            }
+            
+            .timer-overlay {
+                padding: 12px 25px;
+            }
+            
+            .back-button {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+        }
+
         @media (max-width: 480px) {
             .container {
                 width: 95%;
@@ -539,11 +641,26 @@
     <!-- Floating hearts and sparkles -->
     <div class="floating-hearts" id="floatingHearts"></div>
 
-    <div class="container">
+    <!-- Photo Display View -->
+    <div class="photo-display" id="photoDisplay">
+        <div class="photo-container">
+            <img id="displayedPhoto" src="" alt="Your moment">
+            <div class="timer-overlay">
+                <div class="timer-text" id="timerText">00:00:00</div>
+                <div class="timer-label">Time remaining</div>
+            </div>
+        </div>
+        <button class="back-button" onclick="showUploadView()">
+            <i class="fas fa-arrow-left"></i> Upload New Photo
+        </button>
+    </div>
+
+    <!-- Upload View -->
+    <div class="container" id="uploadView">
         <div class="header">
             <h1>Love Capture</h1>
-            <p class="subtitle">MOMENTS OF LOVE ❤️</p>
-            <p class="dedication">❤️✨ Made with love for Tory ✨❤️</p>
+            <p class="subtitle">MOMENTS OF PASSION</p>
+            <p class="dedication">✨ Made with love for Tory ✨</p>
         </div>
 
         <div class="heart-divider">
@@ -555,7 +672,7 @@
                 <div class="option-icon">
                     <i class="fas fa-camera"></i>
                 </div>
-                <div class="option-title">Capture Now ❤️</div>
+                <div class="option-title">Capture Now</div>
                 <div class="option-description">Take a beautiful photo instantly with your camera</div>
             </div>
 
@@ -563,7 +680,7 @@
                 <div class="option-icon">
                     <i class="fas fa-images"></i>
                 </div>
-                <div class="option-title">From Gallery ❤️</div>
+                <div class="option-title">From Gallery</div>
                 <div class="option-description">Choose a cherished memory from your collection</div>
             </div>
 
@@ -571,7 +688,7 @@
                 <div class="option-icon">
                     <i class="fas fa-clock"></i>
                 </div>
-                <div class="option-title">Set Time ❤️</div>
+                <div class="option-title">Set Time</div>
                 <div class="option-description">Schedule a special moment for later</div>
             </div>
         </div>
@@ -614,11 +731,106 @@
 
   let selectedFile = null;
   let selectedDurationSeconds = 0;
+  let timerInterval = null;
+  let currentPhotoData = null;
+
+  // Check for active photo on load
+  async function checkActivePhoto() {
+    const { data, error } = await supabaseClient
+      .from("photos_table")
+      .select("*")
+      .gt('expires_at', new Date().toISOString())
+      .order('created_at', { ascending: false })
+      .limit(1);
+
+    if (error) {
+      console.error("Error fetching active photo:", error);
+      showUploadView();
+      return;
+    }
+
+    if (data && data.length > 0) {
+      currentPhotoData = data[0];
+      showPhotoDisplay();
+    } else {
+      showUploadView();
+    }
+  }
+
+  function showPhotoDisplay() {
+    if (!currentPhotoData) return;
+    
+    document.getElementById('photoDisplay').classList.add('active');
+    document.getElementById('uploadView').style.display = 'none';
+    document.getElementById('floatingHearts').style.display = 'none';
+    document.body.style.background = '#000';
+    document.body.style.animation = 'none';
+    
+    const bodyBefore = document.querySelector('body::before');
+    if (bodyBefore) {
+      bodyBefore.style.display = 'none';
+    }
+    
+    document.getElementById('displayedPhoto').src = currentPhotoData.image_url;
+    
+    startTimer();
+  }
+
+  function showUploadView() {
+    document.getElementById('photoDisplay').classList.remove('active');
+    document.getElementById('uploadView').style.display = 'block';
+    document.getElementById('floatingHearts').style.display = 'block';
+    document.body.style.background = 'linear-gradient(135deg, #1a0a1f 0%, #2d1b3d 25%, #1a0a1f 50%, #2d1b3d 75%, #1a0a1f 100%)';
+    document.body.style.backgroundSize = '400% 400%';
+    document.body.style.animation = 'gradientShift 15s ease infinite';
+    
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+    
+    currentPhotoData = null;
+  }
+
+  function startTimer() {
+    if (timerInterval) clearInterval(timerInterval);
+    
+    updateTimerDisplay();
+    
+    timerInterval = setInterval(() => {
+      updateTimerDisplay();
+      
+      const now = new Date();
+      const expiresAt = new Date(currentPhotoData.expires_at);
+      
+      if (now >= expiresAt) {
+        clearInterval(timerInterval);
+        showUploadView();
+        checkActivePhoto();
+      }
+    }, 1000);
+  }
+
+  function updateTimerDisplay() {
+    if (!currentPhotoData) return;
+    
+    const now = new Date();
+    const expiresAt = new Date(currentPhotoData.expires_at);
+    const remaining = Math.max(0, Math.floor((expiresAt - now) / 1000));
+    
+    const hours = Math.floor(remaining / 3600);
+    const minutes = Math.floor((remaining % 3600) / 60);
+    const seconds = remaining % 60;
+    
+    const timeString = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    document.getElementById('timerText').textContent = timeString;
+  }
 
   // Loading screen
   window.addEventListener('load', () => {
     setTimeout(() => {
       document.getElementById('loadingOverlay').classList.add('hidden');
+      checkActivePhoto();
     }, 2000);
   });
 
@@ -717,7 +929,7 @@
       alert("❌ Failed to save record in database");
       console.error(error);
     } else {
-      createConfetti(); // Trigger confetti on success!
+      createConfetti();
       alert("✅ Photo uploaded & timer saved!");
     }
   }
@@ -766,6 +978,12 @@
     const imageUrl = await uploadImageToSupabase(selectedFile);
     if (imageUrl) {
       await saveImageRecord(imageUrl, selectedDurationSeconds);
+      selectedFile = null;
+      selectedDurationSeconds = 0;
+      document.getElementById("hours").value = 0;
+      document.getElementById("minutes").value = 0;
+      document.getElementById("seconds").value = 0;
+      checkActivePhoto();
     }
   }
 
