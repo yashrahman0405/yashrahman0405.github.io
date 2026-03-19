@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yash & Tory — One Beautiful Year ❤️</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<style>
+/* ══ VARIABLES ══ */
+:root{
+  --cream:#f5ede0;--rose:#c9836a;--dusty-rose:#e8c4b0;--deep:#1e1008;
+  --warm-brown:#5c3520;--amber:#d4956a;--mist:#8fa89a;--night:#0d0805;
+  --bg:#f5ede0;--fg:#1e1008;--card:rgba(255,255,255,0.5);
+  --nav-bg:rgba(245,237,224,0.97);--ticker-bg:#1e1008;--alt:#f0e4d4;
+}
+[data-theme="dark"]{
+  --bg:#0d0805;--fg:#e8c4b0;--cream:#0d0805;--deep:#e8c4b0;
+  --warm-brown:#e8c4b0;--card:rgba(255,255,255,0.04);
+  --nav-bg:rgba(13,8,5,0.97);--alt:#110b05;--dusty-rose:#6b3d2a;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--fg);font-family:'EB Garamond',serif;overflow-x:hidden;transition:background .5s,color .5s;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9998;opacity:.35;}
+
+/* ══ LOADER ══ */
+#loader{position:fixed;inset:0;z-index:99999;background:var(--night);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;transition:opacity .8s,visibility .8s;}
+#loader.hide{opacity:0;visibility:hidden;pointer-events:none;}
+.loader-names{font-family:'Great Vibes',cursive;font-size:clamp(3rem,12vw,7rem);color:var(--rose);animation:loaderPulse 2s ease infinite;text-align:center;}
+@keyframes loaderPulse{0%,100%{opacity:.4;transform:scale(.97);}50%{opacity:1;transform:scale(1);}}
+.loader-bar-outer{width:200px;height:2px;background:rgba(201,131,106,.2);border-radius:100px;overflow:hidden;margin-top:1.5rem;}
+.loader-bar-fill{height:100%;background:linear-gradient(to right,var(--rose),var(--amber));width:0%;border-radius:100px;animation:loaderFill 2.5s ease forwards;}
+@keyframes loaderFill{0%{width:0%}100%{width:100%}}
+.loader-sub{font-family:'EB Garamond',serif;font-style:italic;color:rgba(232,196,176,.5);font-size:.85rem;letter-spacing:.2em;text-transform:uppercase;}
+.lp{position:absolute;animation:loaderPetal linear infinite;opacity:0;}
+@keyframes loaderPetal{0%{transform:translateY(-20px) rotate(0deg);opacity:0;}10%{opacity:.7;}90%{opacity:.3;}100%{transform:translateY(110vh) rotate(720deg);opacity:0;}}
+
+/* ══ PASSWORD ══ */
+#pwScreen{position:fixed;inset:0;z-index:88888;background:radial-gradient(ellipse at 30% 30%,#2a1a10,var(--night));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;padding:2rem;transition:opacity .8s,visibility .8s;}
+#pwScreen.hide{opacity:0;visibility:hidden;pointer-events:none;}
+.pw-title{font-family:'Great Vibes',cursive;font-size:clamp(2.5rem,10vw,5rem);color:var(--rose);text-align:center;}
+.pw-sub{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--dusty-rose);font-size:1.1rem;text-align:center;opacity:.8;}
+.pw-dots{display:flex;gap:.8rem;margin:.5rem 0;}
+.pw-dot{width:14px;height:14px;border-radius:50%;border:1px solid var(--rose);background:transparent;transition:background .2s;}
+.pw-dot.filled{background:var(--rose);}
+.pw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;max-width:280px;width:100%;}
+.pw-key{aspect-ratio:1;background:rgba(255,255,255,.04);border:1px solid rgba(201,131,106,.3);border-radius:4px;font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--dusty-rose);cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;}
+.pw-key:hover{background:rgba(201,131,106,.12);color:var(--amber);}
+.pw-key:active{transform:scale(.93);}
+.pw-key.del{font-size:1rem;color:var(--mist);}
+.pw-error{color:#c97070;font-style:italic;font-size:.9rem;opacity:0;transition:opacity .3s;}
+.pw-error.show{opacity:1;}
+.pw-hint{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(201,131,106,.3);margin-top:1rem;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-8px);}75%{transform:translateX(8px);}}
+
+/* ══ PETALS ══ */
+.petal{position:fixed;width:8px;height:12px;background:radial-gradient(ellipse,#e8c4b0cc,#c9836a33);border-radius:50% 0 50% 0;pointer-events:none;z-index:9997;animation:petalFall linear infinite;opacity:0;}
+@keyframes petalFall{0%{transform:translateY(-20px) rotate(0deg);opacity:0;}8%{opacity:.8;}90%{opacity:.3;}100%{transform:translateY(110vh) rotate(700deg) translateX(60px);opacity:0;}}
+
+/* ══ FIREWORKS CANVAS ══ */
+#fireworksCanvas{position:fixed;inset:0;pointer-events:none;z-index:9996;opacity:0;transition:opacity .5s;}
+#fireworksCanvas.active{opacity:1;}
+
+/* ══ FIXED UI ══ */
+.theme-toggle{position:fixed;bottom:5rem;right:1.5rem;z-index:5001;width:44px;height:44px;background:var(--nav-bg);border:1px solid var(--dusty-rose);border-radius:50%;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,.12);transition:all .3s;}
+.theme-toggle:hover{transform:scale(1.1);}
+
+/* ══ MUSIC PLAYER ══ */
+.music-player{position:fixed;bottom:1.5rem;right:1.5rem;z-index:5000;background:var(--nav-bg);border:1px solid var(--dusty-rose);border-radius:100px;padding:.6rem 1.2rem .6rem .6rem;display:flex;align-items:center;gap:.8rem;box-shadow:0 4px 24px rgba(201,131,106,.2);cursor:pointer;transition:all .3s;max-width:260px;}
+.music-btn{width:36px;height:36px;background:var(--rose);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;}
+.music-title{font-family:'Playfair Display',serif;font-style:italic;font-size:.8rem;color:var(--warm-brown);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.music-sub{font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mist);}
+.music-bars{display:flex;gap:2px;align-items:flex-end;height:14px;margin-left:auto;flex-shrink:0;}
+.music-bars span{width:3px;background:var(--rose);border-radius:100px;opacity:.7;animation:barAnim .8s ease infinite;}
+.music-bars span:nth-child(2){animation-delay:.15s;}.music-bars span:nth-child(3){animation-delay:.3s;}
+@keyframes barAnim{0%,100%{height:4px}50%{height:14px}}
+.music-bars.paused span{animation-play-state:paused;}
+.music-modal{position:fixed;inset:0;z-index:6000;background:rgba(13,8,5,.85);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;padding:1rem;}
+.music-modal.open{opacity:1;pointer-events:all;}
+.music-modal-inner{background:var(--bg);border:1px solid var(--dusty-rose);border-radius:8px;padding:2rem;max-width:480px;width:100%;max-height:85vh;overflow-y:auto;position:relative;}
+.music-close{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--mist);}
+.spotify-frame{width:100%;border:none;border-radius:12px;margin-top:.8rem;display:none;background:#000;}
+.spotify-frame.visible{display:block;}
+.spotify-embed-section{background:linear-gradient(135deg,#0d1117,#1a0d05);border-radius:8px;padding:1.5rem;margin-top:1rem;border:1px solid rgba(30,215,96,.2);}
+.spotify-logo{display:flex;align-items:center;gap:.6rem;margin-bottom:.8rem;}
+.spotify-logo span{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:#1ed760;}
+.spotify-playlist-input{width:100%;border:1px dashed rgba(30,215,96,.4);background:rgba(255,255,255,.03);padding:.6rem .8rem;font-family:'EB Garamond',serif;font-size:.9rem;color:#e8c4b0;outline:none;border-radius:4px;margin-bottom:.6rem;}
+.spotify-load-btn{background:#1ed760;color:#000;border:none;padding:.4rem 1.2rem;border-radius:100px;cursor:pointer;font-family:'EB Garamond',serif;font-size:.85rem;font-weight:600;transition:all .2s;}
+.spotify-load-btn:hover{background:#1fdf64;transform:scale(1.03);}
+.spotify-hint{font-size:.68rem;color:rgba(232,196,176,.4);margin-top:.5rem;font-style:italic;}
+.song-spotify-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:.3rem;background:rgba(30,215,96,.08);border:1px solid rgba(30,215,96,.25);color:#1ed760;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .6rem;border-radius:100px;cursor:pointer;transition:all .2s;}
+.song-spotify-btn:hover{background:rgba(30,215,96,.18);}
+.song-spotify-input{display:none;width:100%;border:1px dashed rgba(30,215,96,.3);background:transparent;padding:.3rem .5rem;font-family:'EB Garamond',serif;font-size:.8rem;color:var(--warm-brown);outline:none;border-radius:3px;margin-top:.3rem;}
+.song-spotify-input.open{display:block;}
+.music-song-list{display:flex;flex-direction:column;gap:.5rem;margin-top:1rem;}
+.music-song-item{display:flex;align-items:flex-start;gap:.8rem;padding:.8rem;border:1px solid var(--dusty-rose);background:rgba(255,255,255,.3);border-radius:2px;}
+
+/* ══ NAV ══ */
+nav{position:fixed;top:0;left:0;right:0;z-index:5000;display:flex;justify-content:space-between;align-items:center;padding:1rem 2rem;background:var(--nav-bg);backdrop-filter:blur(8px);}
+.nav-logo{font-family:'Great Vibes',cursive;font-size:1.6rem;color:var(--rose);text-decoration:none;}
+.nav-links{display:flex;gap:1.8rem;list-style:none;}
+.nav-links a{color:var(--warm-brown);text-decoration:none;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;opacity:.7;transition:opacity .3s;}
+.nav-links a:hover{opacity:1;}
+.nav-burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;}
+.nav-burger span{width:24px;height:1.5px;background:var(--warm-brown);display:block;transition:all .3s;}
+.mobile-menu{position:fixed;top:0;right:-100%;width:75%;max-width:280px;height:100vh;height:100dvh;background:var(--bg);z-index:4999;padding:5rem 2rem 4rem;display:flex;flex-direction:column;gap:1.5rem;transition:right .4s ease;box-shadow:-8px 0 40px rgba(42,26,16,.1);overflow-y:auto;overflow-x:hidden;}
+.mobile-menu.open{right:0;}
+.mobile-menu a{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--deep);text-decoration:none;font-style:italic;}
+.menu-overlay{position:fixed;inset:0;top:0;left:0;width:100vw;height:100vh;height:100dvh;background:rgba(0,0,0,.3);z-index:4998;opacity:0;pointer-events:none;transition:opacity .3s;}
+.menu-overlay.open{opacity:1;pointer-events:all;}
+
+/* ══ TICKER ══ */
+.ticker-wrap{background:var(--ticker-bg);overflow:hidden;white-space:nowrap;padding:.6rem 0;}
+.ticker-track{display:inline-block;animation:ticker 35s linear infinite;}
+.ticker-track span{font-family:'Great Vibes',cursive;font-size:1.2rem;color:var(--dusty-rose);margin:0 1.5rem;}
+.ticker-track span.sep{color:var(--rose);font-family:serif;font-size:.9rem;}
+@keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+/* ══ HERO ══ */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;padding:7rem 2rem 5rem;background:radial-gradient(ellipse at 20% 20%,#e8d5c4 0%,transparent 55%),radial-gradient(ellipse at 80% 80%,#d4bba8 0%,transparent 50%),var(--bg);overflow:hidden;}
+.stars{position:absolute;inset:0;pointer-events:none;}
+.star{position:absolute;background:var(--amber);border-radius:50%;animation:twinkle ease-in-out infinite;opacity:0;}
+@keyframes twinkle{0%,100%{opacity:0;transform:scale(.5);}50%{opacity:.5;transform:scale(1);}}
+.hero-eyebrow{font-family:'Great Vibes',cursive;font-size:clamp(1.4rem,4vw,2rem);color:var(--rose);opacity:0;animation:fadeUp 1s ease .3s forwards;}
+.hero-names{font-family:'Playfair Display',serif;font-size:clamp(3.5rem,14vw,9.5rem);font-weight:400;line-height:.88;letter-spacing:-.02em;color:var(--deep);opacity:0;animation:fadeUp 1s ease .6s forwards;margin:.5rem 0;}
+.hero-names .tory{font-style:italic;color:var(--rose);}
+.hero-amp{font-family:'Great Vibes',cursive;font-size:clamp(2rem,7vw,4.5rem);color:var(--amber);display:block;}
+.hero-date{font-size:clamp(.7rem,2vw,.9rem);letter-spacing:.3em;text-transform:uppercase;color:var(--warm-brown);opacity:0;animation:fadeUp 1s ease .9s forwards;margin-top:1.5rem;}
+.hero-divider{width:120px;height:1px;background:linear-gradient(to right,transparent,var(--rose),transparent);margin:1.8rem auto;opacity:0;animation:fadeUp 1s ease 1.1s forwards;}
+.hero-tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1rem,3vw,1.3rem);color:var(--warm-brown);max-width:420px;line-height:1.9;opacity:0;animation:fadeUp 1s ease 1.3s forwards;}
+.heartbeat-icon{font-size:2.5rem;display:inline-block;animation:heartbeat 1.4s ease infinite;margin-top:1.5rem;opacity:0;animation:fadeUp 1s ease 1.5s forwards, heartbeat 1.4s ease 1.5s infinite;}
+@keyframes heartbeat{0%,100%{transform:scale(1);}14%{transform:scale(1.2);}28%{transform:scale(1);}42%{transform:scale(1.15);}56%{transform:scale(1);}}
+.countdown-wrap{margin-top:2rem;opacity:0;animation:fadeUp 1s ease 1.7s forwards;}
+.countdown-label{font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;color:var(--mist);margin-bottom:.8rem;}
+.countdown{display:flex;gap:clamp(.8rem,3vw,2rem);justify-content:center;flex-wrap:wrap;}
+.cd-unit{display:flex;flex-direction:column;align-items:center;}
+.cd-num{font-family:'Playfair Display',serif;font-size:clamp(2rem,7vw,3.2rem);font-weight:700;color:var(--deep);line-height:1;min-width:2ch;text-align:center;}
+.cd-label{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--rose);margin-top:.3rem;}
+.cd-sep{font-family:'Playfair Display',serif;font-size:2rem;color:var(--dusty-rose);align-self:flex-start;padding-top:.2rem;}
+.confetti-btn{margin-top:2rem;padding:.7rem 2rem;background:transparent;border:1px solid var(--rose);color:var(--rose);font-family:'EB Garamond',serif;font-size:.85rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;border-radius:100px;opacity:0;animation:fadeUp 1s ease 2s forwards;transition:all .3s;}
+.confetti-btn:hover{background:var(--rose);color:var(--cream);}
+.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:0;animation:fadeUp 1s ease 2.2s forwards;}
+.scroll-hint span{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mist);}
+.scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,var(--rose),transparent);animation:scrollLine 2s ease infinite;}
+@keyframes scrollLine{0%,100%{transform:scaleY(1);opacity:1;}50%{transform:scaleY(.4);opacity:.2;}}
+
+/* ══ SECTIONS ══ */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .8s ease,transform .8s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.section-inner{max-width:900px;margin:0 auto;padding:5rem 2rem;}
+.section-label{font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--rose);margin-bottom:.8rem;display:block;}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,5vw,3.2rem);font-weight:400;line-height:1.2;color:var(--deep);margin-bottom:1.5rem;}
+.section-title em{font-style:italic;color:var(--rose);}
+.section-body{font-size:clamp(1rem,2.5vw,1.15rem);line-height:1.9;color:var(--warm-brown);max-width:680px;}
+
+/* ══ WEATHER WIDGET ══ */
+.weather-bar{background:var(--night);padding:1.5rem 2rem;text-align:center;}
+.weather-inner{max-width:700px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:2rem;flex-wrap:wrap;}
+.weather-location{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mist);}
+.weather-temp{font-family:'Playfair Display',serif;font-size:2.5rem;color:var(--amber);line-height:1;}
+.weather-desc{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--dusty-rose);font-size:1.1rem;}
+.weather-icon{font-size:2rem;}
+.weather-extra{display:flex;gap:1.5rem;font-size:.82rem;color:var(--mist);}
+.weather-romantic{font-family:'Great Vibes',cursive;font-size:1.4rem;color:var(--rose);margin-top:.3rem;}
+
+/* ══ DAILY MESSAGE ══ */
+.daily-section{background:radial-gradient(ellipse at center,#1a0d08,var(--night));padding:4rem 2rem;text-align:center;}
+.daily-inner{max-width:600px;margin:0 auto;}
+.daily-date{font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;color:var(--mist);margin-bottom:1rem;}
+.daily-msg{font-family:'Great Vibes',cursive;font-size:clamp(1.8rem,5vw,3rem);color:var(--rose);line-height:1.5;}
+.daily-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:var(--dusty-rose);margin-top:1rem;opacity:.8;}
+
+/* ══ STATS ══ */
+#stats-section{background:var(--night);padding:5rem 2rem;text-align:center;}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:2rem;max-width:860px;margin:3rem auto 0;}
+.stat-card{display:flex;flex-direction:column;align-items:center;gap:.4rem;}
+.stat-num{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,6vw,3.5rem);font-weight:700;color:var(--amber);line-height:1;}
+.stat-unit{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--rose);}
+.stat-label{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--dusty-rose);}
+.progress-section{background:var(--bg);padding:3rem 2rem;text-align:center;}
+.progress-label{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.2rem;color:var(--warm-brown);margin-bottom:1.5rem;}
+.progress-bar-outer{max-width:600px;margin:0 auto;height:3px;background:var(--dusty-rose);border-radius:100px;overflow:visible;position:relative;}
+.progress-bar-fill{height:100%;background:linear-gradient(to right,var(--rose),var(--amber));border-radius:100px;width:0%;transition:width 2s ease;position:relative;}
+.progress-dot{position:absolute;right:-6px;top:-5px;width:13px;height:13px;background:var(--amber);border-radius:50%;box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--amber);}
+.progress-ends{display:flex;justify-content:space-between;max-width:600px;margin:.8rem auto 0;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--mist);}
+
+/* ══ HOW WE MET ══ */
+.met-card{position:relative;overflow:hidden;border-left:3px solid var(--rose);padding-left:2rem;}
+.met-card::before{content:'"';font-family:'Great Vibes',cursive;font-size:clamp(8rem,25vw,18rem);color:var(--dusty-rose);opacity:.15;position:absolute;top:-3rem;left:-1rem;line-height:1;pointer-events:none;}
+.winter-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(201,131,106,.12);border:1px solid var(--dusty-rose);padding:.4rem 1rem;border-radius:100px;font-size:.8rem;letter-spacing:.1em;color:var(--warm-brown);margin-bottom:1.5rem;}
+
+/* ══ TIMELINE ══ */
+.timeline{position:relative;padding-left:2.5rem;margin-top:3rem;}
+.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--rose),var(--dusty-rose),transparent);}
+.tl-item{position:relative;margin-bottom:3rem;}
+.tl-item::before{content:'';position:absolute;left:-2.9rem;top:.4rem;width:10px;height:10px;border-radius:50%;background:var(--rose);box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--dusty-rose);}
+.tl-time{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--rose);margin-bottom:.2rem;}
+.tl-title{font-family:'Playfair Display',serif;font-size:clamp(1.1rem,3vw,1.35rem);font-style:italic;color:var(--deep);margin-bottom:.5rem;}
+.tl-body{font-size:1.05rem;line-height:1.85;color:var(--warm-brown);}
+
+/* ══ FLIP CARDS ══ */
+.flip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1.2rem;margin-top:2rem;}
+.flip-card{height:190px;perspective:900px;cursor:pointer;}
+.flip-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.4,0,.2,1);}
+.flip-card:hover .flip-inner,.flip-card.flipped .flip-inner{transform:rotateY(180deg);}
+.flip-front,.flip-back{position:absolute;inset:0;backface-visibility:hidden;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:1.5rem;text-align:center;}
+.flip-front{background:linear-gradient(135deg,var(--cream),var(--dusty-rose));border:1px solid var(--dusty-rose);}
+.flip-front-icon{font-size:2rem;margin-bottom:.5rem;}
+.flip-front-num{font-family:'Playfair Display',serif;font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--rose);}
+.flip-back{background:var(--deep);transform:rotateY(180deg);}
+.flip-back-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;line-height:1.6;color:var(--dusty-rose);}
+
+/* ══ STARFIELD ══ */
+#starfield-section{background:var(--night);padding:5rem 2rem;text-align:center;position:relative;}
+#starCanvas{display:block;margin:2rem auto;cursor:crosshair;border-radius:4px;max-width:100%;}
+.star-popup{position:absolute;background:rgba(30,16,8,.95);border:1px solid var(--rose);border-radius:4px;padding:.8rem 1.2rem;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--dusty-rose);pointer-events:none;z-index:100;white-space:nowrap;transition:opacity .3s;max-width:220px;white-space:normal;text-align:left;}
+.star-popup.hide{opacity:0;}
+
+/* ══ YEAR REVIEW ══ */
+.year-timeline{display:flex;flex-direction:column;gap:0;margin-top:2.5rem;position:relative;}
+.year-timeline::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--rose),transparent);transform:translateX(-50%);}
+.yt-row{display:flex;align-items:flex-start;gap:2rem;margin-bottom:2.5rem;position:relative;}
+.yt-row:nth-child(even){flex-direction:row-reverse;}
+.yt-content{flex:1;background:var(--card);border:1px solid var(--dusty-rose);padding:1.5rem;border-radius:2px;transition:transform .3s;}
+.yt-content:hover{transform:translateY(-3px);}
+.yt-month{font-family:'Playfair Display',serif;font-style:italic;font-size:1.1rem;color:var(--rose);margin-bottom:.3rem;}
+.yt-text{font-size:1rem;line-height:1.7;color:var(--warm-brown);}
+.yt-dot{width:14px;height:14px;background:var(--rose);border-radius:50%;flex-shrink:0;margin-top:1.5rem;box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--dusty-rose);z-index:1;}
+.yt-spacer{flex:1;}
+
+/* ══ MEMORIES ══ */
+.memories-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem;margin-top:2rem;}
+.memory-card{background:var(--card);border:1px solid var(--dusty-rose);padding:2rem;position:relative;transition:transform .3s;}
+.memory-card:hover{transform:translateY(-4px);}
+.memory-card::after{content:'';position:absolute;bottom:-5px;right:-5px;width:100%;height:100%;border:1px solid var(--dusty-rose);z-index:-1;opacity:.4;}
+.memory-icon{font-size:1.6rem;margin-bottom:.8rem;display:block;}
+.memory-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-style:italic;color:var(--deep);margin-bottom:.5rem;}
+.memory-text{font-size:.95rem;line-height:1.75;color:var(--warm-brown);}
+.pull-quote{font-family:'Great Vibes',cursive;font-size:clamp(1.8rem,5vw,3rem);color:var(--rose);text-align:center;padding:3rem 2rem;max-width:700px;margin:0 auto;line-height:1.7;}
+
+/* ══ GIFT UNWRAP ══ */
+#gift-section{background:radial-gradient(ellipse at center,#1a0d08,var(--night));padding:5rem 2rem;text-align:center;}
+.gift-wrap{max-width:380px;margin:2.5rem auto;position:relative;cursor:pointer;}
+.gift-box{display:flex;flex-direction:column;align-items:center;gap:0;transition:transform .3s;}
+.gift-box:hover{transform:scale(1.03);}
+.gift-lid{background:linear-gradient(135deg,#c9836a,#e8c4b0);border-radius:4px 4px 0 0;padding:.8rem 3rem;position:relative;width:100%;text-align:center;}
+.gift-lid::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:30px;height:100%;background:linear-gradient(to bottom,#fff3,#fff1);border-radius:2px;}
+.gift-lid-ribbon{position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:1.5rem;}
+.gift-body{background:linear-gradient(135deg,#e8c4b0,#d4956a);padding:2rem 3rem;border-radius:0 0 4px 4px;width:100%;min-height:120px;display:flex;align-items:center;justify-content:center;}
+.gift-body::before{content:'';position:absolute;left:50%;transform:translateX(-50%);top:0;bottom:0;width:30px;background:linear-gradient(to bottom,#fff2,#fff1);}
+.gift-hint{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mist);margin-top:1.5rem;}
+.gift-reveal{display:none;animation:giftReveal .8s ease forwards;}
+@keyframes giftReveal{0%{opacity:0;transform:scale(.8) translateY(20px);}100%{opacity:1;transform:scale(1) translateY(0);}}
+.gift-reveal.show{display:block;}
+.gift-message{font-family:'Great Vibes',cursive;font-size:clamp(2rem,6vw,3.5rem);color:var(--amber);margin-bottom:1rem;}
+.gift-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.2rem;color:var(--dusty-rose);line-height:1.8;}
+@keyframes lidFly{0%{transform:translateY(0) rotate(0);}100%{transform:translateY(-120px) rotate(-15deg);opacity:0;}}
+.gift-lid.fly{animation:lidFly .5s ease forwards;}
+
+/* ══ POLAROIDS ══ */
+.polaroid-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:2rem;margin-top:2rem;}
+.polaroid{background:#fff;padding:.8rem .8rem 3rem;box-shadow:3px 6px 20px rgba(42,26,16,.12);position:relative;transition:transform .3s;cursor:pointer;}
+.polaroid:nth-child(odd){transform:rotate(-2deg);}.polaroid:nth-child(even){transform:rotate(1.5deg);}
+.polaroid:hover{transform:rotate(0deg) scale(1.04);z-index:10;}
+.polaroid-img{width:100%;aspect-ratio:1;object-fit:cover;background:linear-gradient(135deg,var(--dusty-rose),#d4a898);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.4rem;color:var(--warm-brown);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;position:relative;overflow:hidden;}
+.polaroid-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.polaroid-img input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.polaroid-caption{position:absolute;bottom:.5rem;left:0;right:0;text-align:center;font-family:'Great Vibes',cursive;font-size:1.2rem;color:var(--warm-brown);padding:0 .5rem;}
+
+/* ══ LIGHTBOX ══ */
+.lightbox{position:fixed;inset:0;z-index:8000;background:rgba(10,5,2,.92);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;padding:2rem;}
+.lightbox.open{opacity:1;pointer-events:all;}
+.lb-inner{position:relative;max-width:600px;width:100%;text-align:center;}
+.lb-img{width:100%;max-height:70vh;object-fit:contain;border:6px solid #fff;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+.lb-caption{font-family:'Great Vibes',cursive;font-size:2rem;color:var(--dusty-rose);margin-top:1rem;}
+.lb-close{position:absolute;top:-1rem;right:-1rem;width:32px;height:32px;background:var(--rose);border:none;border-radius:50%;color:#fff;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.lb-nav{display:flex;justify-content:center;gap:1rem;margin-top:1.2rem;}
+.lb-nav button{background:transparent;border:1px solid var(--dusty-rose);color:var(--dusty-rose);padding:.4rem 1.2rem;cursor:pointer;font-family:'EB Garamond',serif;font-size:.9rem;transition:all .2s;border-radius:100px;}
+.lb-nav button:hover{background:var(--rose);border-color:var(--rose);color:#fff;}
+
+/* ══ MAP ══ */
+#map{height:420px;border:1px solid var(--dusty-rose);border-radius:2px;margin-top:2rem;z-index:1;}
+.map-legend{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:1rem;}
+.map-legend-item{display:flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--warm-brown);}
+.map-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
+/* ══ CHAT ══ */
+.chat-wrap{max-width:500px;margin:2.5rem auto 0;background:linear-gradient(to bottom,#e5ddd5,#d5c8be);border-radius:12px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.15);}
+.chat-header{background:#075E54;padding:.8rem 1.2rem;display:flex;align-items:center;gap:.8rem;}
+.chat-avatar{width:36px;height:36px;background:var(--dusty-rose);border-radius:50%;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.chat-header-name{font-family:'Playfair Display',serif;font-style:italic;color:#fff;font-size:1rem;}
+.chat-body{padding:1.2rem;display:flex;flex-direction:column;gap:.6rem;min-height:200px;}
+.chat-msg{max-width:75%;padding:.6rem .9rem;border-radius:8px;font-family:'EB Garamond',serif;font-size:.95rem;line-height:1.5;position:relative;}
+.chat-msg.sent{background:#dcf8c6;align-self:flex-end;border-bottom-right-radius:2px;color:#1a1a1a;}
+.chat-msg.recv{background:#fff;align-self:flex-start;border-bottom-left-radius:2px;color:#1a1a1a;}
+.chat-time{font-size:.65rem;color:rgba(0,0,0,.4);text-align:right;margin-top:2px;}
+.chat-msg.sent .chat-time::after{content:' ✓✓';color:#4fc3f7;}
+
+/* ══ BENGALI ══ */
+.bengali-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem;margin-top:2.5rem;}
+.bengali-card{border:1px solid rgba(201,131,106,.25);padding:1.8rem;background:rgba(255,255,255,.03);border-radius:2px;transition:all .3s;text-align:center;}
+.bengali-card:hover{background:rgba(201,131,106,.07);transform:translateY(-3px);}
+.bengali-script{font-size:1.6rem;color:var(--amber);margin-bottom:.5rem;line-height:1.4;}
+.bengali-roman{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--dusty-rose);margin-bottom:.3rem;}
+.bengali-meaning{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mist);}
+
+/* ══ ENVELOPE ══ */
+.envelope-wrap{max-width:480px;margin:3rem auto 0;}
+.envelope{width:100%;background:#fff9f3;border:1px solid var(--dusty-rose);border-radius:4px;position:relative;cursor:pointer;transition:box-shadow .3s;overflow:hidden;}
+.envelope:hover{box-shadow:0 12px 40px rgba(201,131,106,.25);}
+.envelope-flap{width:100%;padding-bottom:45%;background:linear-gradient(135deg,#f5e8dc,#e8d0c0);border-bottom:1px solid var(--dusty-rose);clip-path:polygon(0 0,50% 80%,100% 0,100% 100%,0 100%);transform-origin:top center;transition:transform .6s ease;}
+.envelope.open .envelope-flap{transform:rotateX(180deg);}
+.envelope-body{padding:3rem 2.5rem;text-align:left;max-height:0;overflow:hidden;transition:max-height .8s ease;}
+.envelope.open .envelope-body{max-height:1000px;}
+.envelope-seal{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:2.5rem;z-index:5;transition:opacity .3s;}
+.envelope.open .envelope-seal{opacity:0;pointer-events:none;}
+.envelope-tap{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mist);margin-top:1.2rem;display:block;text-align:center;}
+.envelope.open .envelope-tap{display:none;}
+.letter-salutation{font-family:'Great Vibes',cursive;font-size:2.2rem;color:var(--rose);margin-bottom:1rem;}
+.letter-body{font-family:'Cormorant Garamond',serif;font-size:1.15rem;line-height:2;color:var(--warm-brown);}
+.letter-sign{font-family:'Great Vibes',cursive;font-size:1.8rem;color:var(--rose);margin-top:1.5rem;text-align:right;}
+
+/* ══ HEARTBEAT SECTION ══ */
+#heartbeat-section{background:var(--night);padding:5rem 2rem;text-align:center;}
+#hbCanvas{display:block;margin:0 auto;max-width:100%;}
+.hb-note{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.1rem,3vw,1.4rem);color:var(--dusty-rose);max-width:600px;margin:2rem auto 0;line-height:2;}
+
+/* ══ PROMISES ══ */
+.promises-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem;margin-top:2.5rem;}
+.promise-card{border:1px solid rgba(201,131,106,.35);padding:2rem;background:rgba(255,255,255,.04);transition:background .3s;}
+.promise-card:hover{background:rgba(201,131,106,.08);}
+.promise-num{font-family:'Playfair Display',serif;font-size:3rem;color:rgba(201,131,106,.2);line-height:1;margin-bottom:.5rem;}
+.promise-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.7;color:var(--dusty-rose);}
+
+/* ══ BUCKET LIST ══ */
+#bucket-section{background:var(--alt);}
+.bucket-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin-top:1.5rem;}
+.bucket-item{display:flex;align-items:flex-start;gap:.8rem;padding:1rem 1.2rem;background:var(--card);border:1px solid var(--dusty-rose);border-radius:2px;transition:all .3s;cursor:pointer;}
+.bucket-item.done{opacity:.5;text-decoration:line-through;}
+.bucket-item:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(201,131,106,.15);}
+.bucket-check{width:22px;height:22px;border:1px solid var(--rose);border-radius:50%;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:.8rem;transition:all .3s;}
+.bucket-item.done .bucket-check{background:var(--rose);color:#fff;}
+.bucket-emoji{font-size:1.2rem;flex-shrink:0;}
+.bucket-text{font-size:1rem;line-height:1.5;color:var(--warm-brown);}
+.bucket-by{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mist);margin-top:.2rem;}
+.bucket-add-form{display:flex;gap:.8rem;margin-top:1.5rem;flex-wrap:wrap;}
+.bucket-input{flex:1;min-width:200px;border:1px solid var(--dusty-rose);background:rgba(255,255,255,.5);padding:.7rem 1rem;font-family:'EB Garamond',serif;font-size:1rem;color:var(--fg);outline:none;border-radius:2px;}
+.bucket-who{border:1px solid var(--dusty-rose);background:rgba(255,255,255,.5);padding:.7rem .8rem;font-family:'EB Garamond',serif;font-size:.9rem;color:var(--warm-brown);outline:none;border-radius:2px;}
+.bucket-submit{background:var(--rose);color:var(--cream);border:none;padding:.7rem 1.5rem;font-family:'EB Garamond',serif;font-size:.9rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .2s;}
+.bucket-submit:hover{background:var(--amber);}
+.bucket-loading{text-align:center;font-style:italic;color:var(--mist);padding:1rem;}
+
+/* ══ NICKNAMES ══ */
+.nickname-grid{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:2rem;justify-content:center;}
+.nickname-tag{font-family:'Great Vibes',cursive;font-size:1.5rem;color:var(--dusty-rose);background:rgba(255,255,255,.05);border:1px solid rgba(201,131,106,.3);padding:.2rem 1.1rem;border-radius:100px;transition:all .3s;}
+.nickname-tag:hover{background:rgba(201,131,106,.15);color:var(--amber);transform:scale(1.07);}
+.nickname-add-btn{font-family:'EB Garamond',serif;font-style:italic;font-size:.9rem;color:var(--mist);background:transparent;border:1px dashed rgba(201,131,106,.3);padding:.2rem 1.1rem;border-radius:100px;cursor:pointer;transition:all .3s;}
+.nickname-add-btn:hover{border-color:var(--rose);color:var(--rose);}
+
+/* ══ SONGS ══ */
+.song-list{display:flex;flex-direction:column;gap:.8rem;margin-top:1.5rem;max-width:600px;}
+.song-item{display:flex;align-items:flex-start;gap:1rem;padding:1rem 1.5rem;background:var(--card);border:1px solid var(--dusty-rose);border-radius:2px;transition:all .2s;}
+.song-item:hover{background:rgba(201,131,106,.08);}
+
+/* ══ STORYBOOK ══ */
+#storybookBtn{position:fixed;bottom:9rem;right:1.5rem;z-index:5001;width:44px;height:44px;background:var(--nav-bg);border:1px solid var(--dusty-rose);border-radius:50%;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,.12);transition:all .3s;}
+#storybookBtn:hover{transform:scale(1.1);}
+.storybook-overlay{position:fixed;inset:0;z-index:9000;background:rgba(10,5,2,.95);opacity:0;pointer-events:none;transition:opacity .4s;display:flex;align-items:center;justify-content:center;padding:2rem;}
+.storybook-overlay.open{opacity:1;pointer-events:all;}
+.book{width:100%;max-width:700px;position:relative;}
+.book-close{position:absolute;top:-2rem;right:0;background:none;border:none;color:var(--mist);font-size:1.2rem;cursor:pointer;letter-spacing:.1em;text-transform:uppercase;font-family:'EB Garamond',serif;font-size:.8rem;}
+.book-pages{position:relative;min-height:360px;}
+.book-page{position:absolute;inset:0;background:var(--cream);border-radius:2px;padding:3rem;display:flex;flex-direction:column;justify-content:center;opacity:0;pointer-events:none;transition:all .5s ease;}
+.book-page.active{opacity:1;pointer-events:all;position:relative;}
+.book-page-num{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--rose);margin-bottom:.5rem;}
+.book-chapter{font-family:'Great Vibes',cursive;font-size:2.5rem;color:var(--rose);margin-bottom:1rem;}
+.book-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.2rem;line-height:2;color:var(--warm-brown);}
+.book-nav{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;}
+.book-btn{background:transparent;border:1px solid var(--dusty-rose);color:var(--warm-brown);padding:.5rem 1.5rem;cursor:pointer;font-family:'EB Garamond',serif;font-size:.9rem;border-radius:100px;transition:all .2s;}
+.book-btn:hover{background:var(--rose);border-color:var(--rose);color:#fff;}
+.book-btn:disabled{opacity:.3;cursor:not-allowed;}
+.book-dots{display:flex;gap:.5rem;}
+.book-dot{width:8px;height:8px;border-radius:50%;background:var(--dusty-rose);cursor:pointer;transition:all .2s;}
+.book-dot.active{background:var(--rose);transform:scale(1.2);}
+
+/* ══ GUESTBOOK ══ */
+#guestbook-section{background:var(--night);}
+.guestbook-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.2rem;margin-top:2rem;}
+.gb-card{background:rgba(255,255,255,.03);border:1px solid rgba(201,131,106,.2);padding:1.5rem;border-radius:2px;position:relative;transition:transform .3s;animation:fadeUp .5s ease forwards;opacity:0;}
+.gb-card:hover{transform:translateY(-3px);}
+.gb-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--rose);opacity:.4;}
+.gb-emoji{font-size:1.6rem;margin-bottom:.6rem;display:block;}
+.gb-name{font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;color:var(--amber);margin-bottom:.4rem;}
+.gb-message{font-size:.95rem;line-height:1.7;color:var(--dusty-rose);white-space:pre-wrap;}
+.gb-date{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mist);margin-top:.8rem;opacity:.7;}
+.gb-empty{text-align:center;font-style:italic;color:var(--mist);padding:2rem;font-size:1rem;}
+.gb-link{display:inline-flex;align-items:center;gap:.5rem;margin-top:2rem;padding:.7rem 1.5rem;border:1px solid var(--rose);color:var(--rose);text-decoration:none;font-family:'EB Garamond',serif;font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;border-radius:100px;transition:all .3s;}
+.gb-link:hover{background:var(--rose);color:var(--cream);}
+
+/* ══ CONFETTI ══ */
+.confetti-piece{position:fixed;pointer-events:none;z-index:99990;animation:confettiFall linear forwards;}
+@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1;}100%{transform:translateY(110vh) rotate(720deg);opacity:0;}}
+
+/* ══ FOOTER ══ */
+footer{background:var(--night);color:var(--dusty-rose);text-align:center;padding:4rem 2rem;font-family:'EB Garamond',serif;font-style:italic;}
+.footer-names{font-family:'Great Vibes',cursive;font-size:clamp(2.5rem,8vw,4rem);display:block;margin-bottom:.5rem;color:var(--amber);}
+footer p{font-size:.95rem;opacity:.7;}
+footer small{display:block;margin-top:1rem;font-size:.75rem;opacity:.4;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:768px){
+  .nav-links{display:none;}.nav-burger{display:flex;}
+  body{cursor:auto;}.cursor,.cursor-ring{display:none;}
+  .flip-grid{grid-template-columns:repeat(2,1fr);}
+  .polaroid-grid{grid-template-columns:repeat(2,1fr);gap:1.2rem;}
+  .promises-grid{grid-template-columns:1fr 1fr;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .timeline{padding-left:1.8rem;}.tl-item::before{left:-2.3rem;}
+  .year-timeline::before{left:14px;transform:none;}
+  .yt-row,.yt-row:nth-child(even){flex-direction:column;padding-left:2.5rem;}
+  .yt-dot{position:absolute;left:-2.4rem;top:1.5rem;margin:0;}
+  .yt-row{position:relative;}.yt-spacer{display:none;}
+  .music-player{max-width:200px;padding:.5rem .8rem .5rem .5rem;}
+  .music-info{display:none;}
+  #storybookBtn{bottom:9.5rem;}
+  .weather-inner{flex-direction:column;gap:1rem;}
+  .book-page{padding:2rem 1.5rem;}
+}
+@media(max-width:480px){
+  .flip-grid,.polaroid-grid{grid-template-columns:1fr 1fr;}
+  .promises-grid,.memories-grid{grid-template-columns:1fr;}
+  .countdown{gap:.8rem;}.cd-sep{display:none;}
+  .bengali-grid{grid-template-columns:1fr 1fr;}
+  .bucket-add-form{flex-direction:column;}
+}
+.chat-msg{opacity:0;animation:chatIn .4s ease forwards;}
+.chat-msg:nth-child(1){animation-delay:.2s;}
+.chat-msg:nth-child(2){animation-delay:.8s;}
+.chat-msg:nth-child(3){animation-delay:1.4s;}
+.chat-msg:nth-child(4){animation-delay:2s;}
+@keyframes chatIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.typing-dots{display:flex;gap:4px;padding:.6rem .9rem;background:#fff;border-radius:8px;align-self:flex-start;width:fit-content;border-bottom-left-radius:2px;}
+.typing-dots span{width:7px;height:7px;background:#aaa;border-radius:50%;animation:dot .9s ease infinite;}
+.typing-dots span:nth-child(2){animation-delay:.2s;}
+.typing-dots span:nth-child(3){animation-delay:.4s;}
+@keyframes dot{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-6px);}}
+/* Mobile priority */
+@media(max-width:768px){
+  .star-popup{position:fixed;bottom:2rem;left:1rem;right:1rem;top:auto;width:auto;font-size:1.1rem;padding:1rem 1.2rem;}
+  .flip-card:hover .flip-inner{transform:none;}
+  .year-timeline::before{display:none;}
+  .bucket-add-form{flex-direction:column;}
+  .polaroid:nth-child(odd),.polaroid:nth-child(even){transform:none;}
+  .polaroid:active{transform:scale(.97);}
+  .section-inner{padding:3rem 1.2rem;}
+  .book-page{padding:1.5rem 1.2rem;}
+  #hbCanvas{height:80px;}
+}
+</style>
+</head>
+<body>
+
+<!-- FIREWORKS CANVAS -->
+<canvas id="fireworksCanvas"></canvas>
+
+<!-- STORYBOOK OVERLAY -->
+<div class="storybook-overlay" id="storybookOverlay">
+  <div class="book">
+    <button class="book-close" onclick="closeStorybook()">✕ close</button>
+    <div class="book-pages" id="bookPages">
+      <div class="book-page active" id="bp0">
+        <div class="book-page-num">Page 1</div>
+        <div class="book-chapter">It began with a trip</div>
+        <p class="book-text">Nobody planned it. A sudden winter trip to Nawabganj — fog on the fields, cold air, the kind of quiet that only exists in villages in December. I went because I had to. I stayed because of her.</p>
+      </div>
+      <div class="book-page" id="bp1">
+        <div class="book-page-num">Page 2</div>
+        <div class="book-chapter">The night we didn't sleep</div>
+        <p class="book-text">Ludo. Monopoly. Noodles at 2AM she made without being asked. We stayed up all night talking about everything and nothing, the hours disappearing like they were embarrassed to interrupt us.</p>
+      </div>
+      <div class="book-page" id="bp2">
+        <div class="book-page-num">Page 3</div>
+        <div class="book-chapter">The river, the mud, the flowers</div>
+        <p class="book-text">She swam. I watched from the bank, quietly happy just to be there. Then I slipped in the mud getting up. A spectacular, dignified fall. She laughed. Later I picked flowers for her in a field that smelled like winter and hope.</p>
+      </div>
+      <div class="book-page" id="bp3">
+        <div class="book-page-num">Page 4</div>
+        <div class="book-chapter">She wasn't into me yet</div>
+        <p class="book-text">I knew how I felt long before she did. I picked those flowers for a girl who hadn't said yes yet, carried them across a muddy field, and handed them over like it was the most natural thing in the world. Because for me, it was.</p>
+      </div>
+      <div class="book-page" id="bp4">
+        <div class="book-page-num">Page 5</div>
+        <div class="book-chapter">One whole year</div>
+        <p class="book-text">And now here we are. A year of mornings and late nights, of being found when we got separated, of building something that belongs to just us. She is my favourite story. This is only the beginning of it.</p>
+      </div>
+    </div>
+    <div class="book-nav">
+      <button class="book-btn" id="bookPrev" onclick="bookNav(-1)" disabled>← Prev</button>
+      <div class="book-dots" id="bookDots"></div>
+      <button class="book-btn" id="bookNext" onclick="bookNav(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div style="position:absolute;inset:0;overflow:hidden;" id="loaderPetals"></div>
+  <p class="loader-names">Yash & Tory ❤️🌸</p>
+  <div class="loader-bar-outer"><div class="loader-bar-fill"></div></div>
+  <p class="loader-sub">one beautiful year ❤️🥺</p>
+</div>
+
+<!-- PASSWORD -->
+<div id="pwScreen">
+  <p class="pw-title">Yash & Tory ❤️🌸</p>
+  <p class="pw-sub">This page is locked with love.<br>Enter the password to continue.</p>
+  <div class="pw-dots" id="pwDots">
+    <div class="pw-dot" id="d0"></div><div class="pw-dot" id="d1"></div>
+    <div class="pw-dot" id="d2"></div><div class="pw-dot" id="d3"></div>
+    <div class="pw-dot" id="d4"></div><div class="pw-dot" id="d5"></div>
+  </div>
+  <div class="pw-grid">
+    <button class="pw-key" onclick="pwPress('1')">1</button><button class="pw-key" onclick="pwPress('2')">2</button><button class="pw-key" onclick="pwPress('3')">3</button>
+    <button class="pw-key" onclick="pwPress('4')">4</button><button class="pw-key" onclick="pwPress('5')">5</button><button class="pw-key" onclick="pwPress('6')">6</button>
+    <button class="pw-key" onclick="pwPress('7')">7</button><button class="pw-key" onclick="pwPress('8')">8</button><button class="pw-key" onclick="pwPress('9')">9</button>
+    <button class="pw-key del" onclick="pwDel()">⌫</button><button class="pw-key" onclick="pwPress('0')">0</button><button class="pw-key" onclick="pwSubmit()">↵</button>
+  </div>
+  <p class="pw-error" id="pwError">Hmm, try again 🌸</p>
+  <p class="pw-hint">hint: a date that means something 🌸</p>
+</div>
+
+<!-- FIXED UI BUTTONS -->
+<button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙</button>
+<button id="storybookBtn" onclick="openStorybook()" title="Read our story 📖">📖</button>
+
+<!-- MUSIC PLAYER -->
+<div class="music-player" onclick="openMusic()">
+  <div class="music-btn" id="musicBtn">🎵</div>
+  <div class="music-info">
+    <div class="music-title" id="musicTitle">Our songs</div>
+    <div class="music-sub">tap to play</div>
+  </div>
+  <div class="music-bars paused" id="musicBars"><span></span><span></span><span></span></div>
+</div>
+<div class="music-modal" id="musicModal">
+  <div class="music-modal-inner">
+    <button class="music-close" onclick="closeMusic()">✕</button>
+    <span class="section-label">Our playlist</span>
+    <h3 style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.5rem;color:var(--deep);margin-bottom:.5rem;">Songs that are <em style="color:var(--rose);">us</em></h3>
+    <div class="spotify-embed-section">
+      <div class="spotify-logo">
+        <svg viewBox="0 0 24 24" fill="#1ed760" width="18" height="18"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+        <span>Paste playlist link</span>
+      </div>
+      <input class="spotify-playlist-input" id="playlistUrlModal" placeholder="https://open.spotify.com/playlist/...">
+      <button class="spotify-load-btn" onclick="loadPlaylistModal()">Load Playlist</button>
+      <p class="spotify-hint">Spotify → Share → Copy Link</p>
+      <iframe id="spotifyPlaylistFrame" class="spotify-frame" height="340" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+    <div class="music-song-list">
+      <div class="music-song-item"><span style="font-size:1.1rem;">♪</span><div style="flex:1;"><div style="font-family:'Playfair Display',serif;font-style:italic;font-size:.9rem;color:var(--deep);">Song 1</div><div style="font-size:.78rem;color:var(--mist);">Add a track link below</div><button class="song-spotify-btn" onclick="toggleSpotifyInput(this)">🎵 Add link</button><input class="song-spotify-input" placeholder="open.spotify.com/track/..." onchange="loadTrack(this)"><iframe class="spotify-frame" height="80" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div></div>
+      <div class="music-song-item"><span style="font-size:1.1rem;">♪</span><div style="flex:1;"><div style="font-family:'Playfair Display',serif;font-style:italic;font-size:.9rem;color:var(--deep);">Song 2</div><div style="font-size:.78rem;color:var(--mist);">Add a track link below</div><button class="song-spotify-btn" onclick="toggleSpotifyInput(this)">🎵 Add link</button><input class="song-spotify-input" placeholder="open.spotify.com/track/..." onchange="loadTrack(this)"><iframe class="spotify-frame" height="80" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE MENU -->
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+<div class="mobile-menu" id="mobileMenu">
+<a href="#" onclick="navTo('hero')">Home 🌸</a>
+<a href="#" onclick="navTo('met-section')">How We Met</a>
+<a href="#" onclick="navTo('day-section')">That Day</a>
+<a href="#" onclick="navTo('starfield-section')">Starfield</a>
+<a href="#" onclick="navTo('year-section')">Year in Review</a>
+<a href="#" onclick="navTo('photos-section')">Photos</a>
+<a href="#" onclick="navTo('map-section')">Our Map</a>
+<a href="#" onclick="navTo('letter-section')">Love Letter</a>
+<a href="#" onclick="navTo('bucket-section')">Bucket List</a>
+<a href="#" onclick="navTo('guestbook-section')">Guestbook</a>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#hero">Y & T</a>
+  <ul class="nav-links">
+    <li><a href="#met-section">Met</a></li>
+    <li><a href="#day-section">That Day</a></li>
+    <li><a href="#starfield-section">Stars</a></li>
+    <li><a href="#year-section">Year</a></li>
+    <li><a href="#photos-section">Photos</a></li>
+    <li><a href="#map-section">Map</a></li>
+    <li><a href="#letter-section">Letter</a></li>
+    <li><a href="#bucket-section">Future</a></li>
+    <li><a href="#guestbook-section">Wishes</a></li>
+  </ul>
+  <div class="nav-burger" onclick="openMenu()"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker-wrap"><div class="ticker-track">
+  <span>I love you</span><span class="sep">✦</span><span>আমি তোমাকে ভালোবাসি</span><span class="sep">✦</span><span>Tumi amar shob</span><span class="sep">✦</span><span>One whole year</span><span class="sep">✦</span><span>Nawabganj winter</span><span class="sep">✦</span><span>Noodles & chaa at 2am</span><span class="sep">✦</span><span>The flower field girl</span><span class="sep">✦</span><span>My favourite person</span><span class="sep">✦</span><span>তুমি আমার সব</span><span class="sep">✦</span>
+  <span>I love you</span><span class="sep">✦</span><span>আমি তোমাকে ভালোবাসি</span><span class="sep">✦</span><span>Tumi amar shob</span><span class="sep">✦</span><span>One whole year</span><span class="sep">✦</span><span>Nawabganj winter</span><span class="sep">✦</span><span>Noodles & chaa at 2am</span><span class="sep">✦</span><span>The flower field girl</span><span class="sep">✦</span><span>My favourite person</span><span class="sep">✦</span><span>তুমি আমার সব</span><span class="sep">✦</span>
+</div></div>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="stars" id="starsContainer"></div>
+  <p class="hero-eyebrow">one whole, beautiful year with</p>
+  <h1 class="hero-names">Yash<span class="hero-amp">&amp;</span><span class="tory">Tory</span></h1>
+  <p class="hero-date">30 March · 10:30 AM · Nawabganj, Bangladesh</p>
+  <div class="hero-divider"></div>
+  <p class="hero-tagline">From a cold winter morning in a village I'll never forget, to every quiet moment since — this is ours.</p>
+  <span class="heartbeat-icon">🫀</span>
+  <div class="countdown-wrap">
+    <p class="countdown-label">Until our anniversary</p>
+    <div class="countdown" id="countdown">
+      <div class="cd-unit"><span class="cd-num" id="cd-d">00</span><span class="cd-label">Days</span></div>
+      <span class="cd-sep">:</span>
+      <div class="cd-unit"><span class="cd-num" id="cd-h">00</span><span class="cd-label">Hours</span></div>
+      <span class="cd-sep">:</span>
+      <div class="cd-unit"><span class="cd-num" id="cd-m">00</span><span class="cd-label">Mins</span></div>
+      <span class="cd-sep">:</span>
+      <div class="cd-unit"><span class="cd-num" id="cd-s">00</span><span class="cd-label">Secs</span></div>
+    </div>
+  </div>
+  <button class="confetti-btn" onclick="launchConfetti()">🎉 Celebrate us!</button>
+  <div class="scroll-hint"><span>Scroll</span><div class="scroll-line"></div></div>
+</div>
+
+<!-- WEATHER -->
+<div class="weather-bar reveal" id="weather-section">
+  <div class="weather-inner" id="weatherInner">
+    <div><div class="weather-location">🌍 Nawabganj, Dhaka — right now</div><div class="weather-romantic" id="weatherRomantic">loading...</div></div>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <span class="weather-icon" id="weatherIcon">🌤️</span>
+      <div><div class="weather-temp" id="weatherTemp">—°C</div><div class="weather-desc" id="weatherDesc">Loading...</div></div>
+    </div>
+    <div class="weather-extra" id="weatherExtra"></div>
+  </div>
+</div>
+
+<!-- DAILY LOVE MESSAGE -->
+<div class="daily-section reveal">
+  <div class="daily-inner">
+    <div class="daily-date" id="dailyDate"></div>
+    <div class="daily-msg" id="dailyMsg"></div>
+    <div class="daily-sub" id="dailySub"></div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div id="stats-section" class="reveal">
+  <div class="section-inner" style="text-align:center;">
+    <span class="section-label" style="color:var(--dusty-rose);">By the numbers</span>
+    <h2 class="section-title" style="color:var(--cream);">One year in <em style="color:var(--dusty-rose);">numbers</em></h2>
+    <div class="stats-grid">
+      <div class="stat-card"><span class="stat-num" id="statDays">365</span><span class="stat-unit">days</span><span class="stat-label">of loving you</span></div>
+      <div class="stat-card"><span class="stat-num" id="statHours">—</span><span class="stat-unit">hours</span><span class="stat-label">together in my heart</span></div>
+      <div class="stat-card"><span class="stat-num">∞</span><span class="stat-unit">times</span><span class="stat-label">I've thought of you</span></div>
+      <div class="stat-card"><span class="stat-num">1</span><span class="stat-unit">mud slip</span><span class="stat-label">for love (worth it)</span></div>
+      <div class="stat-card"><span class="stat-num">0</span><span class="stat-unit">regrets</span><span class="stat-label">not a single one</span></div>
+      <div class="stat-card"><span class="stat-num">🌸</span><span class="stat-unit">flowers</span><span class="stat-label">I'll always pick for her</span></div>
+    </div>
+  </div>
+</div>
+<div class="progress-section reveal">
+  <p class="progress-label">One year down · forever to go</p>
+  <div class="progress-bar-outer"><div class="progress-bar-fill" id="progressFill"><div class="progress-dot"></div></div></div>
+  <div class="progress-ends"><span>March 30, 2025</span><span>Forever 🌸</span></div>
+</div>
+
+<!-- HOW WE MET -->
+<div id="met-section" class="reveal">
+  <div class="section-inner">
+    <div class="met-card">
+      <span class="winter-badge">🌫️ Winter · Nawabganj · Dhaka</span>
+      <span class="section-label">Chapter One</span>
+      <h2 class="section-title">How it <em>began</em></h2>
+      <div class="section-body">
+        <p>It wasn't planned. The best things never are.</p><br>
+        <p>A sudden trip to Nawabganj — cold winter air thick with fog, the fields pale and still, the kind of quiet that only villages get when the season turns. The kind of cold that makes you want to be close to someone. I didn't know yet that this trip would become the story I'd tell for the rest of my life.</p><br>
+        <p>She wasn't into me. But somewhere in the mist and the chai and the cold morning light, I was already completely, quietly in love with her. I'm so glad we went.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- THAT DAY -->
+<div id="day-section" class="reveal">
+  <div class="section-inner">
+    <span class="section-label">Chapter Two</span>
+    <h2 class="section-title">The day that <em>changed everything</em></h2>
+    <p class="section-body">We never had an official first date. What we had was better — an entire day that just kept going.</p>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-time">Late night</div><div class="tl-title">The Graveyard Walk</div><div class="tl-body">We walked past a graveyard at night, making jokes like two people who are either very brave or very comfortable with each other. Definitely the second one.</div></div>
+      <div class="tl-item"><div class="tl-time">Her home</div><div class="tl-title">Ludo, Monopoly & Pure Chaos</div><div class="tl-body">Ludo first. Then Monopoly — <em>dhoni howar mojar khela.</em> She bankrupted everyone in the first hour and somehow acted surprised about it. I laughed until it hurt.</div></div>
+      <div class="tl-item"><div class="tl-time">2AM kitchen</div><div class="tl-title">Noodles & Chaa</div><div class="tl-body">She made us noodles and chaa without being asked. Simple, warm, perfect. There's something quietly romantic about someone making food for you at 2AM like it's nothing.</div></div>
+      <div class="tl-item"><div class="tl-time">All night</div><div class="tl-title">We Didn't Sleep</div><div class="tl-body">We stayed up all night. I don't remember every word. I just remember not wanting any of it to stop.</div></div>
+      <div class="tl-item"><div class="tl-time">Morning</div><div class="tl-title">Separated & Reunited</div><div class="tl-body">We moved houses and got separated. Worst few minutes of the whole day. Then we found each other again and everything felt lighter.</div></div>
+      <div class="tl-item"><div class="tl-time">The river</div><div class="tl-title">The River & The Mud Incident 😭</div><div class="tl-body">She swam. I watched from the bank, quietly happy just to be there. Then getting up, I slipped in the wet mud. A full, spectacular, completely dignified fall. Mortifying. Worth it forever.</div></div>
+      <div class="tl-item"><div class="tl-time">Flower field</div><div class="tl-title">I Picked Flowers for Her</div><div class="tl-body">We went to a flower field. I picked some for her and we walked together, laughing at nothing. She wasn't into me yet. I was completely, irrevocably in love — picking flowers like they were the most important things I'd ever held.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- REASONS FLIP CARDS -->
+<div class="reveal" style="background:var(--alt);">
+  <div class="section-inner">
+    <span class="section-label">From my heart</span>
+    <h2 class="section-title">Reasons I <em>love you</em></h2>
+    <p style="font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mist);">tap or hover each card ✦</p>
+    <div class="flip-grid">
+      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">😂</span><span class="flip-front-num">01</span></div><div class="flip-back"><p class="flip-back-text">The way you laugh — completely unfiltered. It's the best sound I know.</p></div></div></div>
+      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">🍜</span><span class="flip-front-num">02</span></div><div class="flip-back"><p class="flip-back-text">You made noodles at 2AM without being asked. That's exactly the kind of person you are.</p></div></div></div>
+      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">🌊</span><span class="flip-front-num">03</span></div><div class="flip-back"><p class="flip-back-text">You dove into that river like it was nothing. You are so much braver than you know.</p></div></div></div>
+      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">🌙</span><span class="flip-front-num">04</span></div><div class="flip-back"><p class="flip-back-text">That you stayed up all night with me and it still never felt like enough time.</p></div></div></div>
+      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">🌸</span><span class="flip-front-num">05</span></div><div class="flip-back"><p class="flip-back-text">The look on your face in the flower field. I was already completely lost before that.</p></div></div></div>
+      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">🎲</span><span class="flip-front-num">06</span></div><div class="flip-back"><p class="flip-back-text">The way you play Monopoly like world peace depends on bankrupting everyone at the table.</p></div></div></div>
+      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">💬</span><span class="flip-front-num">07</span></div><div class="flip-back"><p class="flip-back-text">You make even the hardest conversations feel safe. That's rare. That's everything.</p></div></div></div>
+      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">🫂</span><span class="flip-front-num">08</span></div><div class="flip-back"><p class="flip-back-text">A year in and I still choose you first, every single day. That's my favourite reason.</p></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- STARFIELD -->
+<div id="starfield-section">
+  <span class="section-label" style="color:var(--dusty-rose);">Click a star</span>
+  <h2 class="section-title" style="color:var(--cream);">The reasons I <em style="color:var(--dusty-rose);">fell for you</em></h2>
+  <p style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--mist);font-size:1.05rem;">Every star holds a reason. Tap to find out.</p>
+  <canvas id="starCanvas" width="800" height="380"></canvas>
+  <div class="star-popup hide" id="starPopup"></div>
+</div>
+
+<!-- YEAR IN REVIEW -->
+<div id="year-section" class="reveal">
+  <div class="section-inner">
+    <span class="section-label">Chapter Three</span>
+    <h2 class="section-title">Our year, <em>month by month</em></h2>
+    <div class="year-timeline">
+      <div class="yt-row"><div class="yt-content"><div class="yt-month">March 2025 — It began 🌸</div><div class="yt-text">The trip. The night. The flowers. Everything started here. The best accident of my life.</div></div><div class="yt-dot"></div><div class="yt-spacer"></div></div>
+      <div class="yt-row"><div class="yt-spacer"></div><div class="yt-dot"></div><div class="yt-content"><div class="yt-month">April 2025</div><div class="yt-text">The first month of actually being us. Still figuring it out. Already sure about her.</div></div></div>
+      <div class="yt-row"><div class="yt-content"><div class="yt-month">May 2025</div><div class="yt-text">Something about this month stays with me. Add your memory here.</div></div><div class="yt-dot"></div><div class="yt-spacer"></div></div>
+      <div class="yt-row"><div class="yt-spacer"></div><div class="yt-dot"></div><div class="yt-content"><div class="yt-month">June 2025</div><div class="yt-text">Halfway through the year and still finding new things to love about her.</div></div></div>
+      <div class="yt-row"><div class="yt-content"><div class="yt-month">July–August 2025</div><div class="yt-text">Long hot days. Her laugh making everything cooler. Your best summer memory goes here.</div></div><div class="yt-dot"></div><div class="yt-spacer"></div></div>
+      <div class="yt-row"><div class="yt-spacer"></div><div class="yt-dot"></div><div class="yt-content"><div class="yt-month">September–October 2025</div><div class="yt-text">The season turning. Something shifting between us in the best way.</div></div></div>
+      <div class="yt-row"><div class="yt-content"><div class="yt-month">November–December 2025</div><div class="yt-text">Winter coming back around. Almost a full year. Grateful for all of it.</div></div><div class="yt-dot"></div><div class="yt-spacer"></div></div>
+      <div class="yt-row"><div class="yt-spacer"></div><div class="yt-dot"></div><div class="yt-content"><div class="yt-month">March 2026 — One year 🎉</div><div class="yt-text">Happy anniversary, my love. Here's to every year after this one.</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- MEMORIES -->
+<div class="reveal">
+  <div class="section-inner">
+    <span class="section-label">Moments I keep</span>
+    <h2 class="section-title">Things I <em>never want to forget</em></h2>
+    <div class="memories-grid">
+      <div class="memory-card"><span class="memory-icon">🌊</span><div class="memory-title">The River Adventure</div><div class="memory-text">She swam. I watched. I slipped in mud. It fully counts as an adventure and I will never stop telling this story.</div></div>
+      <div class="memory-card"><span class="memory-icon">🌸</span><div class="memory-title">The Flower Field</div><div class="memory-text">I picked flowers for a girl who wasn't even mine yet. That's how far gone I already was. Completely, happily gone.</div></div>
+      <div class="memory-card"><span class="memory-icon">🎲</span><div class="memory-title">Monopoly Night</div><div class="memory-text">She bankrupted everyone and acted shocked. The entire night was a masterclass in chaos and I loved every second.</div></div>
+      <div class="memory-card"><span class="memory-icon">🏠</span><div class="memory-title">Our Coziest Evening</div><div class="memory-text">One evening, just us. Tea going cold, talking about everything and nothing, her laugh filling the whole room. That was enough.</div></div>
+      <div class="memory-card"><span class="memory-icon">🌧️</span><div class="memory-title">The Hard Part</div><div class="memory-text">We went through something that could have broken us. It didn't. We came out knowing each other better, trusting each other more. That's the part I'm most proud of.</div></div>
+      <div class="memory-card"><span class="memory-icon">☕</span><div class="memory-title">Noodles & Chaa at 2AM</div><div class="memory-text">She made it like it was nothing. It meant everything.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="pull-quote reveal">"She wasn't into me yet.<br>I was already completely lost."</div>
+
+<!-- GIFT UNWRAP -->
+<div id="gift-section" class="reveal">
+  <div class="section-inner" style="text-align:center;max-width:600px;">
+    <span class="section-label" style="color:var(--dusty-rose);">Something for you</span>
+    <h2 class="section-title" style="color:var(--cream);">I got you <em style="color:var(--dusty-rose);">something</em></h2>
+    <p style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--dusty-rose);font-size:1.1rem;margin-bottom:0;">Tap the gift to open it 🎀</p>
+    <div class="gift-wrap" id="giftWrap" onclick="openGift()">
+      <div class="gift-box" id="giftBox">
+        <div class="gift-lid" id="giftLid"><span class="gift-lid-ribbon">🎀</span><span style="font-size:1.5rem;">🌸🌸🌸</span></div>
+        <div class="gift-body"><span style="font-size:2rem;">🎁</span></div>
+      </div>
+    </div>
+    <span class="gift-hint" id="giftHint">tap to unwrap ✦</span>
+    <div class="gift-reveal" id="giftReveal">
+      <div class="gift-message">Happy Anniversary, Tory 🌸</div>
+      <div class="gift-sub">A whole year of you. Of us. Of picking flowers in muddy fields and staying up all night and finding each other again when we got separated. I wouldn't change a single second of it.<br><br>Here's to forever more. — Yash</div>
+    </div>
+  </div>
+</div>
+
+<!-- PHOTOS -->
+<div id="photos-section" class="reveal">
+  <div class="section-inner">
+    <span class="section-label">Chapter Four</span>
+    <h2 class="section-title">Our <em>gallery</em></h2>
+    <p class="section-body">Click any polaroid to add a photo. Tap a photo to view full screen.</p>
+    <div class="polaroid-grid">
+      <div class="polaroid" onclick="openLightbox(0)"><div class="polaroid-img" id="pol0"><span style="font-size:1.5rem;">🌿</span><span style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;">add photo</span><input type="file" accept="image/*" onchange="addPhoto(this,0)" onclick="event.stopPropagation()"></div><div class="polaroid-caption">Nawabganj ✦</div></div>
+      <div class="polaroid" onclick="openLightbox(1)"><div class="polaroid-img" id="pol1"><span style="font-size:1.5rem;">🌸</span><span style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;">add photo</span><input type="file" accept="image/*" onchange="addPhoto(this,1)" onclick="event.stopPropagation()"></div><div class="polaroid-caption">Flower field</div></div>
+      <div class="polaroid" onclick="openLightbox(2)"><div class="polaroid-img" id="pol2"><span style="font-size:1.5rem;">🌊</span><span style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;">add photo</span><input type="file" accept="image/*" onchange="addPhoto(this,2)" onclick="event.stopPropagation()"></div><div class="polaroid-caption">River day ✦</div></div>
+      <div class="polaroid" onclick="openLightbox(3)"><div class="polaroid-img" id="pol3"><span style="font-size:1.5rem;">☕</span><span style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;">add photo</span><input type="file" accept="image/*" onchange="addPhoto(this,3)" onclick="event.stopPropagation()"></div><div class="polaroid-caption">2AM noodles</div></div>
+      <div class="polaroid" onclick="openLightbox(4)"><div class="polaroid-img" id="pol4"><span style="font-size:1.5rem;">🎲</span><span style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;">add photo</span><input type="file" accept="image/*" onchange="addPhoto(this,4)" onclick="event.stopPropagation()"></div><div class="polaroid-caption">Monopoly chaos</div></div>
+      <div class="polaroid" onclick="openLightbox(5)"><div class="polaroid-img" id="pol5"><span style="font-size:1.5rem;">💐</span><span style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;">add photo</span><input type="file" accept="image/*" onchange="addPhoto(this,5)" onclick="event.stopPropagation()"></div><div class="polaroid-caption">Us ♡</div></div>
+    </div>
+  </div>
+</div>
+<div class="lightbox" id="lightbox" onclick="closeLightbox()"><div class="lb-inner" onclick="event.stopPropagation()"><button class="lb-close" onclick="closeLightbox()">✕</button><img class="lb-img" id="lbImg" src="" alt=""><p class="lb-caption" id="lbCaption"></p><div class="lb-nav"><button onclick="lbPrev()">← Prev</button><button onclick="lbNext()">Next →</button></div></div></div>
+
+<!-- MAP -->
+<div id="map-section" class="reveal">
+  <div class="section-inner">
+    <span class="section-label">Where it happened</span>
+    <h2 class="section-title">Our <em>places</em></h2>
+    <div id="map"></div>
+    <div class="map-legend">
+      <div class="map-legend-item"><div class="map-legend-dot" style="background:#c9836a;"></div>Nawabganj — where we met</div>
+      <div class="map-legend-item"><div class="map-legend-dot" style="background:#8fa89a;"></div>The river</div>
+      <div class="map-legend-item"><div class="map-legend-dot" style="background:#d4956a;"></div>The flower field</div>
+      <div class="map-legend-item"><div class="map-legend-dot" style="background:#e8c4b0;"></div>Her home</div>
+    </div>
+  </div>
+</div>
+
+<!-- FIRST TEXTS -->
+<div class="reveal" style="background:var(--alt);">
+  <div class="section-inner" style="max-width:700px;">
+    <span class="section-label">How it started</span>
+    <h2 class="section-title">Our <em>first conversations</em></h2>
+    <div class="chat-wrap">
+      <div class="chat-header"><div class="chat-avatar">🌸</div><div><div class="chat-header-name">Tory</div><div style="font-size:.72rem;color:rgba(255,255,255,.6);">online</div></div></div>
+      <div class="chat-body">
+        <div class="chat-msg recv"><div>Add your first texts here — edit this HTML to put in the real ones 🌸</div><div class="chat-time">seen</div></div>
+        <div class="chat-msg sent"><div>The messages that started everything. You know which ones.</div><div class="chat-time"></div></div>
+        <div class="chat-msg recv"><div>The one that made you smile for an hour after reading it.</div><div class="chat-time">seen</div></div>
+        <div class="chat-msg sent"><div>And the reply that made her think maybe... just maybe.</div><div class="chat-time"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BENGALI -->
+<div class="reveal" style="background:var(--night);">
+  <div class="section-inner" style="text-align:center;">
+    <span class="section-label" style="color:var(--dusty-rose);">আমাদের ভাষা</span>
+    <h2 class="section-title" style="color:var(--cream);">Our <em style="color:var(--dusty-rose);">language</em></h2>
+    <div class="bengali-grid">
+      <div class="bengali-card"><div class="bengali-script">আমি তোমাকে ভালোবাসি</div><div class="bengali-roman">Ami tomake bhalobashi</div><div class="bengali-meaning">I love you</div></div>
+      <div class="bengali-card"><div class="bengali-script">তুমি আমার সব</div><div class="bengali-roman">Tumi amar shob</div><div class="bengali-meaning">You are my everything</div></div>
+      <div class="bengali-card"><div class="bengali-script">তোমাকে ছাড়া থাকতে পারি না</div><div class="bengali-roman">Tomake chhara thakte pari na</div><div class="bengali-meaning">I can't live without you</div></div>
+      <div class="bengali-card"><div class="bengali-script">তুমি আমার স্বপ্নের মানুষ</div><div class="bengali-roman">Tumi amar shopner manush</div><div class="bengali-meaning">Person of my dreams</div></div>
+      <div class="bengali-card"><div class="bengali-script">আমার মন তোমার কাছে</div><div class="bengali-roman">Amar mon tomar kache</div><div class="bengali-meaning">My heart is with you</div></div>
+      <div class="bengali-card"><div class="bengali-script">শুধু তুমি</div><div class="bengali-roman">Shudhu tumi</div><div class="bengali-meaning">Only you</div></div>
+      <div class="bengali-card"><div class="bengali-script">তুমি আমার জান</div><div class="bengali-roman">Tumi amar jaan</div><div class="bengali-meaning">You are my life</div></div>
+      <div class="bengali-card"><div class="bengali-script">তোমাকে দেখলে মন ভালো হয়</div><div class="bengali-roman">Tomake dekhle mon bhalo hoy</div><div class="bengali-meaning">Seeing you makes me happy</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- LOVE LETTER -->
+<div id="letter-section" class="reveal" style="background:radial-gradient(ellipse at center,#ede0d4,var(--bg));text-align:center;">
+  <div class="section-inner" style="max-width:700px;">
+    <span class="section-label">From me, to you</span>
+    <h2 class="section-title">A letter I <em>wrote you</em></h2>
+    <div class="envelope-wrap">
+      <div class="envelope" id="envelope" onclick="openEnvelope()">
+        <div class="envelope-flap"></div>
+        <span class="envelope-seal">🌸</span>
+        <div class="envelope-body">
+          <p class="letter-salutation">My dearest Tory,</p>
+          <p class="letter-body">A year ago I went on a trip I didn't plan and found the person I wasn't looking for. You made noodles at 2AM. You swam in a cold river without hesitating. You played Monopoly like it was a professional sport. And in a flower field on a winter morning, before you'd even said yes to me, I picked flowers for you — because that's what you do when someone already has your whole heart.<br><br>Thank you for this year. Thank you for every conversation, every late night, every moment of being found after getting separated. You are my favourite thing that ever happened to me.<br><br>Happy anniversary. Here's to all the years after this one.</p>
+          <p class="letter-sign">— Yash, always 🌸</p>
+        </div>
+      </div>
+      <span class="envelope-tap">tap to open ✦</span>
+    </div>
+  </div>
+</div>
+
+<!-- HEARTBEAT -->
+<div id="heartbeat-section" class="reveal">
+  <div class="section-inner" style="text-align:center;max-width:700px;">
+    <span class="section-label" style="color:var(--dusty-rose);">My heartbeat for you</span>
+    <h2 class="section-title" style="color:var(--cream);">Every beat <em style="color:var(--dusty-rose);">is yours</em></h2>
+    <canvas id="hbCanvas" width="700" height="120"></canvas>
+    <p class="hb-note">A year of waking up and thinking of you first. A year of your laugh being the best part of any day. A year of being completely, happily, irreversibly yours.</p>
+  </div>
+</div>
+
+<!-- PROMISES -->
+<div class="reveal" style="background:var(--deep);">
+  <div class="section-inner">
+    <span class="section-label" style="color:var(--dusty-rose);">From this day on</span>
+    <h2 class="section-title" style="color:var(--cream);">My <em style="color:var(--dusty-rose);">promises</em> to you</h2>
+    <div class="promises-grid">
+      <div class="promise-card"><div class="promise-num">01</div><div class="promise-text">I promise to always pick flowers for you, even when there's no flower field nearby.</div></div>
+      <div class="promise-card"><div class="promise-num">02</div><div class="promise-text">I promise to always find you when we get separated — even if it's only been five minutes.</div></div>
+      <div class="promise-card"><div class="promise-num">03</div><div class="promise-text">I promise to stay up all night with you whenever you need it — and a few times when you don't.</div></div>
+      <div class="promise-card"><div class="promise-num">04</div><div class="promise-text">I promise to make you laugh as often as possible, even if that means embarrassing myself in the mud.</div></div>
+      <div class="promise-card"><div class="promise-num">05</div><div class="promise-text">I promise to choose you — not because I have to, but because you're the easiest choice I've ever made.</div></div>
+      <div class="promise-card"><div class="promise-num">06</div><div class="promise-text">I promise that no matter what, you will always have someone in your corner. Me. Always me.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- NICKNAMES -->
+<div class="reveal" style="background:var(--night);">
+  <div class="section-inner" style="text-align:center;max-width:700px;">
+    <span class="section-label" style="color:var(--dusty-rose);">Just between us</span>
+    <h2 class="section-title" style="color:var(--cream);">What I call <em style="color:var(--dusty-rose);">her</em></h2>
+    <div class="nickname-grid" id="nicknameGrid">
+      <span class="nickname-tag">Tory</span><span class="nickname-tag">Baby</span><span class="nickname-tag">Jaan</span>
+      <span class="nickname-tag">Pagli</span><span class="nickname-tag">Tori</span><span class="nickname-tag">Love</span><span class="nickname-tag">Shona</span>
+    </div>
+  </div>
+</div>
+
+<!-- SONGS + SPOTIFY -->
+<div class="reveal">
+  <div class="section-inner">
+    <span class="section-label">Our soundtrack</span>
+    <h2 class="section-title">Songs that <em>remind me of you</em></h2>
+    <div class="song-list">
+      <div class="song-item"><span style="font-size:1.3rem;">🎵</span><div style="flex:1;"><div style="font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;color:var(--deep);">Our song</div><div style="font-size:.85rem;color:var(--mist);">The one that plays and I think of you instantly</div><button class="song-spotify-btn" onclick="toggleSpotifyInput(this)">🎵 Add Spotify link</button><input class="song-spotify-input" placeholder="open.spotify.com/track/..." onchange="loadTrack(this)"><iframe class="spotify-frame" height="80" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div></div>
+      <div class="song-item"><span style="font-size:1.3rem;">🎵</span><div style="flex:1;"><div style="font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;color:var(--deep);">The night song</div><div style="font-size:.85rem;color:var(--mist);">What was playing that night in Nawabganj</div><button class="song-spotify-btn" onclick="toggleSpotifyInput(this)">🎵 Add Spotify link</button><input class="song-spotify-input" placeholder="open.spotify.com/track/..." onchange="loadTrack(this)"><iframe class="spotify-frame" height="80" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div></div>
+      <div class="song-item"><span style="font-size:1.3rem;">🎵</span><div style="flex:1;"><div style="font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;color:var(--deep);">Add a song</div><div style="font-size:.85rem;color:var(--mist);">A song that's just ours</div><button class="song-spotify-btn" onclick="toggleSpotifyInput(this)">🎵 Add Spotify link</button><input class="song-spotify-input" placeholder="open.spotify.com/track/..." onchange="loadTrack(this)"><iframe class="spotify-frame" height="80" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div></div>
+    </div>
+    <div class="spotify-embed-section" style="margin-top:2rem;">
+      <div class="spotify-logo"><svg viewBox="0 0 24 24" fill="#1ed760" width="18" height="18"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg><span>Our Playlist</span></div>
+      <input class="spotify-playlist-input" id="playlistUrlPage" placeholder="https://open.spotify.com/playlist/...">
+      <button class="spotify-load-btn" onclick="loadPlaylistPage()">Load Our Playlist</button>
+      <p class="spotify-hint">Spotify → Share → Copy Link → paste above</p>
+      <iframe id="spotifyPlaylistPage" class="spotify-frame" height="420" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- BUCKET LIST -->
+<div id="bucket-section" class="reveal">
+  <div class="section-inner">
+    <span class="section-label">Our future</span>
+    <h2 class="section-title">Things we'll do <em>together</em></h2>
+    <p class="section-body">Our bucket list. Both of us can add to it. Check things off when they happen. Saved forever. 🌸</p>
+    <div class="bucket-grid" id="bucketGrid"><p class="bucket-loading">Loading dreams... 🌸</p></div>
+    <div class="bucket-add-form">
+      <input class="bucket-input" id="bucketInput" placeholder="Add something to our list..." maxlength="100" onkeydown="if(event.key==='Enter')addBucketItem()">
+      <select class="bucket-who" id="bucketWho"><option value="Yash">Added by Yash 🌸</option><option value="Tory">Added by Tory 💕</option></select>
+      <button class="bucket-submit" onclick="addBucketItem()">Add to our list</button>
+    </div>
+  </div>
+</div>
+
+<!-- GUESTBOOK -->
+<div id="guestbook-section" class="reveal">
+  <div class="section-inner">
+    <span class="section-label" style="color:var(--dusty-rose);">Love from everyone</span>
+    <h2 class="section-title" style="color:var(--cream);">Wishes from <em style="color:var(--dusty-rose);">our people</em></h2>
+    <p style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--dusty-rose);font-size:1.1rem;margin-bottom:.5rem;">Everyone who loves you both, leaving a piece of that love here.</p>
+    <a class="gb-link" href="guestbook.html" target="_blank">🌸 Leave a wish</a>
+    <div class="guestbook-grid" id="guestbookGrid"><p class="gb-empty" style="color:var(--mist);">Loading wishes... 🌸</p></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-names">Yash &amp; Tory</span>
+  <p>March 30, 2025 → March 30, 2026 · Nawabganj, Dhaka, Bangladesh</p>
+  <p style="margin-top:.5rem;font-family:'Great Vibes',cursive;font-size:1.6rem;color:var(--rose);opacity:1;">Happy first anniversary, my love 🌸</p>
+  <small>Made with love, by Yash — for Tory. Every single word.</small>
+</footer>
+
+<!-- SUPABASE + LEAFLET + SCRIPTS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+const SB_URL='https://dnawslmeqkcqiyrqyafj.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRuYXdzbG1lcWtjcWl5cnF5YWZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA2NjE3MDcsImV4cCI6MjA4NjIzNzcwN30.1DKTCy4OlS-gRAjGIWnwnOav3LIzTeUeLw-q3c33wKw';
+async function sb(path,opts={}){return fetch(SB_URL+'/rest/v1/'+path,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation',...(opts.headers||{})},  ...opts});}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+/* ── LOADER ── */
+for(let i=0;i<10;i++){const p=document.createElement('div');p.className='lp';p.textContent=['🌸','✨','🌷','💕'][Math.floor(Math.random()*4)];p.style.cssText=`left:${Math.random()*100}vw;font-size:1.2rem;animation-duration:${6+Math.random()*8}s;animation-delay:${Math.random()*4}s;`;document.getElementById('loaderPetals').appendChild(p);}
+setTimeout(()=>document.getElementById('loader').classList.add('hide'),2800);
+
+/* ── PASSWORD ── */
+const PW='040500';let pwIn='';
+function pwPress(d){if(pwIn.length>=6)return;pwIn+=d;updDots();if(pwIn.length===6)setTimeout(pwSubmit,300);}
+function pwDel(){pwIn=pwIn.slice(0,-1);updDots();}
+function updDots(){for(let i=0;i<6;i++)document.getElementById('d'+i).classList.toggle('filled',i<pwIn.length);}
+function pwSubmit(){
+  if(pwIn===PW){document.getElementById('pwScreen').classList.add('hide');}
+  else{const e=document.getElementById('pwError');e.classList.add('show');document.getElementById('pwDots').style.animation='shake .4s ease';setTimeout(()=>{e.classList.remove('show');document.getElementById('pwDots').style.animation='';},1500);pwIn='';updDots();}
+}
+document.addEventListener('keydown',e=>{if(document.getElementById('pwScreen').classList.contains('hide'))return;if(/^[0-9]$/.test(e.key))pwPress(e.key);if(e.key==='Backspace')pwDel();if(e.key==='Enter')pwSubmit();});
+
+/* ── PETALS ── */
+for(let i=0;i<18;i++){const p=document.createElement('div');p.className='petal';p.style.cssText=`left:${Math.random()*100}vw;animation-duration:${12+Math.random()*14}s;animation-delay:${Math.random()*15}s;transform:scale(${.5+Math.random()});`;document.body.appendChild(p);}
+
+/* ── STARS HERO ── */
+const sc=document.getElementById('starsContainer');
+for(let i=0;i<30;i++){const s=document.createElement('div');s.className='star';const sz=1+Math.random()*2;s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;animation-duration:${2+Math.random()*3}s;animation-delay:${Math.random()*4}s;`;sc.appendChild(s);}
+
+/* ── THEME ── */
+let dark=false;
+function toggleTheme(){dark=!dark;document.documentElement.setAttribute('data-theme',dark?'dark':'');document.getElementById('themeToggle').textContent=dark?'☀️':'🌙';}
+
+/* ── COUNTDOWN ── */
+function tick(){
+  const t=new Date('2026-03-30T10:30:00+06:00'),n=new Date(),diff=t-n;
+  if(diff<=0){document.getElementById('countdown').innerHTML='<span style="font-family:Great Vibes,cursive;font-size:2.5rem;color:var(--rose)">Happy Anniversary, Tory! 🌸</span>';triggerFireworks();return;}
+  const d=Math.floor(diff/86400000),h=Math.floor((diff%86400000)/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
+  document.getElementById('cd-d').textContent=String(d).padStart(2,'0');
+  document.getElementById('cd-h').textContent=String(h).padStart(2,'0');
+  document.getElementById('cd-m').textContent=String(m).padStart(2,'0');
+  document.getElementById('cd-s').textContent=String(s).padStart(2,'0');
+}
+tick();setInterval(tick,1000);
+
+/* ── CHECK IF ANNIVERSARY TODAY ── */
+const now=new Date();
+if(now.getMonth()===2&&now.getDate()===30)setTimeout(triggerFireworks,3000);
+
+/* ── STATS ── */
+const startDate=new Date('2025-03-30T10:30:00+06:00');
+const dTogether=Math.floor((new Date()-startDate)/86400000);
+document.getElementById('statDays').textContent=dTogether>0?dTogether:365;
+document.getElementById('statHours').textContent=dTogether>0?(dTogether*24).toLocaleString():'8,760';
+setTimeout(()=>{const f=document.getElementById('progressFill');if(f)f.style.width='100%';},600);
+
+/* ── WEATHER ── */
+function loadWeather(){
+  const codes={0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',61:'🌧️',63:'🌧️',71:'❄️',80:'🌦️',95:'⛈️'};
+  const romantics=['The same sky that was over us that winter morning','A sky that\'s seen our whole story','Whatever the weather, I\'d go back to Nawabganj for you','Even the clouds know this place is ours'];
+  fetch('https://api.weatherapi.com/v1/current.json?key=3b9c041a4afd451299e224831250406&q=23.660970,90.162110&aqi=no')
+    .then(r=>{if(!r.ok)throw new Error();return r.json();})
+    .then(d=>{
+      const c=d.current;
+      document.getElementById('weatherIcon').innerHTML=`<img src="https:${c.condition.icon}" style="width:40px;height:40px;">`;
+      document.getElementById('weatherTemp').textContent=Math.round(c.temp_c)+'°C';
+      document.getElementById('weatherDesc').textContent=c.condition.text;
+      document.getElementById('weatherExtra').innerHTML=`<span>💨 ${Math.round(c.wind_kph)} km/h</span><span>💧 ${c.humidity}%</span><span>🌡️ Feels ${Math.round(c.feelslike_c)}°C</span>`;
+      document.getElementById('weatherRomantic').textContent=romantics[Math.floor(Math.random()*romantics.length)];
+    })
+    .catch(()=>{document.getElementById('weatherRomantic').textContent='Nawabganj — where it all began 🌸';});
+}
+loadWeather();
+
+/* ── DAILY LOVE MESSAGE ── */
+const msgs=[
+  {msg:'Today I woke up and thought of you first.',sub:'Same as every day. Same as forever.'},
+  {msg:'Every ordinary day with you is extraordinary.',sub:'That\'s just the effect you have.'},
+  {msg:'I\'d slip in that mud a thousand times over.',sub:'As long as you\'re there to laugh about it.'},
+  {msg:'You are my favourite person to stay up with.',sub:'Even when we should absolutely be sleeping.'},
+  {msg:'The flower field was just the beginning.',sub:'Everything since has been better.'},
+  {msg:'I chose you today. I\'ll choose you again tomorrow.',sub:'And the day after. And every one after that.'},
+  {msg:'A year ago, a village in winter changed my life.',sub:'Because you were in it.'},
+  {msg:'Some people come into your life like a storm.',sub:'You came in like a warm winter morning.'},
+  {msg:'You made noodles at 2AM without being asked.',sub:'I knew then. I knew.'},
+  {msg:'Today\'s reason I love you: just because.',sub:'No reason needed. Just you.'},
+  {msg:'আজও তোমাকে ভালোবাসি।',sub:'Today. Tomorrow. Always.'},
+  {msg:'I still smile thinking about the graveyard walk.',sub:'We were so ridiculous. I loved it.'},
+];
+const today=new Date();
+const msgIdx=(today.getFullYear()*366+today.getMonth()*31+today.getDate())%msgs.length;
+const dm=msgs[msgIdx];
+document.getElementById('dailyMsg').textContent=dm.msg;
+document.getElementById('dailySub').textContent=dm.sub;
+document.getElementById('dailyDate').textContent=today.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+/* ── SCROLL REVEAL ── */
+const obs=new IntersectionObserver(en=>{en.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.07});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+/* ── CONFETTI ── */
+function launchConfetti(){
+  const colors=['#c9836a','#e8c4b0','#d4956a','#f5ede0','#8fa89a','#c8a97e'];
+  for(let i=0;i<90;i++){const c=document.createElement('div');c.className='confetti-piece';c.style.left=(15+Math.random()*70)+'vw';c.style.top='-10px';c.style.background=colors[Math.floor(Math.random()*colors.length)];c.style.borderRadius=Math.random()>.5?'50%':'2px';c.style.animationDuration=(1.5+Math.random()*2)+'s';c.style.animationDelay=(Math.random()*.8)+'s';c.style.width=(6+Math.random()*8)+'px';c.style.height=(8+Math.random()*10)+'px';document.body.appendChild(c);setTimeout(()=>c.remove(),4000);}
+}
+
+/* ── FIREWORKS ── */
+const fwCanvas=document.getElementById('fireworksCanvas');
+const fwCtx=fwCanvas.getContext('2d');
+let fwParticles=[];
+function resizeFW(){fwCanvas.width=window.innerWidth;fwCanvas.height=window.innerHeight;}
+resizeFW();window.addEventListener('resize',resizeFW);
+function triggerFireworks(){
+  fwCanvas.classList.add('active');
+  for(let i=0;i<8;i++)setTimeout(()=>spawnBurst(),i*400);
+  setTimeout(()=>{fwCanvas.classList.remove('active');fwParticles=[];},8000);
+  animFW();
+}
+function spawnBurst(){
+  const x=Math.random()*fwCanvas.width,y=Math.random()*fwCanvas.height*.6;
+  const colors=['#c9836a','#e8c4b0','#d4956a','#fff','#8fa89a','#f5ede0'];
+  for(let i=0;i<60;i++){const a=Math.random()*Math.PI*2,sp=2+Math.random()*6;fwParticles.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,color:colors[Math.floor(Math.random()*colors.length)],size:2+Math.random()*3});}
+}
+function animFW(){
+  if(!fwCanvas.classList.contains('active'))return;
+  fwCtx.clearRect(0,0,fwCanvas.width,fwCanvas.height);
+  fwParticles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.05;p.life-=.015;fwCtx.globalAlpha=p.life;fwCtx.fillStyle=p.color;fwCtx.beginPath();fwCtx.arc(p.x,p.y,p.size,0,Math.PI*2);fwCtx.fill();});
+  fwParticles=fwParticles.filter(p=>p.life>0);
+  fwCtx.globalAlpha=1;
+  requestAnimationFrame(animFW);
+}
+
+/* ── STARFIELD ── */
+const starReasons=[
+  'Your laugh. I could listen to it forever.',
+  'You made food for me without being asked.',
+  'The way you dove into that river without hesitating.',
+  'You stayed up all night with me just talking.',
+  'The look on your face in the flower field.',
+  'You make every hard thing feel a little lighter.',
+  'Your complete, joyful chaos at Monopoly.',
+  'The way you held my hand that first time.',
+  'You are brave in ways you don\'t even see.',
+  'Every time we got separated and found each other.',
+  'You are my favourite kind of trouble.',
+  'Your warmth. You make everywhere feel like home.',
+  'The way you laugh at my jokes even when they\'re bad.',
+  'You chose me back. That changed everything.',
+  'Nawabganj in winter. Because of you.',
+];
+const sfCanvas=document.getElementById('starCanvas');
+const sfCtx=sfCanvas.getContext('2d');
+let sfStars=[];
+function initStars(){
+  sfCanvas.width=Math.min(800,sfCanvas.parentElement.offsetWidth-40);
+  sfCanvas.height=380;
+  sfStars=starReasons.map((reason,i)=>({x:30+Math.random()*(sfCanvas.width-60),y:20+Math.random()*(sfCanvas.height-40),r:1.5+Math.random()*2.5,pulse:Math.random()*Math.PI*2,reason,idx:i}));
+  drawStars();
+}
+function drawStars(){
+  sfCtx.clearRect(0,0,sfCanvas.width,sfCanvas.height);
+  sfStars.forEach(s=>{
+    s.pulse+=.03;
+    const glow=Math.sin(s.pulse)*.5+.5;
+    sfCtx.beginPath();sfCtx.arc(s.x,s.y,s.r*(1+glow*.3),0,Math.PI*2);
+    sfCtx.fillStyle=`rgba(212,149,106,${.5+glow*.5})`;sfCtx.fill();
+    sfCtx.beginPath();sfCtx.arc(s.x,s.y,s.r*2.5,0,Math.PI*2);
+    sfCtx.fillStyle=`rgba(201,131,106,${.1+glow*.15})`;sfCtx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+initStars();window.addEventListener('resize',initStars);
+
+const sfPopup=document.getElementById('starPopup');
+function sfClick(e){
+  e.preventDefault();
+  const touch=e.touches?e.touches[0]:e;
+  const rect=sfCanvas.getBoundingClientRect();
+  const cx=touch.clientX-rect.left;
+  const cy=touch.clientY-rect.top;
+  const hit=sfStars.find(s=>Math.hypot(s.x-cx,s.y-cy)<28);
+  if(hit){
+    sfPopup.textContent=hit.reason;
+    sfPopup.style.left=Math.min(touch.clientX,window.innerWidth-240)+'px';
+    sfPopup.style.top=Math.max(touch.clientY-60,10)+'px';
+    sfPopup.classList.remove('hide');
+    clearTimeout(sfPopup._t);sfPopup._t=setTimeout(()=>sfPopup.classList.add('hide'),3000);
+  }
+}
+sfCanvas.addEventListener('click',sfClick);
+sfCanvas.addEventListener('touchstart',sfClick,{passive:false});
+
+/* ── GIFT UNWRAP ── */
+let giftOpened=false;
+function openGift(){
+  const now=new Date();
+  const isAnniversary=now.getMonth()===2&&now.getDate()===30; // March 30
+  if(!isAnniversary){
+    const target=new Date('2026-03-30');
+    const diff=Math.ceil((target-now)/86400000);
+    alert(`This gift opens on March 30 🌸\n${diff} days to go 💕`);
+    return;
+  }
+  if(giftOpened)return;
+  giftOpened=true;
+  document.getElementById('giftHint').style.display='none';
+  document.getElementById('giftLid').classList.add('fly');
+  setTimeout(()=>{
+    document.getElementById('giftBox').style.display='none';
+    document.getElementById('giftReveal').classList.add('show');
+    launchConfetti();triggerFireworks();
+  },600);
+}
+
+/* ── STORYBOOK ── */
+let bookPage=0;const totalPages=5;
+function initBook(){
+  const dots=document.getElementById('bookDots');dots.innerHTML='';
+  for(let i=0;i<totalPages;i++){const d=document.createElement('div');d.className='book-dot'+(i===0?' active':'');d.onclick=()=>goBookPage(i);dots.appendChild(d);}
+}
+function goBookPage(n){
+  document.getElementById('bp'+bookPage).classList.remove('active');
+  bookPage=n;
+  document.getElementById('bp'+bookPage).classList.add('active');
+  document.querySelectorAll('.book-dot').forEach((d,i)=>d.classList.toggle('active',i===bookPage));
+  document.getElementById('bookPrev').disabled=bookPage===0;
+  document.getElementById('bookNext').disabled=bookPage===totalPages-1;
+}
+function bookNav(dir){goBookPage(Math.max(0,Math.min(totalPages-1,bookPage+dir)));}
+function openStorybook(){document.getElementById('storybookOverlay').classList.add('open');}
+function closeStorybook(){document.getElementById('storybookOverlay').classList.remove('open');}
+initBook();
+
+/* ── HEARTBEAT CANVAS ── */
+const hbCanvas=document.getElementById('hbCanvas');
+const hbCtx=hbCanvas.getContext('2d');
+let hbT=0;
+function resizeHB(){hbCanvas.width=Math.min(700,hbCanvas.parentElement.offsetWidth-40);hbCanvas.height=120;}
+resizeHB();window.addEventListener('resize',resizeHB);
+function drawHB(){
+  hbCtx.clearRect(0,0,hbCanvas.width,hbCanvas.height);
+  hbCtx.strokeStyle='#c9836a';hbCtx.lineWidth=2;hbCtx.shadowBlur=8;hbCtx.shadowColor='#c9836a';
+  hbCtx.beginPath();
+  const W=hbCanvas.width,H=hbCanvas.height,mid=H/2;
+  for(let x=0;x<W;x++){
+    const t=(x/W*4+hbT)%(1);
+    let y=mid;
+    const p=t%1;
+    if(p<.05)y=mid;
+    else if(p<.1)y=mid-(p-.05)/.05*H*.35;
+    else if(p<.15)y=mid-(1-(p-.1)/.05)*H*.35;
+    else if(p<.2)y=mid+(p-.15)/.05*H*.2;
+    else if(p<.25)y=mid+(1-(p-.2)/.05)*H*.2;
+    else y=mid;
+    if(x===0)hbCtx.moveTo(x,y);else hbCtx.lineTo(x,y);
+  }
+  hbCtx.stroke();hbCtx.shadowBlur=0;
+  hbT+=.005;
+  requestAnimationFrame(drawHB);
+}
+drawHB();
+
+/* ── PHOTOS ── */
+const photoSrcs=Array(6).fill(null);
+function addPhoto(input,idx){if(!input.files[0])return;const r=new FileReader();r.onload=e=>{photoSrcs[idx]=e.target.result;const s=document.getElementById('pol'+idx);s.innerHTML='';const img=document.createElement('img');img.src=e.target.result;s.appendChild(img);};r.readAsDataURL(input.files[0]);}
+let lbIdx=0;
+function openLightbox(idx){if(!photoSrcs[idx])return;lbIdx=idx;document.getElementById('lbImg').src=photoSrcs[idx];const caps=document.querySelectorAll('.polaroid-caption');document.getElementById('lbCaption').textContent=caps[idx]?caps[idx].textContent:'';document.getElementById('lightbox').classList.add('open');}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
+function lbPrev(){let n=(lbIdx-1+6)%6;while(!photoSrcs[n]&&n!==lbIdx)n=(n-1+6)%6;openLightbox(n);}
+function lbNext(){let n=(lbIdx+1)%6;while(!photoSrcs[n]&&n!==lbIdx)n=(n+1)%6;openLightbox(n);}
+
+/* ── MAP ── */
+const mapEl=document.getElementById('map');
+if(mapEl){
+  const map=L.map('map',{scrollWheelZoom:false}).setView([23.7241,90.4075],14);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:18}).addTo(map);
+  const mkI=c=>L.divIcon({html:`<div style="width:18px;height:18px;background:${c};border-radius:50%;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.3);"></div>`,iconSize:[18,18],className:''});
+  L.marker([23.7241,90.4075],{icon:mkI('#c9836a')}).addTo(map).bindPopup('<b style="font-family:Playfair Display,serif;">Nawabganj</b><br><span style="font-size:.85rem;">Where everything began 🌸</span>');
+  L.marker([23.7220,90.4050],{icon:mkI('#8fa89a')}).addTo(map).bindPopup('<b style="font-family:Playfair Display,serif;">The River</b><br><span style="font-size:.85rem;">She swam. I slipped in mud. 🌊</span>');
+  L.marker([23.7260,90.4110],{icon:mkI('#d4956a')}).addTo(map).bindPopup('<b style="font-family:Playfair Display,serif;">The Flower Field</b><br><span style="font-size:.85rem;">I picked flowers for her here 🌸</span>');
+  L.marker([23.7235,90.4080],{icon:mkI('#e8c4b0')}).addTo(map).bindPopup('<b style="font-family:Playfair Display,serif;">Her Home</b><br><span style="font-size:.85rem;">Noodles, chaa & Monopoly 🎲</span>');
+}
+
+/* ── ENVELOPE ── */
+function openEnvelope(){document.getElementById('envelope').classList.add('open');}
+
+/* ── SPOTIFY ── */
+function getSpotifyEmbed(url){for(const t of['track','playlist','album']){const m=url.match(new RegExp(`spotify\\.com\\/${t}\\/([a-zA-Z0-9]+)`));if(m)return`https://open.spotify.com/embed/${t}/${m[1]}?utm_source=generator&theme=0`;}return null;}
+function loadTrack(input){
+  const eu=getSpotifyEmbed(input.value.trim());
+  const f=input.nextElementSibling;
+  if(eu&&f&&f.tagName==='IFRAME'){
+    f.src=eu;f.classList.add('visible');
+    localStorage.setItem('spotify_'+input.placeholder.slice(0,10),input.value.trim());
+  }
+}
+function toggleSpotifyInput(btn){const i=btn.nextElementSibling;i.classList.toggle('open');if(i.classList.contains('open'))i.focus();}
+function loadPlaylistPage(){
+  const url=document.getElementById('playlistUrlPage').value.trim();
+  const eu=getSpotifyEmbed(url);const f=document.getElementById('spotifyPlaylistPage');
+  if(eu){f.src=eu;f.classList.add('visible');localStorage.setItem('spotify_playlist_page',url);}
+  else alert('Paste a valid Spotify link 🌸');
+}
+function loadPlaylistModal(){
+  const url=document.getElementById('playlistUrlModal').value.trim();
+  const eu=getSpotifyEmbed(url);const f=document.getElementById('spotifyPlaylistFrame');
+  if(eu){f.src=eu;f.classList.add('visible');localStorage.setItem('spotify_playlist_modal',url);}
+  else alert('Paste a valid Spotify link 🌸');
+}
+function openMusic(){document.getElementById('musicModal').classList.add('open');}
+function closeMusic(){document.getElementById('musicModal').classList.remove('open');}
+
+/* ── FLIP CARDS ── */
+document.querySelectorAll('.flip-card').forEach(c=>{c.addEventListener('click',()=>{if(window.matchMedia('(hover:none)').matches)c.classList.toggle('flipped');});});
+
+/* ── NICKNAMES ── */
+function addNickname(){const n=prompt('Add a nickname for Tory 🌸');if(!n||!n.trim())return;const g=document.getElementById('nicknameGrid'),b=g.querySelector('.nickname-add-btn');const t=document.createElement('span');t.className='nickname-tag';t.textContent=n.trim();g.insertBefore(t,b);}
+
+/* ── MOBILE MENU ── */
+function openMenu(){document.getElementById('mobileMenu').classList.add('open');document.getElementById('menuOverlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeMenu(){document.getElementById('mobileMenu').classList.remove('open');document.getElementById('menuOverlay').classList.remove('open');document.body.style.overflow='';}
+
+/* ── BUCKET LIST (SUPABASE) ── */
+async function loadBucketList(){
+  const grid=document.getElementById('bucketGrid');
+  try{
+    const r=await sb('bucket_list?select=*&order=created_at.asc');
+    const data=await r.json();
+    if(!data.length){grid.innerHTML='<p class="bucket-loading">No dreams yet — add the first one! 🌸</p>';return;}
+    grid.innerHTML=data.map(item=>`
+      <div class="bucket-item${item.completed?' done':''}" onclick="toggleBucket('${item.id}',${item.completed})">
+        <div class="bucket-check">${item.completed?'✓':''}</div>
+        <span class="bucket-emoji">${esc(item.emoji||'🌸')}</span>
+        <div>
+          <div class="bucket-text">${esc(item.item)}</div>
+          <div class="bucket-by">— ${esc(item.added_by||'Yash')}</div>
+        </div>
+      </div>`).join('');
+  }catch(e){grid.innerHTML='<p class="bucket-loading">Couldn\'t load right now 🌸</p>';}
+}
+
+async function addBucketItem(){
+  const inp=document.getElementById('bucketInput');
+  const item=inp.value.trim();if(!item)return;
+  const who=document.getElementById('bucketWho').value;
+  const emojis=['🌸','🌊','✈️','🎭','🌙','🏔️','🎉','💕','🎶','🌺'];
+  const emoji=emojis[Math.floor(Math.random()*emojis.length)];
+  try{
+    await sb('bucket_list',{method:'POST',body:JSON.stringify({item,added_by:who,emoji,completed:false})});
+    inp.value='';loadBucketList();
+  }catch(e){alert('Couldn\'t save right now 🌸');}
+}
+
+async function toggleBucket(id,done){
+  try{
+    await sb(`bucket_list?id=eq.${id}`,{method:'PATCH',body:JSON.stringify({completed:!done})});
+    loadBucketList();
+  }catch(e){}
+}
+
+/* ── GUESTBOOK (SUPABASE) ── */
+async function loadGuestbook(){
+  const grid=document.getElementById('guestbookGrid');
+  try{
+    const r=await sb('guestbook?select=*&order=created_at.desc&limit=12');
+    const data=await r.json();
+    if(!data.length){grid.innerHTML='<p class="gb-empty">No wishes yet — share the guestbook link with your friends! 🌸</p>';return;}
+    grid.innerHTML=data.map((w,i)=>`
+      <div class="gb-card" style="animation-delay:${i*.06}s">
+        <span class="gb-emoji">${esc(w.emoji||'🌸')}</span>
+        <div class="gb-name">${esc(w.name)}</div>
+        <div class="gb-message">${esc(w.message)}</div>
+        <div class="gb-date">${new Date(w.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</div>
+      </div>`).join('');
+  }catch(e){grid.innerHTML='<p class="gb-empty">Couldn\'t load wishes right now 🌸</p>';}
+}
+
+/* ── INIT ── */
+loadBucketList();
+loadGuestbook();
+setInterval(loadGuestbook,60000);
+/* ── RESTORE SPOTIFY ── */
+document.querySelectorAll('.song-spotify-input').forEach(input=>{
+  const saved=localStorage.getItem('spotify_'+input.placeholder.slice(0,10));
+  if(saved){input.value=saved;input.classList.add('open');loadTrack(input);}
+});
+const savedPlaylist=localStorage.getItem('spotify_playlist_page');
+if(savedPlaylist){
+  document.getElementById('playlistUrlPage').value=savedPlaylist;
+  loadPlaylistPage();
+}
+const savedModal=localStorage.getItem('spotify_playlist_modal');
+if(savedModal){
+  document.getElementById('playlistUrlModal').value=savedModal;
+}
+
+function navTo(id){
+  closeMenu();
+  setTimeout(()=>{
+    const el=document.getElementById(id);
+    if(el)el.scrollIntoView({behavior:'smooth'});
+  },400);
+}
+</script>
+</body>
+</html>
