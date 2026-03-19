@@ -105,10 +105,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:5000;display:flex;justify-conten
 .nav-links a:hover{opacity:1;}
 .nav-burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;}
 .nav-burger span{width:24px;height:1.5px;background:var(--warm-brown);display:block;transition:all .3s;}
-.mobile-menu{position:fixed;top:0;right:-100%;width:75%;max-width:280px;height:100vh;height:100dvh;background:var(--bg);z-index:4999;padding:5rem 2rem 4rem;display:flex;flex-direction:column;gap:1.5rem;transition:right .4s ease;box-shadow:-8px 0 40px rgba(42,26,16,.1);overflow-y:auto;overflow-x:hidden;}
+.mobile-menu{position:fixed;top:0;right:-100%;width:75%;max-width:280px;height:100vh;background:var(--bg);z-index:4999;padding:5rem 2rem 2rem;display:flex;flex-direction:column;gap:1.5rem;transition:right .4s ease;box-shadow:-8px 0 40px rgba(42,26,16,.1);}
 .mobile-menu.open{right:0;}
 .mobile-menu a{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--deep);text-decoration:none;font-style:italic;}
-.menu-overlay{position:fixed;inset:0;top:0;left:0;width:100vw;height:100vh;height:100dvh;background:rgba(0,0,0,.3);z-index:4998;opacity:0;pointer-events:none;transition:opacity .3s;}
+.menu-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:4998;opacity:0;pointer-events:none;transition:opacity .3s;}
 .menu-overlay.open{opacity:1;pointer-events:all;}
 
 /* ══ TICKER ══ */
