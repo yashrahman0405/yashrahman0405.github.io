@@ -9,6 +9,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <style>
+  .music-player {
+  display: none !important;
+}
 /* ══ VARIABLES ══ */
 :root{
   --rose:#c9836a; --amber:#d4956a; --dusty-rose:#e8c4b0;
@@ -750,6 +753,29 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
   .guestbook-grid{grid-template-columns:1fr;}
   .ifwewere-grid{grid-template-columns:1fr 1fr;}
 }
+.debug-panel{
+  position:fixed;bottom:1.2rem;left:1.2rem;z-index:9999;
+  background:#0a0a0a;border:1px solid #333;border-radius:10px;
+  padding:1rem;width:260px;
+  font-family:monospace;font-size:.78rem;color:#ccc;
+  box-shadow:0 8px 32px rgba(0,0,0,.6);
+  display:none;
+}
+.debug-panel.open{display:block;}
+.debug-title{color:#f0c060;font-weight:bold;margin-bottom:.7rem;font-size:.82rem;display:flex;justify-content:space-between;align-items:center;}
+.debug-close{background:none;border:none;color:#888;cursor:pointer;font-size:1rem;padding:0;}
+.debug-section{margin-bottom:.6rem;color:#888;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;border-top:1px solid #222;padding-top:.5rem;margin-top:.5rem;}
+.debug-btn{
+  display:block;width:100%;text-align:left;
+  background:#1a1a1a;border:1px solid #333;border-radius:4px;
+  color:#ddd;padding:.4rem .6rem;margin-bottom:.3rem;
+  cursor:pointer;font-family:monospace;font-size:.76rem;
+  transition:background .15s;
+}
+.debug-btn:active{background:#2a2a2a;color:#f0c060;}
+.debug-btn.danger{border-color:#5a2020;color:#e08080;}
+.debug-btn.success{border-color:#205a30;color:#80e090;}
+.debug-status{margin-top:.6rem;padding:.4rem .6rem;background:#111;border-radius:4px;color:#888;font-size:.7rem;min-height:1.4em;word-break:break-all;}
 </style>
 </head>
 <body>
@@ -759,6 +785,22 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
 <!-- AMBIENT -->
 <audio id="ambientAudio" loop>
   <source src="https://cdn.pixabay.com/audio/2022/08/04/audio_2dde668d05.mp3" type="audio/mpeg">
+</audio>
+
+<!-- SOUND EFFECTS — replace src paths with your own files if desired -->
+<!-- confetti.mp3 / fireworks.mp3 should be in same folder as the HTML -->
+<!-- Free alternatives: use the pixabay CDN links below as fallbacks -->
+<audio id="sfxConfetti" preload="auto">
+  <source src="sounds/confetti.mp3" type="audio/mpeg">
+  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_1a415bab4a.mp3" type="audio/mpeg">
+</audio>
+<audio id="sfxFireworks" preload="auto">
+  <source src="sounds/fireworks.mp3" type="audio/mpeg">
+  <source src="https://cdn.pixabay.com/audio/2022/12/23/audio_64c6ca0a80.mp3" type="audio/mpeg">
+</audio>
+<audio id="sfxPop" preload="auto">
+  <source src="sounds/pop.mp3" type="audio/mpeg">
+  <source src="https://cdn.pixabay.com/audio/2022/01/18/audio_d0c6ff1dda.mp3" type="audio/mpeg">
 </audio>
 
 <!-- LOCK MODAL -->
@@ -833,12 +875,12 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
 <div class="color-panel" id="colorPanel">
   <p>Accent colour</p>
   <div class="color-swatches">
-    <div class="swatch active" style="background:#c9836a;" onclick="setAccent(this,'#c9836a','#d4956a','#e8c4b0')"></div>
-    <div class="swatch" style="background:#7a9cc9;" onclick="setAccent(this,'#7a9cc9','#9ab4d4','#c4d4e8')"></div>
-    <div class="swatch" style="background:#9c7ac9;" onclick="setAccent(this,'#9c7ac9','#b49ad4','#d4c4e8')"></div>
-    <div class="swatch" style="background:#7ac99a;" onclick="setAccent(this,'#7ac99a','#9ad4b4','#c4e8d4')"></div>
-    <div class="swatch" style="background:#c9a87a;" onclick="setAccent(this,'#c9a87a','#d4bc9a','#e8d8c4')"></div>
-    <div class="swatch" style="background:#c97a9a;" onclick="setAccent(this,'#c97a9a','#d49ab4','#e8c4d4')"></div>
+    <div class="swatch active" style="background:#c9836a;" data-rose="#c9836a" data-amber="#d4956a" data-dusty="#e8c4b0"></div>
+    <div class="swatch" style="background:#7a9cc9;" data-rose="#7a9cc9" data-amber="#9ab4d4" data-dusty="#c4d4e8"></div>
+    <div class="swatch" style="background:#9c7ac9;" data-rose="#9c7ac9" data-amber="#b49ad4" data-dusty="#d4c4e8"></div>
+    <div class="swatch" style="background:#7ac99a;" data-rose="#7ac99a" data-amber="#9ad4b4" data-dusty="#c4e8d4"></div>
+    <div class="swatch" style="background:#c9a87a;" data-rose="#c9a87a" data-amber="#d4bc9a" data-dusty="#e8d8c4"></div>
+    <div class="swatch" style="background:#c97a9a;" data-rose="#c97a9a" data-amber="#d49ab4" data-dusty="#e8c4d4"></div>
   </div>
 </div>
 
@@ -1056,9 +1098,9 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
   <p style="font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(232,196,176,.45);font-size:.98rem;">Tap any star. Write a wish — it becomes a star in our sky forever.</p>
   <canvas id="starCanvas" width="800" height="320"></canvas>
   <div class="sf-legend">
-    <div class="sf-legend-item"><div class="sf-legend-dot" style="background:#d4956a;"></div>reasons</div>
-    <div class="sf-legend-item"><div class="sf-legend-dot" style="background:var(--wish-yash);"></div>Yash's wishes</div>
-    <div class="sf-legend-item"><div class="sf-legend-dot" style="background:var(--wish-tory);"></div>Tory's wishes</div>
+    <div class="sf-legend-item"><div class="sf-legend-dot" style="background:#e8d0a0;"></div>reasons</div>
+    <div class="sf-legend-item"><div class="sf-legend-dot" style="background:#d4956a;"></div>Yash's wishes</div>
+    <div class="sf-legend-item"><div class="sf-legend-dot" style="background:#7ab8a8;"></div>Tory's wishes</div>
     <div class="sf-legend-item"><div class="sf-legend-dot" style="background:rgba(255,255,255,.35);"></div>shooting stars</div>
   </div>
   <div class="sf-wish-row">
@@ -1265,8 +1307,13 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
     <span class="section-label" style="color:var(--dusty-rose);">Just between us</span>
     <h2 class="section-title" style="color:var(--cream);">What I call <em style="color:var(--dusty-rose);">her</em></h2>
     <div class="nickname-grid">
-      <span class="nickname-tag">Tory</span><span class="nickname-tag">Baby</span><span class="nickname-tag">Jaan</span>
-      <span class="nickname-tag">Pagli</span><span class="nickname-tag">Tori</span><span class="nickname-tag">Love</span><span class="nickname-tag">Shona</span>
+      <span class="nickname-tag">Tory ❤️🌸</span><span class="nickname-tag">Baby ❤️</span><span class="nickname-tag">Jaan ❤️</span>
+      <span class="nickname-tag">Shona Baccha ❤️🌸 </span><span class="nickname-tag">Toriii ❤️🌸</span><span class="nickname-tag">Love ❤️</span>
+      <span class="nickname-tag">Shona ❤️</span><span class="nickname-tag">Toru ❤️🌸</span><span class="nickname-tag">Shonuuu ❤️</span>
+      <span class="nickname-tag">Pakhiii ❤️</span><span class="nickname-tag">Shona Pakhiii ❤️</span><span class="nickname-tag">Jaantushhhh ❤️</span>
+      <span class="nickname-tag">baccha ❤️</span><span class="nickname-tag">bebiiii ❤️</span><span class="nickname-tag">babe ❤️</span><span class="nickname-tag">babuu ❤️🌸</span>
+      <span class="nickname-tag">My Love ❤️</span><span class="nickname-tag">Lokkhi ❤️</span><span class="nickname-tag">Babuiii ❤️</span><span class="nickname-tag">Shona Baccha ❤️</span>
+      <span class="nickname-tag">Moyna Pakhi ❤️</span><span class="nickname-tag">Cutushhh ❤️</span>
     </div>
   </div>
 </div>
@@ -1327,7 +1374,7 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
     <span class="section-label" style="color:var(--dusty-rose);">Love from everyone</span>
     <h2 class="section-title" style="color:var(--cream);">Wishes from <em style="color:var(--dusty-rose);">our people</em></h2>
     <p style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--dusty-rose);font-size:1.05rem;margin-bottom:.4rem;">Everyone who loves you both, leaving a piece of that love here.</p>
-    <a class="gb-link" href="guestbook.html" target="_blank">🌸 Leave a wish</a>
+    <a class="gb-link" href="https://yashrahman0405.github.io" target="_blank">🌸 Leave a wish</a>
     <div class="guestbook-grid" id="guestbookGrid"><p class="gb-empty" style="color:var(--mist);">Loading wishes... 🌸</p></div>
   </div>
 </div>
@@ -1338,6 +1385,30 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
   <p style="margin-top:.45rem;font-family:'Great Vibes',cursive;font-size:1.5rem;color:var(--rose);opacity:1;">Happy first anniversary, my love 🌸</p>
   <small>Made with love, by Yash — for Tory. Every single word.</small>
 </footer>
+
+<!-- DEBUG PANEL — tap Y&T logo 5x to open -->
+<div class="debug-panel" id="debugPanel">
+  <div class="debug-title">🛠 Debug Menu <button class="debug-close" onclick="document.getElementById('debugPanel').classList.remove('open')">✕</button></div>
+  <div class="debug-section">🔐 Auth</div>
+  <button class="debug-btn" onclick="dbg_skipPw()">Skip password screen</button>
+  <div class="debug-section">🎉 Anniversary</div>
+  <button class="debug-btn success" onclick="dbg_triggerAnniv()">Trigger anniversary mode</button>
+  <button class="debug-btn" onclick="dbg_confetti()">Launch confetti</button>
+  <button class="debug-btn" onclick="dbg_fireworks()">Launch fireworks</button>
+  <div class="debug-section">🔒 Locks</div>
+  <button class="debug-btn" onclick="dbg_unlockGift()">Unlock gift box now</button>
+  <button class="debug-btn" onclick="dbg_unlockLetter()">Open love letter now</button>
+  <div class="debug-section">🌟 Starfield</div>
+  <button class="debug-btn" onclick="dbg_addWishY()">Add test wish (Yash)</button>
+  <button class="debug-btn" onclick="dbg_addWishT()">Add test wish (Tory)</button>
+  <button class="debug-btn" onclick="dbg_shootingStar()">Spawn shooting star</button>
+  <div class="debug-section">🎨 Theme</div>
+  <button class="debug-btn" onclick="dbg_toggleTheme()">Toggle dark/light mode</button>
+  <div class="debug-section">📋 Info</div>
+  <button class="debug-btn" onclick="dbg_showInfo()">Show timing info</button>
+  <button class="debug-btn danger" onclick="dbg_resetAll()">Reset all local state</button>
+  <div class="debug-status" id="debugStatus">ready</div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
@@ -1384,16 +1455,42 @@ for(let i=0;i<26;i++){const s=document.createElement('div');s.className='star-bg
 let dark=false;
 function toggleTheme(){dark=!dark;document.documentElement.setAttribute('data-theme',dark?'dark':'');document.getElementById('themeToggle').textContent=dark?'☀️':'🌙';}
 
-/* ─── COLOUR ACCENT — pass el explicitly to avoid event issues on mobile ─── */
-function setAccent(el,rose,amber,dusty){
+/* ─── COLOUR ACCENT — uses data attrs + proper touch listeners (no onclick) ─── */
+function applyAccent(rose,amber,dusty){
   document.documentElement.style.setProperty('--rose',rose);
   document.documentElement.style.setProperty('--amber',amber);
   document.documentElement.style.setProperty('--dusty-rose',dusty);
-  document.querySelectorAll('.swatch').forEach(s=>s.classList.remove('active'));
-  el.classList.add('active');
 }
-function toggleColorPanel(){document.getElementById('colorPanel').classList.toggle('open');}
-document.addEventListener('click',e=>{if(!e.target.closest('#colorPanel')&&!e.target.closest('#colorBtn'))document.getElementById('colorPanel').classList.remove('open');});
+function toggleColorPanel(){
+  const p=document.getElementById('colorPanel');
+  p.classList.toggle('open');
+  // stop propagation via a flag so the document handler doesn't close it immediately
+  _colorJustOpened=true;setTimeout(()=>{_colorJustOpened=false;},200);
+}
+let _colorJustOpened=false;
+// Wire swatches — use touchstart so it fires BEFORE any document-level handler
+document.querySelectorAll('.swatch').forEach(sw=>{
+  function handleSwatch(e){
+    e.stopPropagation();e.preventDefault();
+    applyAccent(sw.dataset.rose,sw.dataset.amber,sw.dataset.dusty);
+    document.querySelectorAll('.swatch').forEach(s=>s.classList.remove('active'));
+    sw.classList.add('active');
+    // Close after tiny delay so the state is applied first
+    setTimeout(()=>document.getElementById('colorPanel').classList.remove('open'),50);
+    return false;
+  }
+  sw.addEventListener('touchstart',handleSwatch,{passive:false});
+  sw.addEventListener('click',handleSwatch);
+});
+// Close panel on outside interaction
+function _maybeCloseColorPanel(e){
+  if(_colorJustOpened)return;
+  if(!e.target.closest('#colorPanel')&&!e.target.closest('#colorBtn')){
+    document.getElementById('colorPanel').classList.remove('open');
+  }
+}
+document.addEventListener('click',_maybeCloseColorPanel);
+document.addEventListener('touchstart',_maybeCloseColorPanel,{passive:true});
 
 /* ─── AMBIENT ─── */
 let ambPlaying=false;
@@ -1514,6 +1611,8 @@ document.getElementById('dailyDate').textContent=_td.toLocaleDateString('en-GB',
 const obs=new IntersectionObserver(en=>{en.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0,rootMargin:'0px 0px -20px 0px'});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 setTimeout(()=>document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible')),700);
+// Gift section force-visible (dark bg makes it easy to miss if observer misfires)
+setTimeout(()=>{const g=document.getElementById('gift-section');if(g)g.classList.add('visible');},800);
 
 /* nav progress + active link */
 const navLinks=document.querySelectorAll('.nav-links a[data-sec]');
@@ -1560,7 +1659,11 @@ const chatObs=new IntersectionObserver(en=>{en.forEach(e=>{
 const cw=document.getElementById('chatWrap');if(cw)chatObs.observe(cw);
 
 /* ─── CONFETTI ─── */
+function playSfx(id,vol=0.45){
+  try{const a=document.getElementById(id);if(!a)return;a.currentTime=0;a.volume=vol;a.play().catch(()=>{});}catch(e){}
+}
 function launchConfetti(){
+  playSfx('sfxConfetti',0.5);
   const cols=['#c9836a','#e8c4b0','#d4956a','#f5ede0','#8fa89a','#c8a97e','#fff'];
   for(let i=0;i<100;i++){const c=document.createElement('div');c.className='confetti-piece';c.style.cssText=`left:${5+Math.random()*90}vw;top:-10px;background:${cols[Math.floor(Math.random()*cols.length)]};border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${1.5+Math.random()*2.5}s;animation-delay:${Math.random()}s;width:${6+Math.random()*8}px;height:${8+Math.random()*10}px;`;document.body.appendChild(c);setTimeout(()=>c.remove(),5000);}
 }
@@ -1568,14 +1671,16 @@ function launchConfetti(){
 /* ─── FIREWORKS ─── */
 const fwC=document.getElementById('fireworksCanvas'),fwX=fwC.getContext('2d');let fwP=[];
 function resizeFW(){fwC.width=window.innerWidth;fwC.height=window.innerHeight;}resizeFW();window.addEventListener('resize',resizeFW);
-function triggerFireworks(){fwC.classList.add('active');for(let i=0;i<10;i++)setTimeout(()=>spawnBurst(),i*320);setTimeout(()=>{fwC.classList.remove('active');fwP=[];},9000);animFW();}
+function triggerFireworks(){playSfx('sfxFireworks',0.55);fwC.classList.add('active');for(let i=0;i<10;i++)setTimeout(()=>spawnBurst(),i*320);setTimeout(()=>{fwC.classList.remove('active');fwP=[];},9000);animFW();}
 function spawnBurst(){const x=Math.random()*fwC.width,y=Math.random()*fwC.height*.6;['#c9836a','#e8c4b0','#d4956a','#fff','#8fa89a'].forEach(color=>{for(let i=0;i<12;i++){const a=Math.random()*Math.PI*2,sp=2+Math.random()*7;fwP.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,color,size:2+Math.random()*3});}});}
 function animFW(){if(!fwC.classList.contains('active'))return;fwX.clearRect(0,0,fwC.width,fwC.height);fwP.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.05;p.life-=.016;fwX.globalAlpha=p.life;fwX.fillStyle=p.color;fwX.beginPath();fwX.arc(p.x,p.y,p.size,0,Math.PI*2);fwX.fill();});fwP=fwP.filter(p=>p.life>0);fwX.globalAlpha=1;requestAnimationFrame(animFW);}
 
-/* ─── STARFIELD — fully fixed ─── */
+/* ─── DEBUG MENU ─── */
 const starReasons=['Your laugh. I could listen to it forever.','You made food for me without being asked.','The way you dove into that river without hesitating.','You stayed up all night with me just talking.','The look on your face in the flower field.','You make every hard thing feel a little lighter.','Your complete, joyful chaos at Monopoly.','The way you held my hand that first time.','You are brave in ways you don\'t even see.','Every time we got separated and found each other.','You are my favourite kind of trouble.','Your warmth. You make everywhere feel like home.','The way you laugh at my jokes even when they\'re bad.','You chose me back. That changed everything.','Nawabganj in winter. Because of you.'];
 const sfC=document.getElementById('starCanvas'),sfX=sfC.getContext('2d');
 let sfStars=[],sfWishStars=[],sfShooting=[],sfAnimId,sfHov=null,wishWho='Yash';
+// 3 distinct colours: reasons=silver-white, Yash wishes=warm gold, Tory wishes=teal
+const SFC={reason:{core:'232,224,210',glow:'232,224,210'},yash:{core:'212,149,106',glow:'212,149,106'},tory:{core:'122,184,168',glow:'122,184,168'}};
 
 function setWishWho(who){
   wishWho=who;
@@ -1591,7 +1696,6 @@ function initSF(){
     r:2.5+Math.random()*3,pulse:Math.random()*Math.PI*2,speed:.016+Math.random()*.012,
     reason,type:'reason',conns:[],
   }));
-  // Constellation connections
   sfStars.forEach((s,i)=>{sfStars.forEach((t,j)=>{if(i===j)return;if(Math.hypot(s.x-t.x,s.y-t.y)<110&&s.conns.length<2&&t.conns.length<2)s.conns.push(j);});});
   loadWishes();
   if(sfAnimId)cancelAnimationFrame(sfAnimId);
@@ -1600,61 +1704,68 @@ function initSF(){
 
 function drawSF(){
   sfX.clearRect(0,0,sfC.width,sfC.height);
-  // Constellation lines
-  sfStars.forEach(s=>{s.conns.forEach(j=>{const t=sfStars[j];const g=Math.sin(s.pulse)*.5+.5;sfX.beginPath();sfX.moveTo(s.x,s.y);sfX.lineTo(t.x,t.y);sfX.strokeStyle=`rgba(201,131,106,${.03+g*.05})`;sfX.lineWidth=.5;sfX.stroke();});});
+  // Constellation lines (subtle silver)
+  sfStars.forEach(s=>{s.conns.forEach(j=>{const t=sfStars[j];const g=Math.sin(s.pulse)*.5+.5;sfX.beginPath();sfX.moveTo(s.x,s.y);sfX.lineTo(t.x,t.y);sfX.strokeStyle=`rgba(232,224,210,${.02+g*.04})`;sfX.lineWidth=.5;sfX.stroke();});});
   // Shooting stars
-  sfShooting.forEach(sh=>{sh.tail.unshift({x:sh.x,y:sh.y});if(sh.tail.length>20)sh.tail.pop();sh.x+=sh.vx;sh.y+=sh.vy;sh.life-=.02;sh.tail.forEach((pt,i)=>{const a=(1-i/sh.tail.length)*sh.life;sfX.beginPath();sfX.arc(pt.x,pt.y,1.1*(1-i/sh.tail.length),0,Math.PI*2);sfX.fillStyle=`rgba(255,240,220,${a})`;sfX.fill();});});
+  sfShooting.forEach(sh=>{sh.tail.unshift({x:sh.x,y:sh.y});if(sh.tail.length>22)sh.tail.pop();sh.x+=sh.vx;sh.y+=sh.vy;sh.life-=.018;sh.tail.forEach((pt,i)=>{const a=(1-i/sh.tail.length)*sh.life;sfX.beginPath();sfX.arc(pt.x,pt.y,1.2*(1-i/sh.tail.length),0,Math.PI*2);sfX.fillStyle=`rgba(255,248,235,${a})`;sfX.fill();});});
   sfShooting=sfShooting.filter(sh=>sh.life>0&&sh.x>-60&&sh.x<sfC.width+60);
-  // Reason stars
+  // Reason stars — silver/white
   sfStars.forEach(s=>{
     s.pulse+=s.speed;const g=Math.sin(s.pulse)*.5+.5;const isH=(sfHov===s);
-    const r=isH?s.r*2.5:s.r*(1+g*.5);
-    const grd=sfX.createRadialGradient(s.x,s.y,0,s.x,s.y,r*5);
-    grd.addColorStop(0,`rgba(212,149,106,${isH?.3:.06+g*.1})`);grd.addColorStop(1,'rgba(212,149,106,0)');
-    sfX.beginPath();sfX.arc(s.x,s.y,r*5,0,Math.PI*2);sfX.fillStyle=grd;sfX.fill();
-    sfX.beginPath();sfX.arc(s.x,s.y,r,0,Math.PI*2);sfX.fillStyle=isH?'rgba(255,210,160,1)':`rgba(212,149,106,${.5+g*.5})`;sfX.fill();
-    if(isH){[0,Math.PI/2,Math.PI,Math.PI*1.5].forEach(a=>{sfX.beginPath();sfX.moveTo(s.x+Math.cos(a)*(r*2),s.y+Math.sin(a)*(r*2));sfX.lineTo(s.x+Math.cos(a)*(r*4.5),s.y+Math.sin(a)*(r*4.5));sfX.strokeStyle='rgba(255,220,180,.5)';sfX.lineWidth=.7;sfX.stroke();});}
+    const r=isH?s.r*2.8:s.r*(1+g*.5);const c=SFC.reason;
+    const grd=sfX.createRadialGradient(s.x,s.y,0,s.x,s.y,r*6);
+    grd.addColorStop(0,`rgba(${c.glow},${isH?.35:.05+g*.1})`);grd.addColorStop(1,`rgba(${c.glow},0)`);
+    sfX.beginPath();sfX.arc(s.x,s.y,r*6,0,Math.PI*2);sfX.fillStyle=grd;sfX.fill();
+    sfX.beginPath();sfX.arc(s.x,s.y,r,0,Math.PI*2);sfX.fillStyle=isH?`rgba(255,252,245,1)`:`rgba(${c.core},${.5+g*.5})`;sfX.fill();
+    if(isH){[0,Math.PI/2,Math.PI,Math.PI*1.5].forEach(a=>{sfX.beginPath();sfX.moveTo(s.x+Math.cos(a)*(r*2),s.y+Math.sin(a)*(r*2));sfX.lineTo(s.x+Math.cos(a)*(r*5),s.y+Math.sin(a)*(r*5));sfX.strokeStyle=`rgba(255,248,230,.5)`;sfX.lineWidth=.8;sfX.stroke();});}
   });
-  // Wish stars
+  // Wish stars — Yash=gold, Tory=teal
   sfWishStars.forEach(s=>{
-    s.pulse+=.02;const g=Math.sin(s.pulse)*.5+.5;
-    const col=s.who==='Tory'?'122,184,168':'201,131,106';
-    sfX.beginPath();sfX.arc(s.x,s.y,s.r*(1+g*.4)*6,0,Math.PI*2);sfX.fillStyle=`rgba(${col},${.04+g*.07})`;sfX.fill();
-    sfX.beginPath();sfX.arc(s.x,s.y,s.r*(1+g*.4),0,Math.PI*2);sfX.fillStyle=`rgba(${col},${.45+g*.55})`;sfX.fill();
+    s.pulse+=.022;const g=Math.sin(s.pulse)*.5+.5;const isH=(sfHov===s);
+    const c=s.who==='Tory'?SFC.tory:SFC.yash;const r=s.r*(1+g*.4);
+    sfX.beginPath();sfX.arc(s.x,s.y,r*7,0,Math.PI*2);sfX.fillStyle=`rgba(${c.glow},${isH?.18:.03+g*.07})`;sfX.fill();
+    sfX.beginPath();sfX.arc(s.x,s.y,r,0,Math.PI*2);sfX.fillStyle=`rgba(${c.core},${isH?.98:.42+g*.55})`;sfX.fill();
+    if(isH){[0,Math.PI/2].forEach(a=>{sfX.beginPath();sfX.moveTo(s.x+Math.cos(a)*(r*2),s.y+Math.sin(a)*(r*2));sfX.lineTo(s.x+Math.cos(a)*(r*4.5),s.y+Math.sin(a)*(r*4.5));sfX.strokeStyle=`rgba(${c.core},.5)`;sfX.lineWidth=.7;sfX.stroke();});}
   });
   sfAnimId=requestAnimationFrame(drawSF);
 }
 initSF();window.addEventListener('resize',initSF);
 setInterval(()=>{if(sfShooting.length<3){const side=Math.random()>.5;sfShooting.push({x:side?-8:sfC.width+8,y:8+Math.random()*(sfC.height*.45),vx:side?3.5+Math.random()*2.5:-(3.5+Math.random()*2.5),vy:.4+Math.random()*1.2,life:1,tail:[]});}},3800);
 
-/* STARFIELD HIT DETECTION — properly scaled ─── */
+/* ─ STARFIELD HIT DETECTION — properly scaled, large radius ─ */
 function sfHitTest(clientX,clientY){
   const rect=sfC.getBoundingClientRect();
-  // scale from CSS pixels to canvas pixels
   const scaleX=sfC.width/rect.width,scaleY=sfC.height/rect.height;
   const cx=(clientX-rect.left)*scaleX,cy=(clientY-rect.top)*scaleY;
   const all=[...sfStars,...sfWishStars];
-  // generous hit radius: max of 40px canvas or 3x star radius
-  return all.find(s=>Math.hypot(s.x-cx,s.y-cy)<Math.max(40,s.r*8));
+  const hitR=window.matchMedia('(pointer:coarse)').matches?62:42; // bigger on touch screens
+  let best=null,bestD=Infinity;
+  all.forEach(s=>{const d=Math.hypot(s.x-cx,s.y-cy);if(d<Math.max(hitR,s.r*10)&&d<bestD){bestD=d;best=s;}});
+  return best;
 }
 
 const sfPopup=document.getElementById('starPopup');
 function showSFPopup(hit){
   if(!hit){sfPopup.classList.add('hide');sfHov=null;return;}
   sfHov=hit;
-  const icon=hit.type==='wish'?(hit.who==='Tory'?'💫':'✨'):'⭐';
-  sfPopup.className='star-popup '+(hit.who==='Tory'?'tory-pop':'yash-pop');
+  let icon,cls;
+  if(hit.type==='reason'){icon='⭐';cls='yash-pop';}
+  else if(hit.who==='Tory'){icon='💫';cls='tory-pop';}
+  else{icon='✨';cls='yash-pop';}
+  sfPopup.className='star-popup '+cls;
   sfPopup.innerHTML=`<span style="margin-right:.4rem">${icon}</span>${hit.reason}`;
   sfPopup.classList.remove('hide');
-  clearTimeout(sfPopup._t);sfPopup._t=setTimeout(()=>{sfPopup.classList.add('hide');sfHov=null;},4000);
+  clearTimeout(sfPopup._t);sfPopup._t=setTimeout(()=>{sfPopup.classList.add('hide');sfHov=null;},4200);
 }
 
-// Desktop hover
-sfC.addEventListener('mousemove',e=>{const hit=sfHitTest(e.clientX,e.clientY);sfHov=hit||null;sfC.style.cursor=hit?'pointer':'crosshair';});
-// Desktop click
-sfC.addEventListener('click',e=>showSFPopup(sfHitTest(e.clientX,e.clientY)));
-// Mobile touch — use touchend for reliability
+sfC.addEventListener('mousemove',e=>{const h=sfHitTest(e.clientX,e.clientY);sfHov=h||null;sfC.style.cursor=h?'pointer':'crosshair';});
+sfC.addEventListener('click',e=>{e.preventDefault();showSFPopup(sfHitTest(e.clientX,e.clientY));});
+// Mobile: track if user scrolled — only show popup on clean taps
+let _sfMoved=false;
+sfC.addEventListener('touchstart',()=>{_sfMoved=false;},{passive:true});
+sfC.addEventListener('touchmove',()=>{_sfMoved=true;},{passive:true});
 sfC.addEventListener('touchend',e=>{
+  if(_sfMoved)return;
   e.preventDefault();
   const t=e.changedTouches[0];
   showSFPopup(sfHitTest(t.clientX,t.clientY));
@@ -1683,6 +1794,7 @@ async function addWish(){
     sfWishStars.push({x:22+Math.random()*(sfC.width-44),y:16+Math.random()*(sfC.height-32),r:1.6+Math.random()*2,pulse:Math.random()*Math.PI*2,reason:(wishWho==='Tory'?'💫 ':'✨ ')+val,type:'wish',who:wishWho});
     updateWishCount(sfWishStars.length);
     sfPopup.className='star-popup '+(wishWho==='Tory'?'tory-pop':'yash-pop');
+    playSfx('sfxPop',0.4);
     sfPopup.innerHTML=(wishWho==='Tory'?'💫':'✨')+' Your wish is now a star in our sky';
     sfPopup.classList.remove('hide');clearTimeout(sfPopup._t);sfPopup._t=setTimeout(()=>sfPopup.classList.add('hide'),2800);
     launchConfetti&&launchConfetti();
@@ -1803,6 +1915,59 @@ async function loadGuestbook(){
     grid.innerHTML=data.map((w,i)=>`<div class="gb-card" style="animation-delay:${i*.06}s"><span class="gb-emoji">${esc(w.emoji||'🌸')}</span><div class="gb-name">${esc(w.name)}</div><div class="gb-message">${esc(w.message)}</div><div class="gb-date">${new Date(w.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</div></div>`).join('');
   }catch(e){grid.innerHTML='<p class="gb-empty">Couldn\'t load right now 🌸</p>';}
 }
+
+/* ─── DEBUG MENU — tap Y&T logo 5× to unlock ─── */
+let _logoTaps=0,_logoTimer=null;
+document.querySelector('.nav-logo').addEventListener('click',()=>{
+  _logoTaps++;clearTimeout(_logoTimer);
+  _logoTimer=setTimeout(()=>_logoTaps=0,2000);
+  if(_logoTaps>=5){_logoTaps=0;document.getElementById('debugPanel').classList.toggle('open');}
+});
+function _dbgStatus(msg){document.getElementById('debugStatus').textContent=msg;}
+function dbg_skipPw(){document.getElementById('pwScreen').classList.add('hide');_dbgStatus('password skipped');}
+function dbg_triggerAnniv(){
+  document.getElementById('countdown').style.display='none';
+  document.querySelector('.countdown-label').style.display='none';
+  document.getElementById('annivBanner').classList.add('show');
+  launchConfetti();triggerFireworks();_dbgStatus('anniversary triggered');
+}
+function dbg_confetti(){launchConfetti();_dbgStatus('confetti launched');}
+function dbg_fireworks(){triggerFireworks();_dbgStatus('fireworks launched');}
+function dbg_unlockGift(){
+  document.getElementById('giftHint').style.display='none';
+  document.getElementById('giftLid').classList.add('fly');
+  setTimeout(()=>{document.getElementById('giftBox').style.display='none';document.getElementById('giftReveal').classList.add('show');launchConfetti();},600);
+  _dbgStatus('gift unlocked');
+}
+function dbg_unlockLetter(){document.getElementById('envelope').classList.add('open');_dbgStatus('letter opened');}
+function dbg_addWishY(){
+  const w={x:22+Math.random()*(sfC.width-44),y:16+Math.random()*(sfC.height-32),r:1.8+Math.random()*2,pulse:Math.random()*Math.PI*2,reason:'✨ Test wish from Yash',type:'wish',who:'Yash'};
+  sfWishStars.push(w);updateWishCount(sfWishStars.length);_dbgStatus('Yash wish added (not saved)');
+}
+function dbg_addWishT(){
+  const w={x:22+Math.random()*(sfC.width-44),y:16+Math.random()*(sfC.height-32),r:1.8+Math.random()*2,pulse:Math.random()*Math.PI*2,reason:'💫 Test wish from Tory',type:'wish',who:'Tory'};
+  sfWishStars.push(w);updateWishCount(sfWishStars.length);_dbgStatus('Tory wish added (not saved)');
+}
+function dbg_shootingStar(){
+  const side = Math.random() > .5;
+
+  sfShooting.push({
+    x: side ? -8 : sfC.width + 8,
+    y: 8 + Math.random() * (sfC.height * .45),
+    vx: side ? 5 : -5,
+    vy: .8,
+    life: 1,
+    tail: []
+  });
+
+  _dbgStatus('shooting star spawned');
+}
+function dbg_toggleTheme(){toggleTheme();_dbgStatus('theme toggled');}
+function dbg_showInfo(){
+  const now=new Date(),diff=ANNIVERSARY-now,dd=Math.floor((now-START)/86400000);
+  _dbgStatus(`days together: ${dd} | days to anniv: ${Math.floor(diff/86400000)} | stars: ${sfStars.length} | wishes: ${sfWishStars.length}`);
+}
+function dbg_resetAll(){try{localStorage.clear();}catch(e){}sfWishStars=[];updateWishCount(0);_dbgStatus('local state reset');}
 
 loadBucketList();loadGuestbook();setInterval(loadGuestbook,60000);
 </script>
