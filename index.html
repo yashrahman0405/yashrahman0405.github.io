@@ -776,6 +776,61 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
 .debug-btn.danger{border-color:#5a2020;color:#e08080;}
 .debug-btn.success{border-color:#205a30;color:#80e090;}
 .debug-status{margin-top:.6rem;padding:.4rem .6rem;background:#111;border-radius:4px;color:#888;font-size:.7rem;min-height:1.4em;word-break:break-all;}
+
+/* ── PARALLEL UNIVERSE ── */
+.parallel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1.1rem;margin-top:1rem;}
+.parallel-card{border:1px solid rgba(201,131,106,.2);padding:1.6rem 1.3rem;text-align:center;background:rgba(255,255,255,.03);border-radius:2px;transition:all .35s;animation:fadeUp .6s ease both;}
+.parallel-card:hover,.parallel-card:active{background:rgba(201,131,106,.07);border-color:var(--rose);transform:translateY(-4px);}
+.parallel-card:nth-child(2){animation-delay:.08s;}.parallel-card:nth-child(3){animation-delay:.16s;}
+.parallel-card:nth-child(4){animation-delay:.24s;}.parallel-card:nth-child(5){animation-delay:.32s;}.parallel-card:nth-child(6){animation-delay:.4s;}
+.p-if{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--rose);margin-bottom:.8rem;opacity:.8;}
+.p-then{font-family:'Great Vibes',cursive;font-size:1.45rem;color:var(--dusty-rose);line-height:1.55;}
+@media(max-width:480px){.parallel-grid{grid-template-columns:1fr 1fr;}}
+
+/* ── REVEAL CARDS ── */
+.reveal-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.1rem;margin-top:2rem;}
+.reveal-card{height:160px;background:rgba(255,255,255,.04);border:1px solid rgba(201,131,106,.3);border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:1.5rem;text-align:center;transition:all .4s ease;-webkit-tap-highlight-color:transparent;user-select:none;position:relative;overflow:hidden;}
+.reveal-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--rose),var(--amber));opacity:0;transition:opacity .4s;}
+.reveal-card.open::before{opacity:.12;}
+.reveal-card.open{border-color:var(--rose);transform:scale(1.02);}
+.rc-front{display:flex;flex-direction:column;align-items:center;gap:.5rem;transition:opacity .3s,transform .3s;position:relative;z-index:1;}
+.rc-front span{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--mist);}
+.rc-front{font-size:1.5rem;}
+.reveal-card.open .rc-front{opacity:0;transform:scale(.8);pointer-events:none;position:absolute;}
+.rc-back{font-family:'Great Vibes',cursive;font-size:1.55rem;color:var(--rose);line-height:1.6;opacity:0;transform:translateY(8px);transition:opacity .35s .15s,transform .35s .15s;position:relative;z-index:1;}
+.reveal-card.open .rc-back{opacity:1;transform:translateY(0);}
+@media(max-width:480px){.reveal-cards-grid{grid-template-columns:1fr 1fr;}}
+
+/* ── FUTURE TIMELINE ── */
+.future-timeline{display:flex;flex-direction:column;gap:1.5rem;margin-top:1rem;position:relative;padding-left:2rem;}
+.future-timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--rose),var(--dusty-rose),transparent);}
+.ft-item{display:flex;align-items:flex-start;gap:1.2rem;opacity:0;transform:translateX(-12px);transition:opacity .6s ease,transform .6s ease;}
+.ft-item.ft-visible{opacity:1;transform:translateX(0);}
+.ft-icon{font-size:1.8rem;flex-shrink:0;margin-top:.1rem;}
+.ft-label{font-family:'Playfair Display',serif;font-style:italic;font-size:1.1rem;color:var(--deep);margin-bottom:.3rem;}
+.ft-sub{font-size:.95rem;line-height:1.75;color:var(--warm-brown);}
+
+/* ── DAILY COMPLIMENT ── */
+.compliment-section{background:linear-gradient(135deg,#1a0a06,var(--night));padding:3.5rem 1.5rem;text-align:center;border-top:1px solid rgba(201,131,106,.08);}
+.compliment-inner{max-width:560px;margin:0 auto;}
+.compliment-day{font-size:.68rem;letter-spacing:.25em;text-transform:uppercase;color:var(--rose);margin-bottom:.6rem;opacity:.7;}
+.compliment-icon{font-size:2.8rem;margin-bottom:1rem;animation:complimentFloat 3s ease-in-out infinite;}
+@keyframes complimentFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+.compliment-text{font-family:'Great Vibes',cursive;font-size:clamp(1.8rem,5vw,2.8rem);color:var(--amber);line-height:1.5;margin-bottom:.8rem;}
+.compliment-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--dusty-rose);opacity:.75;line-height:1.7;}
+
+
+/* ── GUESTBOOK VIP ── */
+.gb-card.vip{
+  border-color:transparent;
+  box-shadow:0 0 0 2px var(--amber), 0 0 18px 4px rgba(212,149,106,0.35), inset 0 0 14px rgba(212,149,106,0.06);
+  position:relative;overflow:visible;
+}
+.gb-card.vip .gb-crown{position:absolute;top:-10px;right:12px;font-size:1rem;filter:drop-shadow(0 0 5px rgba(212,149,106,0.8));animation:crownFloat 3s ease-in-out infinite;}
+@keyframes crownFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+.gb-vip-title{font-family:'Playfair Display',serif;font-style:italic;font-size:1.15rem;color:var(--amber);margin:2rem 0 1rem;text-align:center;display:flex;align-items:center;gap:.6rem;}
+.gb-vip-title::before,.gb-vip-title::after{content:'';flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(212,149,106,.35),transparent);}
+.gb-vip-title span{white-space:nowrap;padding:0 .4rem;}
 </style>
 </head>
 <body>
@@ -784,31 +839,28 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
 
 <!-- AMBIENT -->
 <audio id="ambientAudio" loop>
-  <source src="https://cdn.pixabay.com/audio/2022/08/04/audio_2dde668d05.mp3" type="audio/mpeg">
+  <source src="Ambient.mp3" type="audio/mpeg">
 </audio>
 
-<!-- SOUND EFFECTS — replace src paths with your own files if desired -->
-<!-- confetti.mp3 / fireworks.mp3 should be in same folder as the HTML -->
-<!-- Free alternatives: use the pixabay CDN links below as fallbacks -->
 <audio id="sfxConfetti" preload="auto">
-  <source src="sounds/confetti.mp3" type="audio/mpeg">
-  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_1a415bab4a.mp3" type="audio/mpeg">
+  <source src="confetti1.mp3" type="audio/mpeg">
+  <source src="confetti2.mp3" type="audio/mpeg">
 </audio>
 <audio id="sfxFireworks" preload="auto">
-  <source src="sounds/fireworks.mp3" type="audio/mpeg">
-  <source src="https://cdn.pixabay.com/audio/2022/12/23/audio_64c6ca0a80.mp3" type="audio/mpeg">
+  <source src="firework1.mp3" type="audio/mpeg">
+  <source src="firework2.mp3" type="audio/mpeg">
 </audio>
 <audio id="sfxPop" preload="auto">
-  <source src="sounds/pop.mp3" type="audio/mpeg">
-  <source src="https://cdn.pixabay.com/audio/2022/01/18/audio_d0c6ff1dda.mp3" type="audio/mpeg">
+  <source src="pop1.mp3" type="audio/mpeg">
+  <source src="pop2" type="audio/mpeg">
 </audio>
 
 <!-- LOCK MODAL -->
 <div class="lock-modal" id="lockModal">
   <div class="lock-modal-inner">
     <span class="lock-modal-icon" id="lockIcon">🔒</span>
-    <div class="lock-modal-title" id="lockTitle">Not yet, love</div>
-    <p class="lock-modal-sub" id="lockSub">This opens on March 30, 2026 🌸</p>
+    <div class="lock-modal-title" id="lockTitle">Ektu Dhorjo, Jaan ❤️</div>
+    <p class="lock-modal-sub" id="lockSub">This opens on March 30, 2026 ❤️</p>
     <div class="lock-countdown">
       <div class="lk-unit"><span class="lk-num" id="lk-d">00</span><span class="lk-lbl">Days</span></div>
       <span class="lk-sep">:</span>
@@ -844,14 +896,14 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
 <!-- LOADER -->
 <div id="loader">
   <div style="position:absolute;inset:0;overflow:hidden;" id="loaderPetals"></div>
-  <p class="loader-names">Yash & Tory ❤️</p>
+  <p class="loader-names">Yash & Tory ❤️🌸</p>
   <div class="loader-bar-outer"><div class="loader-bar-fill"></div></div>
   <p class="loader-msg" id="loaderMsg">loading memories...</p>
 </div>
 
 <!-- PASSWORD -->
 <div id="pwScreen">
-  <p class="pw-title">Yash & Tory 🌸</p>
+  <p class="pw-title">Yash & Tory ❤️🌸</p>
   <p class="pw-sub">This page is locked with love.<br>Enter the password to continue.</p>
   <div class="pw-dots" id="pwDots">
     <div class="pw-dot" id="d0"></div><div class="pw-dot" id="d1"></div><div class="pw-dot" id="d2"></div>
@@ -863,48 +915,16 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
     <button class="pw-key" onclick="pwPress('7')">7</button><button class="pw-key" onclick="pwPress('8')">8</button><button class="pw-key" onclick="pwPress('9')">9</button>
     <button class="pw-key del" onclick="pwDel()">⌫</button><button class="pw-key" onclick="pwPress('0')">0</button><button class="pw-key" onclick="pwSubmit()">↵</button>
   </div>
-  <p class="pw-error" id="pwError">Hmm, try again 🌸</p>
-  <p class="pw-hint">hint: a date that means something 🌸</p>
+  <p class="pw-error" id="pwError">Hmm, try again ❤️😅</p>
+  <p class="pw-hint">hint: a date that means something ❤️</p>
 </div>
 
 <!-- FIXED BUTTONS -->
 <button class="fixed-btn" id="themeToggle" onclick="toggleTheme()">🌙</button>
 <button class="fixed-btn" id="storybookBtn" onclick="openStorybook()">📖</button>
 <button class="fixed-btn" id="ambientBtn" onclick="toggleAmbient()">🎵</button>
-<button class="fixed-btn" id="colorBtn" onclick="toggleColorPanel()">🎨</button>
-<div class="color-panel" id="colorPanel">
-  <p>Accent colour</p>
-  <div class="color-swatches">
-    <div class="swatch active" style="background:#c9836a;" data-rose="#c9836a" data-amber="#d4956a" data-dusty="#e8c4b0"></div>
-    <div class="swatch" style="background:#7a9cc9;" data-rose="#7a9cc9" data-amber="#9ab4d4" data-dusty="#c4d4e8"></div>
-    <div class="swatch" style="background:#9c7ac9;" data-rose="#9c7ac9" data-amber="#b49ad4" data-dusty="#d4c4e8"></div>
-    <div class="swatch" style="background:#7ac99a;" data-rose="#7ac99a" data-amber="#9ad4b4" data-dusty="#c4e8d4"></div>
-    <div class="swatch" style="background:#c9a87a;" data-rose="#c9a87a" data-amber="#d4bc9a" data-dusty="#e8d8c4"></div>
-    <div class="swatch" style="background:#c97a9a;" data-rose="#c97a9a" data-amber="#d49ab4" data-dusty="#e8c4d4"></div>
-  </div>
-</div>
 
-<!-- MUSIC PLAYER -->
-<div class="music-player" onclick="openMusic()">
-  <div class="music-btn">🎵</div>
-  <div class="music-info"><div class="music-title">Our songs</div><div class="music-sub">tap to play</div></div>
-  <div class="music-bars paused" id="musicBars"><span></span><span></span><span></span></div>
-</div>
-<div class="music-modal" id="musicModal">
-  <div class="music-modal-inner">
-    <button class="music-close" onclick="closeMusic()">✕</button>
-    <span class="section-label">Our playlist</span>
-    <h3 style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.3rem;color:var(--deep);margin-bottom:.9rem;">Songs that are <em style="color:var(--rose);">us</em></h3>
-    <div class="song-block"><div class="song-block-header"><span style="font-size:1.1rem;">♪</span><span style="font-family:'Playfair Display',serif;font-style:italic;font-size:.88rem;color:var(--deep);">Song 1 — replace TRACK_ID_1</span></div>
-    <iframe class="spotify-frame" src="https://open.spotify.com/embed/track/TRACK_ID_1?utm_source=generator&theme=0" height="76" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
-    <div class="song-block"><div class="song-block-header"><span style="font-size:1.1rem;">♪</span><span style="font-family:'Playfair Display',serif;font-style:italic;font-size:.88rem;color:var(--deep);">Song 2 — replace TRACK_ID_2</span></div>
-    <iframe class="spotify-frame" src="https://open.spotify.com/embed/track/TRACK_ID_2?utm_source=generator&theme=0" height="76" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
-    <div class="spotify-dark">
-      <div class="spotify-logo"><svg viewBox="0 0 24 24" fill="#1ed760" width="16" height="16"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg><span>Our Playlist</span></div>
-      <iframe class="spotify-frame" src="https://open.spotify.com/embed/playlist/PLAYLIST_ID?utm_source=generator&theme=0" height="280" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-    </div>
-  </div>
-</div>
+
 
 <!-- MOBILE MENU -->
 <div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
@@ -942,21 +962,21 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
 
 <!-- TICKER -->
 <div class="ticker-wrap"><div class="ticker-track">
-  <span>I love you</span><span class="sep">✦</span><span>আমি তোমাকে ভালোবাসি</span><span class="sep">✦</span><span>Tumi amar shob</span><span class="sep">✦</span><span>One whole year</span><span class="sep">✦</span><span>Nawabganj winter</span><span class="sep">✦</span><span>Noodles & chaa at 2am</span><span class="sep">✦</span><span>The flower field girl</span><span class="sep">✦</span><span>My favourite person</span><span class="sep">✦</span><span>তুমি আমার সব</span><span class="sep">✦</span>
-  <span>I love you</span><span class="sep">✦</span><span>আমি তোমাকে ভালোবাসি</span><span class="sep">✦</span><span>Tumi amar shob</span><span class="sep">✦</span><span>One whole year</span><span class="sep">✦</span><span>Nawabganj winter</span><span class="sep">✦</span><span>Noodles & chaa at 2am</span><span class="sep">✦</span><span>The flower field girl</span><span class="sep">✦</span><span>My favourite person</span><span class="sep">✦</span><span>তুমি আমার সব</span><span class="sep">✦</span>
+  <span>I love YOU ❤️</span><span class="sep">✦</span><span>আমি তোমাকে ভালোবাসি</span><span class="sep">✦</span><span>Tumi amar shob</span><span class="sep">✦</span><span>One whole year</span><span class="sep">✦</span><span>Nawabganj winter</span><span class="sep">✦</span><span>Noodles & chaa at 2am</span><span class="sep">✦</span><span>The flower field girl</span><span class="sep">✦</span><span>My favourite person</span><span class="sep">✦</span><span>তুমি আমার সব</span><span class="sep">✦</span>
+  <span>I love YOU ❤️</span><span class="sep">✦</span><span>আমি তোমাকে ভালোবাসি</span><span class="sep">✦</span><span>Tumi amar shob</span><span class="sep">✦</span><span>One whole year</span><span class="sep">✦</span><span>Nawabganj winter</span><span class="sep">✦</span><span>Noodles & chaa at 2am</span><span class="sep">✦</span><span>The flower field girl</span><span class="sep">✦</span><span>My favourite person</span><span class="sep">✦</span><span>তুমি আমার সব</span><span class="sep">✦</span>
 </div></div>
 
 <!-- HERO -->
 <div id="hero">
   <div class="stars-bg" id="starsContainer"></div>
-  <p class="hero-eyebrow">one whole, beautiful year with</p>
-  <h1 class="hero-names">Yash<span class="hero-amp">&amp;</span><span class="tory">Tory</span></h1>
-  <p class="hero-date">30 March · 10:30 AM · Nawabganj, Bangladesh</p>
+  <p class="hero-eyebrow">1 Beautiful Year</p>
+  <h1 class="hero-names">Yash<span class="hero-amp">&amp;</span><span class="tory">Tory ❤️🌸 </span></h1>
+  <p class="hero-date">30 March · 10:30 AM · Nawabganj-Dhaka, Bangladesh</p>
   <div class="hero-divider"></div>
-  <p class="hero-tagline">From a cold winter morning in a village I'll never forget, to every quiet moment since — this is ours.</p>
+  <p class="hero-tagline">Kono Ek Sheeter Raat E Nawabganj Naam Er Ekta Jayga, Jeikhan Thike Shob Kichur Shuru. ❤️</p>
   <span class="heartbeat-icon">🫀</span>
   <div class="countdown-wrap" id="countdownWrap">
-    <p class="countdown-label">Until our anniversary</p>
+    <p class="countdown-label">Until Our Anniversary ❤️</p>
     <div class="countdown" id="countdown">
       <div class="cd-unit"><span class="cd-num" id="cd-d">00</span><span class="cd-label">Days</span></div>
       <span class="cd-sep">:</span>
@@ -968,17 +988,16 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
     </div>
   </div>
   <div class="anniv-banner" id="annivBanner">
-    <div class="anniv-text">Happy Anniversary,<br>Tory 🌸</div>
-    <div class="anniv-sub">One whole beautiful year. Here's to forever more.</div>
+    <div class="anniv-text">Happy Anniversary,<br>Tory ❤️🌸</div>
+    <div class="anniv-sub">Pura Ekta Etto Shundor Bochor Hoye Gelo Amader Eksathe ❤️. Alhamdulillahhh ❤️ <br> Jibon Er Ei Boi Tar Matro Ekta Paata Pore Sesh korlam Amra Ekhono Toh Pura Boi Pora E Baaki ❤️🤭</div>
   </div>
-  <button class="confetti-btn" onclick="launchConfetti()">🎉 Celebrate us!</button>
-  <div class="scroll-hint"><span>Scroll</span><div class="scroll-line"></div></div>
+  <button class="confetti-btn" onclick="launchConfetti()">🎉 Celebrate usssss!</button>
 </div>
 
 <!-- WEATHER -->
 <div class="weather-bar reveal" id="weather-section">
   <div class="weather-inner">
-    <div><div class="weather-location">🌍 Dohar, Dhaka — right now</div><div class="weather-romantic" id="weatherRomantic">loading...</div></div>
+    <div><div class="weather-location">🌍 Nawabganj, Dhaka — right now</div><div class="weather-romantic" id="weatherRomantic">loading...</div></div>
     <div style="display:flex;align-items:center;gap:.9rem;"><span class="weather-icon" id="weatherIcon">🌤️</span><div><div class="weather-temp" id="weatherTemp">—°C</div><div class="weather-desc" id="weatherDesc">Loading...</div></div></div>
     <div class="weather-extra" id="weatherExtra"></div>
   </div>
@@ -1016,6 +1035,15 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
     <div class="daily-sub" id="dailySub"></div>
   </div>
 </div>
+<!-- DAILY COMPLIMENT -->
+<div class="compliment-section reveal">
+  <div class="compliment-inner">
+    <div class="compliment-day" id="complimentDay"></div>
+    <div class="compliment-icon" id="complimentIcon"></div>
+    <div class="compliment-text" id="complimentText"></div>
+    <div class="compliment-sub" id="complimentSub"></div>
+  </div>
+</div>
 
 <!-- STATS -->
 <div id="stats-section" class="reveal">
@@ -1023,19 +1051,23 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
     <span class="section-label" style="color:var(--dusty-rose);">By the numbers</span>
     <h2 class="section-title" style="color:var(--cream);">One year in <em style="color:var(--dusty-rose);">numbers</em></h2>
     <div class="stats-grid">
-      <div class="stat-card"><span class="stat-num" id="statDays">365</span><span class="stat-unit">days</span><span class="stat-label">of loving you</span></div>
+      <div class="stat-card"><span class="stat-num" id="statDays">365</span><span class="stat-unit">days</span><span class="stat-label">of loving YOU ❤️</span></div>
       <div class="stat-card"><span class="stat-num" id="statHours">—</span><span class="stat-unit">hours</span><span class="stat-label">together in my heart</span></div>
-      <div class="stat-card"><span class="stat-num">∞</span><span class="stat-unit">times</span><span class="stat-label">I've thought of you</span></div>
-      <div class="stat-card"><span class="stat-num">1</span><span class="stat-unit">mud slip</span><span class="stat-label">for love (worth it)</span></div>
-      <div class="stat-card"><span class="stat-num">0</span><span class="stat-unit">regrets</span><span class="stat-label">not a single one</span></div>
-      <div class="stat-card"><span class="stat-num">🌸</span><span class="stat-unit">flowers</span><span class="stat-label">I'll always pick for her</span></div>
+      <div class="stat-card"><span class="stat-num">∞</span><span class="stat-unit">Times</span><span class="stat-label">I've thought of YOU ❤️</span></div>
+      <div class="stat-card"><span class="stat-num">1</span><span class="stat-unit">Mud Slip</span><span class="stat-label">for love (worth it)</span></div>
+      <div class="stat-card"><span class="stat-num">0</span><span class="stat-unit">Regrets</span><span class="stat-label">not a single one</span></div>
+      <div class="stat-card"><span class="stat-num">🌸</span><span class="stat-unit">Flowers</span><span class="stat-label">I'll always pick for her</span></div>
+      <div class="stat-card"><span class="stat-num">999+</span><span class="stat-unit">Texts</span><span class="stat-label">that made me smile</span></div>
+      <div class="stat-card"><span class="stat-num" id="heartbeat">0</span><span class="stat-unit">HeartBeats</span><span class="stat-label">for YOU ❤️</span></div>
+      <div class="stat-card highlight"><span class="stat-num">Forever</span><span class="stat-unit">promise</span><span class="stat-label">Ami Kothao Jabo Nah Tomake Chere Shona ❤️ </span></div>
+      <div class="stat-card"><span class="stat-num">∞</span><span class="stat-unit">Dreams</span><span class="stat-label">about our future</span></div>
+      <div class="stat-card"><span class="stat-num">100%</span><span class="stat-unit">Mine ❤️</span><span class="stat-label">and always will be</span></div>
+      <div class="stat-card"><span class="stat-num">100%</span><span class="stat-unit">Yours ❤️ </span><span class="stat-label">and always will be</span></div>
+      <div class="stat-card"><span class="stat-num">1</span><span class="stat-unit">Girl ❤️</span><span class="stat-label">who changed everything</span></div>
     </div>
   </div>
 </div>
-<div class="progress-section reveal">
-  <p class="progress-label">One year down · forever to go</p>
-  <div class="progress-bar-outer"><div class="progress-bar-fill" id="progressFill"><div class="progress-dot"></div></div></div>
-  <div class="progress-ends"><span>March 30, 2025</span><span>Forever 🌸</span></div>
+<div class="progress-section reveal"><p class="progress-label">Ekta Pata Sesh · But Don't Worry Pura Boi Tai EKhono Baki ❤️</p><div class="progress-bar-outer"><div class="progress-bar-fill" id="progressFill"><div class="progress-dot"></div></div></div><div class="progress-ends"><span>March 30, 2025</span><span>Forever 🌸</span></div>
 </div>
 
 <!-- HOW WE MET -->
@@ -1047,7 +1079,7 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
       <h2 class="section-title">How it <em>began</em></h2>
       <div class="section-body">
         <p>It wasn't planned. The best things never are.</p><br>
-        <p>A sudden trip to Nawabganj — cold winter air thick with fog, the fields pale and still, the kind of quiet that only villages get when the season turns. The kind of cold that makes you want to be close to someone. I didn't know yet that this trip would become the story I'd tell for the rest of my life.</p><br>
+        <p>A sudden trip to Nawabganj — cold winter air thick with fog, the fields pale and still, the kind of quiet that only villages get when the season turns. The kind of cold that makes YOU ❤️ want to be close to someone. I didn't know yet that this trip would become the story I'd tell for the rest of my life.</p><br>
         <p>She wasn't into me. But somewhere in the mist and the chai and the cold morning light, I was already completely, quietly in love with her. I'm so glad we went.</p>
       </div>
     </div>
@@ -1063,7 +1095,7 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
     <div class="timeline" id="timeline">
       <div class="tl-item"><div class="tl-time">Late night</div><div class="tl-title">The Graveyard Walk</div><div class="tl-body">We walked past a graveyard at night, making jokes like two people who are either very brave or very comfortable with each other. Definitely the second one.</div></div>
       <div class="tl-item"><div class="tl-time">Her home</div><div class="tl-title">Ludo, Monopoly & Pure Chaos</div><div class="tl-body">Ludo first. Then Monopoly — <em>dhoni howar mojar khela.</em> She bankrupted everyone in the first hour and somehow acted surprised about it. I laughed until it hurt.</div></div>
-      <div class="tl-item"><div class="tl-time">2AM kitchen</div><div class="tl-title">Noodles & Chaa</div><div class="tl-body">She made us noodles and chaa without being asked. Simple, warm, perfect. There's something quietly romantic about someone making food for you at 2AM like it's nothing.</div></div>
+      <div class="tl-item"><div class="tl-time">2AM kitchen</div><div class="tl-title">Noodles & Chaa</div><div class="tl-body">She made us noodles and chaa without being asked. Simple, warm, perfect. There's something quietly romantic about someone making food for YOU ❤️ at 2AM like it's nothing.</div></div>
       <div class="tl-item"><div class="tl-time">All night</div><div class="tl-title">We Didn't Sleep</div><div class="tl-body">We stayed up all night. I don't remember every word. I just remember not wanting any of it to stop.</div></div>
       <div class="tl-item"><div class="tl-time">Morning</div><div class="tl-title">Separated & Reunited</div><div class="tl-body">We moved houses and got separated. Worst few minutes of the whole day. Then we found each other again and everything felt lighter.</div></div>
       <div class="tl-item"><div class="tl-time">The river</div><div class="tl-title">The River & The Mud Incident 😭</div><div class="tl-body">She swam. I watched from the bank, quietly happy just to be there. Then getting up, I slipped in the wet mud. A full, spectacular, completely dignified fall. Mortifying. Worth it forever.</div></div>
@@ -1076,17 +1108,17 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
 <div class="reveal" style="background:var(--alt);">
   <div class="section-inner">
     <span class="section-label">From my heart</span>
-    <h2 class="section-title">Reasons I <em>love you</em></h2>
+    <h2 class="section-title">Reasons I <em>love YOU ❤️</em></h2>
     <p style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--mist);">tap each card ✦</p>
     <div class="flip-grid">
-      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">😂</span><span class="flip-front-num">01</span></div><div class="flip-back"><p class="flip-back-text">The way you laugh — completely unfiltered. It's the best sound I know.</p></div></div></div>
-      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">🍜</span><span class="flip-front-num">02</span></div><div class="flip-back"><p class="flip-back-text">You made noodles at 2AM without being asked. That's exactly the kind of person you are.</p></div></div></div>
-      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">🌊</span><span class="flip-front-num">03</span></div><div class="flip-back"><p class="flip-back-text">You dove into that river like it was nothing. You are so much braver than you know.</p></div></div></div>
-      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">🌙</span><span class="flip-front-num">04</span></div><div class="flip-back"><p class="flip-back-text">That you stayed up all night with me and it still never felt like enough time.</p></div></div></div>
-      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">🌸</span><span class="flip-front-num">05</span></div><div class="flip-back"><p class="flip-back-text">The look on your face in the flower field. I was already completely lost before that.</p></div></div></div>
-      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">🎲</span><span class="flip-front-num">06</span></div><div class="flip-back"><p class="flip-back-text">The way you play Monopoly like world peace depends on bankrupting everyone at the table.</p></div></div></div>
-      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">💬</span><span class="flip-front-num">07</span></div><div class="flip-back"><p class="flip-back-text">You make even the hardest conversations feel safe. That's rare. That's everything.</p></div></div></div>
-      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">🫂</span><span class="flip-front-num">08</span></div><div class="flip-back"><p class="flip-back-text">A year in and I still choose you first, every single day. That's my favourite reason.</p></div></div></div>
+      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">😂</span><span class="flip-front-num">01</span></div><div class="flip-back"><p class="flip-back-text">The way YOU ❤️ laugh — completely unfiltered. It's the best sound I know.</p></div></div></div>
+      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">🍜</span><span class="flip-front-num">02</span></div><div class="flip-back"><p class="flip-back-text">YOU ❤️ made noodles at 2AM without being asked. That's exactly the kind of person YOU ❤️ are.</p></div></div></div>
+      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">🌊</span><span class="flip-front-num">03</span></div><div class="flip-back"><p class="flip-back-text">YOU ❤️ dove into that river like it was nothing. YOU ❤️ are so much braver than YOU ❤️ know.</p></div></div></div>
+      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">🌙</span><span class="flip-front-num">04</span></div><div class="flip-back"><p class="flip-back-text">That YOU ❤️ stayed up all night with me and it still never felt like enough time.</p></div></div></div>
+      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">🌸</span><span class="flip-front-num">05</span></div><div class="flip-back"><p class="flip-back-text">The look on YOU ❤️r face in the flower field. I was already completely lost before that.</p></div></div></div>
+      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">🎲</span><span class="flip-front-num">06</span></div><div class="flip-back"><p class="flip-back-text">The way YOU ❤️ play Monopoly like world peace depends on bankrupting everyone at the table.</p></div></div></div>
+      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">💬</span><span class="flip-front-num">07</span></div><div class="flip-back"><p class="flip-back-text">YOU ❤️ make even the hardest conversations feel safe. That's rare. That's everything.</p></div></div></div>
+      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">🫂</span><span class="flip-front-num">08</span></div><div class="flip-back"><p class="flip-back-text">A year in and I still choose YOU ❤️ first, every single day. That's my favourite reason.</p></div></div></div>
     </div>
   </div>
 </div>
@@ -1094,7 +1126,7 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
 <!-- STARFIELD — UPGRADED -->
 <div id="starfield-section">
   <span class="section-label" style="color:var(--dusty-rose);">tap a star · write a wish</span>
-  <h2 class="section-title" style="color:var(--cream);">The reasons I <em style="color:var(--dusty-rose);">fell for you</em></h2>
+  <h2 class="section-title" style="color:var(--cream);">The reasons I <em style="color:var(--dusty-rose);">fell for YOU ❤️</em></h2>
   <p style="font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(232,196,176,.45);font-size:.98rem;">Tap any star. Write a wish — it becomes a star in our sky forever.</p>
   <canvas id="starCanvas" width="800" height="320"></canvas>
   <div class="sf-legend">
@@ -1156,8 +1188,8 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
 <!-- GIFT — LOCKED -->
 <div id="gift-section" class="reveal">
   <div class="section-inner" style="text-align:center;max-width:520px;">
-    <span class="section-label" style="color:var(--dusty-rose);">Something for you</span>
-    <h2 class="section-title" style="color:var(--cream);">I got you <em style="color:var(--dusty-rose);">something</em></h2>
+    <span class="section-label" style="color:var(--dusty-rose);">Something for YOU ❤️</span>
+    <h2 class="section-title" style="color:var(--cream);">I got YOU ❤️ <em style="color:var(--dusty-rose);">something</em></h2>
     <p style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--dusty-rose);font-size:1rem;margin-bottom:0;">Opens on our anniversary, March 30 🎀</p>
     <div class="gift-wrap" id="giftWrap" onclick="openGift()">
       <div class="gift-box" id="giftBox">
@@ -1168,7 +1200,7 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
     <span class="gift-hint" id="giftHint">tap to unwrap ✦</span>
     <div class="gift-reveal" id="giftReveal">
       <div class="gift-message">Happy Anniversary, Tory 🌸</div>
-      <div class="gift-sub">A whole year of you. Of us. Of picking flowers in muddy fields and staying up all night and finding each other again when we got separated. I wouldn't change a single second of it.<br><br>Here's to forever more. — Yash</div>
+      <div class="gift-sub">A whole year of YOU ❤️. Of us. Of picking flowers in muddy fields and staying up all night and finding each other again when we got separated. I wouldn't change a single second of it.<br><br>Here's to forever more. — Yash</div>
     </div>
   </div>
 </div>
@@ -1211,9 +1243,9 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
       <div class="chat-header"><div class="chat-avatar">🌸</div><div><div class="chat-header-name">Tory</div><div class="chat-status" id="chatStatus">online</div></div></div>
       <div class="chat-body" id="chatBody">
         <div class="typing-indicator" id="typingIndicator"><div class="typing-dots"><span></span><span></span><span></span></div></div>
-        <div class="chat-msg recv" data-time="10:31 AM"><div>Add your first texts here — edit the HTML 🌸</div><div class="chat-time">10:31 AM</div></div>
-        <div class="chat-msg sent" data-time="10:32 AM"><div>The messages that started everything. You know which ones.</div><div class="chat-time">10:32 AM</div></div>
-        <div class="chat-msg recv" data-time="10:33 AM"><div>The one that made you smile for an hour after reading it.</div><div class="chat-time">10:33 AM</div></div>
+        <div class="chat-msg recv" data-time="10:31 AM"><div>Add YOU ❤️r first texts here — edit the HTML 🌸</div><div class="chat-time">10:31 AM</div></div>
+        <div class="chat-msg sent" data-time="10:32 AM"><div>The messages that started everything. YOU ❤️ know which ones.</div><div class="chat-time">10:32 AM</div></div>
+        <div class="chat-msg recv" data-time="10:33 AM"><div>The one that made YOU ❤️ smile for an hour after reading it.</div><div class="chat-time">10:33 AM</div></div>
         <div class="chat-msg sent" data-time="10:35 AM"><div>And the reply that made her think maybe... just maybe.</div><div class="chat-time">10:35 AM</div></div>
       </div>
     </div>
@@ -1226,14 +1258,14 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
     <span class="section-label" style="color:var(--dusty-rose);">আমাদের ভাষা</span>
     <h2 class="section-title" style="color:var(--cream);">Our <em style="color:var(--dusty-rose);">language</em></h2>
     <div class="bengali-grid">
-      <div class="bengali-card"><div class="bengali-script">আমি তোমাকে ভালোবাসি</div><div class="bengali-roman">Ami tomake bhalobashi</div><div class="bengali-meaning">I love you</div></div>
-      <div class="bengali-card"><div class="bengali-script">তুমি আমার সব</div><div class="bengali-roman">Tumi amar shob</div><div class="bengali-meaning">You are my everything</div></div>
-      <div class="bengali-card"><div class="bengali-script">তোমাকে ছাড়া থাকতে পারি না</div><div class="bengali-roman">Tomake chhara thakte pari na</div><div class="bengali-meaning">I can't live without you</div></div>
+      <div class="bengali-card"><div class="bengali-script">আমি তোমাকে ভালোবাসি</div><div class="bengali-roman">Ami tomake bhalobashi</div><div class="bengali-meaning">I love YOU ❤️</div></div>
+      <div class="bengali-card"><div class="bengali-script">তুমি আমার সব</div><div class="bengali-roman">Tumi amar shob</div><div class="bengali-meaning">YOU ❤️ are my everything</div></div>
+      <div class="bengali-card"><div class="bengali-script">তোমাকে ছাড়া থাকতে পারি না</div><div class="bengali-roman">Tomake chhara thakte pari na</div><div class="bengali-meaning">I can't live without YOU ❤️</div></div>
       <div class="bengali-card"><div class="bengali-script">তুমি আমার স্বপ্নের মানুষ</div><div class="bengali-roman">Tumi amar shopner manush</div><div class="bengali-meaning">Person of my dreams</div></div>
-      <div class="bengali-card"><div class="bengali-script">আমার মন তোমার কাছে</div><div class="bengali-roman">Amar mon tomar kache</div><div class="bengali-meaning">My heart is with you</div></div>
-      <div class="bengali-card"><div class="bengali-script">শুধু তুমি</div><div class="bengali-roman">Shudhu tumi</div><div class="bengali-meaning">Only you</div></div>
-      <div class="bengali-card"><div class="bengali-script">তুমি আমার জান</div><div class="bengali-roman">Tumi amar jaan</div><div class="bengali-meaning">You are my life</div></div>
-      <div class="bengali-card"><div class="bengali-script">তোমাকে দেখলে মন ভালো হয়</div><div class="bengali-roman">Tomake dekhle mon bhalo hoy</div><div class="bengali-meaning">Seeing you makes me happy</div></div>
+      <div class="bengali-card"><div class="bengali-script">আমার মন তোমার কাছে</div><div class="bengali-roman">Amar mon tomar kache</div><div class="bengali-meaning">My heart is with YOU ❤️</div></div>
+      <div class="bengali-card"><div class="bengali-script">শুধু তুমি</div><div class="bengali-roman">Shudhu tumi</div><div class="bengali-meaning">Only YOU ❤️</div></div>
+      <div class="bengali-card"><div class="bengali-script">তুমি আমার জান</div><div class="bengali-roman">Tumi amar jaan</div><div class="bengali-meaning">YOU ❤️ are my life</div></div>
+      <div class="bengali-card"><div class="bengali-script">তোমাকে দেখলে মন ভালো হয়</div><div class="bengali-roman">Tomake dekhle mon bhalo hoy</div><div class="bengali-meaning">Seeing YOU ❤️ makes me happy</div></div>
     </div>
   </div>
 </div>
@@ -1241,15 +1273,15 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
 <!-- LOVE LETTER — LOCKED -->
 <div id="letter-section" class="reveal" style="background:radial-gradient(ellipse at center,#ede0d4,var(--bg));text-align:center;">
   <div class="section-inner" style="max-width:660px;">
-    <span class="section-label">From me, to you</span>
-    <h2 class="section-title">A letter I <em>wrote you</em></h2>
+    <span class="section-label">From me, to YOU ❤️</span>
+    <h2 class="section-title">A letter I <em>wrote YOU ❤️</em></h2>
     <div class="envelope-wrap">
       <div class="envelope" id="envelope" onclick="openLetter()">
         <div class="envelope-flap"></div>
         <span class="envelope-seal">🌸</span>
         <div class="envelope-body">
           <p class="letter-salutation">My dearest Tory,</p>
-          <p class="letter-body">A year ago I went on a trip I didn't plan and found the person I wasn't looking for. You made noodles at 2AM. You swam in a cold river without hesitating. You played Monopoly like it was a professional sport. And in a flower field on a winter morning, before you'd even said yes to me, I picked flowers for you — because that's what you do when someone already has your whole heart.<br><br>Thank you for this year. Thank you for every conversation, every late night, every moment of being found after getting separated. You are my favourite thing that ever happened to me.<br><br>Happy anniversary. Here's to all the years after this one.</p>
+          <p class="letter-body">A year ago I went on a trip I didn't plan and found the person I wasn't looking for. YOU ❤️ made noodles at 2AM. YOU ❤️ swam in a cold river without hesitating. YOU ❤️ played Monopoly like it was a professional sport. And in a flower field on a winter morning, before YOU ❤️'d even said yes to me, I picked flowers for YOU ❤️ — because that's what YOU ❤️ do when someone already has YOU ❤️r whole heart.<br><br>Thank YOU ❤️ for this year. Thank YOU ❤️ for every conversation, every late night, every moment of being found after getting separated. YOU ❤️ are my favourite thing that ever happened to me.<br><br>Happy anniversary. Here's to all the years after this one.</p>
           <p class="letter-sign">— Yash, always 🌸</p>
         </div>
       </div>
@@ -1261,10 +1293,10 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
 <!-- HEARTBEAT -->
 <div id="heartbeat-section" class="reveal">
   <div class="section-inner" style="text-align:center;max-width:680px;">
-    <span class="section-label" style="color:var(--dusty-rose);">My heartbeat for you</span>
-    <h2 class="section-title" style="color:var(--cream);">Every beat <em style="color:var(--dusty-rose);">is yours</em></h2>
+    <span class="section-label" style="color:var(--dusty-rose);">My heartbeat for YOU ❤️</span>
+    <h2 class="section-title" style="color:var(--cream);">Every beat <em style="color:var(--dusty-rose);">is YOU ❤️rs</em></h2>
     <canvas id="hbCanvas" width="700" height="120"></canvas>
-    <p class="hb-note">A year of waking up and thinking of you first. A year of your laugh being the best part of any day. A year of being completely, happily, irreversibly yours.</p>
+    <p class="hb-note">A year of waking up and thinking of YOU ❤️ first. A year of YOU ❤️r laugh being the best part of any day. A year of being completely, happily, irreversibly YOU ❤️rs.</p>
   </div>
 </div>
 
@@ -1272,14 +1304,14 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
 <div class="reveal" style="background:var(--deep);">
   <div class="section-inner">
     <span class="section-label" style="color:var(--dusty-rose);">From this day on</span>
-    <h2 class="section-title" style="color:var(--cream);">My <em style="color:var(--dusty-rose);">promises</em> to you</h2>
+    <h2 class="section-title" style="color:var(--cream);">My <em style="color:var(--dusty-rose);">promises</em> to YOU ❤️</h2>
     <div class="promises-grid">
-      <div class="promise-card"><div class="promise-num">01</div><div class="promise-text">I promise to always pick flowers for you, even when there's no flower field nearby.</div></div>
-      <div class="promise-card"><div class="promise-num">02</div><div class="promise-text">I promise to always find you when we get separated — even if it's only been five minutes.</div></div>
-      <div class="promise-card"><div class="promise-num">03</div><div class="promise-text">I promise to stay up all night with you whenever you need it — and a few times when you don't.</div></div>
-      <div class="promise-card"><div class="promise-num">04</div><div class="promise-text">I promise to make you laugh as often as possible, even if that means embarrassing myself in the mud.</div></div>
-      <div class="promise-card"><div class="promise-num">05</div><div class="promise-text">I promise to choose you — not because I have to, but because you're the easiest choice I've ever made.</div></div>
-      <div class="promise-card"><div class="promise-num">06</div><div class="promise-text">I promise that no matter what, you will always have someone in your corner. Me. Always me.</div></div>
+      <div class="promise-card"><div class="promise-num">01</div><div class="promise-text">I promise to always pick flowers for YOU ❤️, even when there's no flower field nearby.</div></div>
+      <div class="promise-card"><div class="promise-num">02</div><div class="promise-text">I promise to always find YOU ❤️ when we get separated — even if it's only been five minutes.</div></div>
+      <div class="promise-card"><div class="promise-num">03</div><div class="promise-text">I promise to stay up all night with YOU ❤️ whenever YOU ❤️ need it — and a few times when YOU ❤️ don't.</div></div>
+      <div class="promise-card"><div class="promise-num">04</div><div class="promise-text">I promise to make YOU ❤️ laugh as often as possible, even if that means embarrassing myself in the mud.</div></div>
+      <div class="promise-card"><div class="promise-num">05</div><div class="promise-text">I promise to choose YOU ❤️ — not because I have to, but because YOU ❤️'re the easiest choice I've ever made.</div></div>
+      <div class="promise-card"><div class="promise-num">06</div><div class="promise-text">I promise that no matter what, YOU ❤️ will always have someone in YOU ❤️r corner. Me. Always me.</div></div>
     </div>
   </div>
 </div>
@@ -1291,7 +1323,7 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
     <h2 class="section-title">If we <em>were...</em></h2>
     <p class="section-body">A little universe of us.</p>
     <div class="ifwewere-grid">
-      <div class="ifw-card"><span class="ifw-icon">🎵</span><div class="ifw-label">a song</div><div class="ifw-answer">a slow winter melody</div><div class="ifw-why">warm, unhurried, the kind you replay at 2AM</div></div>
+      <div class="ifw-card"><span class="ifw-icon">🎵</span><div class="ifw-label">a song</div><div class="ifw-answer">a slow winter melody</div><div class="ifw-why">warm, unhurried, the kind YOU ❤️ replay at 2AM</div></div>
       <div class="ifw-card"><span class="ifw-icon">🌍</span><div class="ifw-label">a place</div><div class="ifw-answer">Nawabganj in December</div><div class="ifw-why">foggy, quiet, and completely ours</div></div>
       <div class="ifw-card"><span class="ifw-icon">🍂</span><div class="ifw-label">a season</div><div class="ifw-answer">late winter</div><div class="ifw-why">cold enough to pull closer, warm enough to stay</div></div>
       <div class="ifw-card"><span class="ifw-icon">☕</span><div class="ifw-label">a drink</div><div class="ifw-answer">chaa at 2AM</div><div class="ifw-why">simple, warm, made without being asked</div></div>
@@ -1307,13 +1339,6 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
     <span class="section-label" style="color:var(--dusty-rose);">Just between us</span>
     <h2 class="section-title" style="color:var(--cream);">What I call <em style="color:var(--dusty-rose);">her</em></h2>
     <div class="nickname-grid">
-      <span class="nickname-tag">Tory ❤️🌸</span><span class="nickname-tag">Baby ❤️</span><span class="nickname-tag">Jaan ❤️</span>
-      <span class="nickname-tag">Shona Baccha ❤️🌸 </span><span class="nickname-tag">Toriii ❤️🌸</span><span class="nickname-tag">Love ❤️</span>
-      <span class="nickname-tag">Shona ❤️</span><span class="nickname-tag">Toru ❤️🌸</span><span class="nickname-tag">Shonuuu ❤️</span>
-      <span class="nickname-tag">Pakhiii ❤️</span><span class="nickname-tag">Shona Pakhiii ❤️</span><span class="nickname-tag">Jaantushhhh ❤️</span>
-      <span class="nickname-tag">baccha ❤️</span><span class="nickname-tag">bebiiii ❤️</span><span class="nickname-tag">babe ❤️</span><span class="nickname-tag">babuu ❤️🌸</span>
-      <span class="nickname-tag">My Love ❤️</span><span class="nickname-tag">Lokkhi ❤️</span><span class="nickname-tag">Babuiii ❤️</span><span class="nickname-tag">Shona Baccha ❤️</span>
-      <span class="nickname-tag">Moyna Pakhi ❤️</span><span class="nickname-tag">Cutushhh ❤️</span>
     </div>
   </div>
 </div>
@@ -1322,9 +1347,9 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
 <div class="reveal">
   <div class="section-inner">
     <span class="section-label">Our soundtrack</span>
-    <h2 class="section-title">Songs that <em>remind me of you</em></h2>
+    <h2 class="section-title">Songs that <em>remind me of YOU ❤️</em></h2>
     <div style="display:flex;flex-direction:column;gap:.9rem;margin-top:1.3rem;max-width:580px;">
-      <div class="song-block"><div class="song-block-header"><span style="font-size:1.2rem;">🎵</span><div><div style="font-family:'Playfair Display',serif;font-style:italic;font-size:.97rem;color:var(--deep);">Our song</div><div style="font-size:.82rem;color:var(--mist);">The one that plays and I think of you instantly</div></div></div>
+      <div class="song-block"><div class="song-block-header"><span style="font-size:1.2rem;">🎵</span><div><div style="font-family:'Playfair Display',serif;font-style:italic;font-size:.97rem;color:var(--deep);">Our song</div><div style="font-size:.82rem;color:var(--mist);">The one that plays and I think of YOU ❤️ instantly</div></div></div>
       <iframe class="spotify-frame" src="https://open.spotify.com/embed/track/TRACK_ID_S1?utm_source=generator&theme=0" height="76" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
       <div class="song-block"><div class="song-block-header"><span style="font-size:1.2rem;">🎵</span><div><div style="font-family:'Playfair Display',serif;font-style:italic;font-size:.97rem;color:var(--deep);">The night song</div><div style="font-size:.82rem;color:var(--mist);">What was playing that night in Nawabganj</div></div></div>
       <iframe class="spotify-frame" src="https://open.spotify.com/embed/track/TRACK_ID_S2?utm_source=generator&theme=0" height="76" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
@@ -1368,14 +1393,79 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
   </div>
 </div>
 
+
+
+<!-- CHAPTER 5 — FUTURE TIMELINE -->
+<div id="future-section" class="reveal" style="background:var(--alt);">
+  <div class="section-inner">
+    <span class="section-label">Chapter Five</span>
+    <h2 class="section-title">The <em>Future</em> We Haven't Lived Yet</h2>
+    <p style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--warm-brown);opacity:.75;font-size:1.1rem;margin-bottom:2.5rem;">
+      We survived a year… imagine a lifetime.
+    </p>
+    <div class="future-timeline">
+      <div class="ft-item reveal-ft"><span class="ft-icon">🌍</span><div class="ft-text"><div class="ft-label">Our first real trip together</div><div class="ft-sub">Somewhere we've never been. Together this time — not across a field.</div></div></div>
+      <div class="ft-item reveal-ft"><span class="ft-icon">😭</span><div class="ft-text"><div class="ft-label">First fight we laugh about later</div><div class="ft-sub">We'll be dramatic about something small. Then laugh about it for years.</div></div></div>
+      <div class="ft-item reveal-ft"><span class="ft-icon">🌙</span><div class="ft-text"><div class="ft-label">A night that changes everything again</div><div class="ft-sub">Because that first night in Nawabganj wasn't the last time life would surprise us.</div></div></div>
+      <div class="ft-item reveal-ft"><span class="ft-icon">🏡</span><div class="ft-text"><div class="ft-label">The "we made it" moment</div><div class="ft-sub">When we look at each other and just know — yeah. This is it. We built it.</div></div></div>
+      <div class="ft-item reveal-ft"><span class="ft-icon">🕰️</span><div class="ft-text"><div class="ft-label">Growing old, still laughing</div><div class="ft-sub">Still making noodles at 2AM. Still staying up too late. Still us.</div></div></div>
+    </div>
+  </div>
+</div>
+<!-- TAP TO REVEAL FUTURE -->
+<div class="reveal" style="background:var(--night);padding:4rem 1.5rem;">
+  <div class="section-inner" style="text-align:center;max-width:700px;">
+    <span class="section-label" style="color:var(--dusty-rose);">tap each one</span>
+    <h2 class="section-title" style="color:var(--cream);">Things I <em style="color:var(--dusty-rose);">know</em> about us</h2>
+    <div class="reveal-cards-grid">
+      <div class="reveal-card" onclick="this.classList.toggle('open')">
+        <div class="rc-front">🔒<span>Tap to reveal</span></div>
+        <div class="rc-back">We don't lose each other.<br>No matter what.</div>
+      </div>
+      <div class="reveal-card" onclick="this.classList.toggle('open')">
+        <div class="rc-front">🔒<span>Tap to reveal</span></div>
+        <div class="rc-back">The best day of my life<br>hasn't happened yet.</div>
+      </div>
+      <div class="reveal-card" onclick="this.classList.toggle('open')">
+        <div class="rc-front">🔒<span>Tap to reveal</span></div>
+        <div class="rc-back">I'd do it all again.<br>Every muddy field. Every 2AM.</div>
+      </div>
+      <div class="reveal-card" onclick="this.classList.toggle('open')">
+        <div class="rc-front">🔒<span>Tap to reveal</span></div>
+        <div class="rc-back">One year down.<br>Every year after — still you.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- PARALLEL UNIVERSE -->
+<div class="reveal" style="background:radial-gradient(ellipse at 50% 0%,#1a0d14,#050103);">
+  <div class="section-inner" style="text-align:center;max-width:780px;">
+    <span class="section-label" style="color:var(--dusty-rose);">in every universe</span>
+    <h2 class="section-title" style="color:var(--cream);">I still <em style="color:var(--dusty-rose);">find you</em></h2>
+    <p style="font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(232,196,176,.5);font-size:1rem;margin-bottom:2rem;">No matter where. No matter when.</p>
+    <div class="parallel-grid">
+      <div class="parallel-card"><div class="p-if">If we were strangers</div><div class="p-then">I'd still fall for you.<br>Some things are inevitable.</div></div>
+      <div class="parallel-card"><div class="p-if">If we met later</div><div class="p-then">I'd still wait.<br>However long it took.</div></div>
+      <div class="parallel-card"><div class="p-if">If everything reset</div><div class="p-then">I'd still choose you.<br>First. Every time.</div></div>
+      <div class="parallel-card"><div class="p-if">If distance was permanent</div><div class="p-then">I'd still find a way.<br>Nawabganj proved that.</div></div>
+      <div class="parallel-card"><div class="p-if">If I could go back</div><div class="p-then">I'd still pick flowers<br>in that muddy field.</div></div>
+      <div class="parallel-card"><div class="p-if">In every universe</div><div class="p-then">There's a version of me<br>completely lost in you.</div></div>
+    </div>
+  </div>
+</div>
+
 <!-- GUESTBOOK -->
 <div id="guestbook-section" class="reveal">
   <div class="section-inner">
     <span class="section-label" style="color:var(--dusty-rose);">Love from everyone</span>
     <h2 class="section-title" style="color:var(--cream);">Wishes from <em style="color:var(--dusty-rose);">our people</em></h2>
-    <p style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--dusty-rose);font-size:1.05rem;margin-bottom:.4rem;">Everyone who loves you both, leaving a piece of that love here.</p>
-    <a class="gb-link" href="https://yashrahman0405.github.io" target="_blank">🌸 Leave a wish</a>
-    <div class="guestbook-grid" id="guestbookGrid"><p class="gb-empty" style="color:var(--mist);">Loading wishes... 🌸</p></div>
+    <p style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--dusty-rose);font-size:1.05rem;margin-bottom:.4rem;">Everyone who loves YOU ❤️ both, leaving a piece of that love here.</p>
+<a class="gb-link" href="https://yashrahman0405.github.io" target="_blank">🌸 Leave a wish</a>
+<div id="guestbookVipBlock" style="display:none;">
+  <div class="gb-vip-title"><span>✨ Special Wishes ✨</span></div>
+  <div class="guestbook-grid" id="guestbookVipGrid"></div>
+</div>
+<div class="guestbook-grid" id="guestbookGrid"><p class="gb-empty" style="color:var(--mist);">Loading wishes... 🌸</p></div>
   </div>
 </div>
 
@@ -1554,7 +1644,7 @@ setTimeout(()=>{const f=document.getElementById('progressFill');if(f)f.style.wid
 
 /* ─── WEATHER ─── */
 function loadWeather(){
-  const romantics=['The same sky that was over us that winter morning','A sky that\'s seen our whole story','Whatever the weather, I\'d go back to Nawabganj for you','Even the clouds know this place is ours'];
+  const romantics=['The same sky that was over us that winter morning','A sky that\'s seen our whole story','Whatever the weather, I\'d go back to Nawabganj for YOU ❤️','Even the clouds know this place is ours'];
   fetch('https://api.weatherapi.com/v1/current.json?key=3b9c041a4afd451299e224831250406&q=23.660970,90.162110&aqi=no')
     .then(r=>{if(!r.ok)throw new Error();return r.json();})
     .then(d=>{
@@ -1581,23 +1671,23 @@ function calcDist(){
     const dist=Math.round(R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)));
     let n=0;const step=Math.max(1,dist/60);
     const iv=setInterval(()=>{n+=step;if(n>=dist){n=dist;clearInterval(iv);}dN.textContent=Math.round(n).toLocaleString()+' km';},30);
-    dM.textContent=dist<2?'you\'re right here 🌸':dist<50?`only ${dist}km apart 🌸`:`${dist}km apart · zero distance in my heart 🌸`;
+    dM.textContent=dist<2?'YOU ❤️\'re right here 🌸':dist<50?`only ${dist}km apart 🌸`:`${dist}km apart · zero distance in my heart 🌸`;
   },()=>{dN.textContent='∞→0';dM.textContent='distance means nothing to us 🌸';});
 }
 calcDist();
 
 /* ─── DAILY MESSAGE ─── */
 const msgs=[
-  {msg:'Today I woke up and thought of you first.',sub:'Same as every day. Same as forever.'},
-  {msg:'Every ordinary day with you is extraordinary.',sub:'That\'s just the effect you have.'},
-  {msg:'I\'d slip in that mud a thousand times over.',sub:'As long as you\'re there to laugh about it.'},
-  {msg:'You are my favourite person to stay up with.',sub:'Even when we should absolutely be sleeping.'},
+  {msg:'Today I woke up and thought of YOU ❤️ first.',sub:'Same as every day. Same as forever.'},
+  {msg:'Every ordinary day with YOU ❤️ is extraordinary.',sub:'That\'s just the effect YOU ❤️ have.'},
+  {msg:'I\'d slip in that mud a thousand times over.',sub:'As long as YOU ❤️\'re there to laugh about it.'},
+  {msg:'YOU ❤️ are my favourite person to stay up with.',sub:'Even when we should absolutely be sleeping.'},
   {msg:'The flower field was just the beginning.',sub:'Everything since has been better.'},
-  {msg:'I chose you today. I\'ll choose you again tomorrow.',sub:'And the day after. And every one after that.'},
-  {msg:'A year ago, a village in winter changed my life.',sub:'Because you were in it.'},
-  {msg:'Some people come into your life like a storm.',sub:'You came in like a warm winter morning.'},
-  {msg:'You made noodles at 2AM without being asked.',sub:'I knew then. I knew.'},
-  {msg:'Today\'s reason I love you: just because.',sub:'No reason needed. Just you.'},
+  {msg:'I chose YOU ❤️ today. I\'ll choose YOU ❤️ again tomorrow.',sub:'And the day after. And every one after that.'},
+  {msg:'A year ago, a village in winter changed my life.',sub:'Because YOU ❤️ were in it.'},
+  {msg:'Some people come into YOU ❤️r life like a storm.',sub:'YOU ❤️ came in like a warm winter morning.'},
+  {msg:'YOU ❤️ made noodles at 2AM without being asked.',sub:'I knew then. I knew.'},
+  {msg:'Today\'s reason I love YOU ❤️: just because.',sub:'No reason needed. Just YOU ❤️.'},
   {msg:'আজও তোমাকে ভালোবাসি।',sub:'Today. Tomorrow. Always.'},
   {msg:'I still smile thinking about the graveyard walk.',sub:'We were so ridiculous. I loved it.'},
 ];
@@ -1676,7 +1766,7 @@ function spawnBurst(){const x=Math.random()*fwC.width,y=Math.random()*fwC.height
 function animFW(){if(!fwC.classList.contains('active'))return;fwX.clearRect(0,0,fwC.width,fwC.height);fwP.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.05;p.life-=.016;fwX.globalAlpha=p.life;fwX.fillStyle=p.color;fwX.beginPath();fwX.arc(p.x,p.y,p.size,0,Math.PI*2);fwX.fill();});fwP=fwP.filter(p=>p.life>0);fwX.globalAlpha=1;requestAnimationFrame(animFW);}
 
 /* ─── DEBUG MENU ─── */
-const starReasons=['Your laugh. I could listen to it forever.','You made food for me without being asked.','The way you dove into that river without hesitating.','You stayed up all night with me just talking.','The look on your face in the flower field.','You make every hard thing feel a little lighter.','Your complete, joyful chaos at Monopoly.','The way you held my hand that first time.','You are brave in ways you don\'t even see.','Every time we got separated and found each other.','You are my favourite kind of trouble.','Your warmth. You make everywhere feel like home.','The way you laugh at my jokes even when they\'re bad.','You chose me back. That changed everything.','Nawabganj in winter. Because of you.'];
+const starReasons=['YOU ❤️r laugh. I could listen to it forever.','YOU ❤️ made food for me without being asked.','The way YOU ❤️ dove into that river without hesitating.','YOU ❤️ stayed up all night with me just talking.','The look on YOU ❤️r face in the flower field.','YOU ❤️ make every hard thing feel a little lighter.','YOU ❤️r complete, joyful chaos at Monopoly.','The way YOU ❤️ held my hand that first time.','YOU ❤️ are brave in ways YOU ❤️ don\'t even see.','Every time we got separated and found each other.','YOU ❤️ are my favourite kind of trouble.','YOU ❤️r warmth. YOU ❤️ make everywhere feel like home.','The way YOU ❤️ laugh at my jokes even when they\'re bad.','YOU ❤️ chose me back. That changed everything.','Nawabganj in winter. Because of YOU ❤️.'];
 const sfC=document.getElementById('starCanvas'),sfX=sfC.getContext('2d');
 let sfStars=[],sfWishStars=[],sfShooting=[],sfAnimId,sfHov=null,wishWho='Yash';
 // 3 distinct colours: reasons=silver-white, Yash wishes=warm gold, Tory wishes=teal
@@ -1795,7 +1885,7 @@ async function addWish(){
     updateWishCount(sfWishStars.length);
     sfPopup.className='star-popup '+(wishWho==='Tory'?'tory-pop':'yash-pop');
     playSfx('sfxPop',0.4);
-    sfPopup.innerHTML=(wishWho==='Tory'?'💫':'✨')+' Your wish is now a star in our sky';
+    sfPopup.innerHTML=(wishWho==='Tory'?'💫':'✨')+' YOU ❤️r wish is now a star in our sky';
     sfPopup.classList.remove('hide');clearTimeout(sfPopup._t);sfPopup._t=setTimeout(()=>sfPopup.classList.add('hide'),2800);
     launchConfetti&&launchConfetti();
   }catch(e){alert('Couldn\'t save wish 🌸');}
@@ -1857,10 +1947,10 @@ if(mapEl){
     {lat:23.660,lng:90.162,color:'#e8c4b0',title:'Her Home',desc:'Noodles, chaa & Monopoly 🎲'},
   ];
   const extra=[
-    {lat:0,lng:0,color:'#c97070',title:'Place 5',desc:'Your description here'},
-    {lat:0,lng:0,color:'#7a9cc9',title:'Place 6',desc:'Your description here'},
-    {lat:0,lng:0,color:'#9cc97a',title:'Place 7',desc:'Your description here'},
-    {lat:0,lng:0,color:'#c9c97a',title:'Place 8',desc:'Your description here'},
+    {lat:0,lng:0,color:'#c97070',title:'Place 5',desc:'YOU ❤️r description here'},
+    {lat:0,lng:0,color:'#7a9cc9',title:'Place 6',desc:'YOU ❤️r description here'},
+    {lat:0,lng:0,color:'#9cc97a',title:'Place 7',desc:'YOU ❤️r description here'},
+    {lat:0,lng:0,color:'#c9c97a',title:'Place 8',desc:'YOU ❤️r description here'},
   ];
   const all=[...core,...extra.filter(m=>m.lat!==0)];
   const coords=[];
@@ -1908,11 +1998,32 @@ async function addBucketItem(){
 async function toggleBucket(id,done){try{await sb(`bucket_list?id=eq.${id}`,{method:'PATCH',body:JSON.stringify({completed:!done})});loadBucketList();}catch(e){}}
 
 /* ─── GUESTBOOK ─── */
+function renderGbCard(w, i, isVip=false){
+  return `<div class="gb-card${isVip?' vip':''}" style="animation-delay:${i*.06}s">
+    ${isVip?'<span class="gb-crown">👑</span>':''}
+    <span class="gb-emoji">${esc(w.emoji||'🌸')}</span>
+    <div class="gb-name">${esc(w.name)}</div>
+    <div class="gb-message">${esc(w.message)}</div>
+    <div class="gb-date">${new Date(w.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</div>
+  </div>`;
+}
 async function loadGuestbook(){
   const grid=document.getElementById('guestbookGrid');
-  try{const r=await sb('guestbook?select=*&order=created_at.desc&limit=12');const data=await r.json();
+  const vipGrid=document.getElementById('guestbookVipGrid');
+  const vipBlock=document.getElementById('guestbookVipBlock');
+  try{const r=await sb('guestbook?select=*&order=created_at.desc&limit=50');const data=await r.json();
     if(!data.length){grid.innerHTML='<p class="gb-empty">No wishes yet 🌸</p>';return;}
-    grid.innerHTML=data.map((w,i)=>`<div class="gb-card" style="animation-delay:${i*.06}s"><span class="gb-emoji">${esc(w.emoji||'🌸')}</span><div class="gb-name">${esc(w.name)}</div><div class="gb-message">${esc(w.message)}</div><div class="gb-date">${new Date(w.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</div></div>`).join('');
+    const vip=data.filter(w=>w.priority===true);
+    const normal=data.filter(w=>w.priority!==true);
+    if(vip.length){
+      vipBlock.style.display='block';
+      vipGrid.innerHTML=vip.map((w,i)=>renderGbCard(w,i,true)).join('');
+    } else {
+      vipBlock.style.display='none';
+    }
+    grid.innerHTML=normal.length
+      ? normal.map((w,i)=>renderGbCard(w,i,false)).join('')
+      : '<p class="gb-empty">No other wishes yet 🌸</p>';
   }catch(e){grid.innerHTML='<p class="gb-empty">Couldn\'t load right now 🌸</p>';}
 }
 
@@ -1970,6 +2081,85 @@ function dbg_showInfo(){
 function dbg_resetAll(){try{localStorage.clear();}catch(e){}sfWishStars=[];updateWishCount(0);_dbgStatus('local state reset');}
 
 loadBucketList();loadGuestbook();setInterval(loadGuestbook,60000);
+</script>
+<script>
+const nicknames = [
+  "Tory ❤️🌸", "Toriii ❤️🌸", "Toru ❤️🌸", "Baby ❤️", "Jaan ❤️", "Shona Baccha ❤️🌸", "Love ❤️", "Shona ❤️", "Shona Baccha ❤️", "Moyna Pakhi ❤️",
+  "Shonuuu ❤️", "Pakhiii ❤️", "Shona Pakhiii ❤️","Jaantushhhh ❤️", "Baccha ❤️", "Bebiiii ❤️","Babe ❤️", "Babuu ❤️🌸", "My Love ❤️", "Lokkhi ❤️",
+  "Babuiii ❤️", "Cutushhh ❤️", "Jaaannuuuu ❤️", "Jaaaaaannnnnnn ❤️", "Lokkhi Shona 🌸❤️", "Pakhuuuu ❤️", "Maa ❤️❤️❤️", "Mamuni ❤️", "Ammu ❤️",
+  "Lokkhiti ❤️", "Maa Pakhiii ❤️", "Cutie Pie ❤️", "My Girl ❤️🌸", "My Lady ❤️", "Madam ❤️", "Malkin ❤️", "Malik ❤️", "Pretty Lady ❤️", 
+  "Wifey ❤️🌸", "Bou ❤️", "Barir Ekmatro Bou ❤️", "Amar Jaan ❤️", "Amar Shob ❤️"
+];
+
+const container = document.querySelector(".nickname-grid");
+
+// 🔀 Shuffle function (better than sort random)
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+shuffle(nicknames);
+
+// 🎯 Render
+nicknames.forEach(name => {
+  const span = document.createElement("span");
+  span.className = "nickname-tag";
+  span.textContent = name;
+  container.appendChild(span);
+});
+
+setInterval(() => {
+  const el = document.getElementById("heartbeat");
+  el.textContent = parseInt(el.textContent || 0) + 1;
+}, 100);
+
+// Future timeline stagger
+const ftObs=new IntersectionObserver(en=>{en.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll('.ft-item').forEach((it,i)=>setTimeout(()=>it.classList.add('ft-visible'),i*160));}});},{threshold:.05});
+document.querySelectorAll('.future-timeline').forEach(t=>ftObs.observe(t));
+
+/* ── DAILY COMPLIMENT ── */
+const compliments = [
+  { icon:'🌸', text:'You are someone\'s favourite reason to smile.', sub:'Today, tomorrow, every day.' },
+  { icon:'✨', text:'The way you care for people is rare.', sub:'Don\'t ever stop being that.' },
+  { icon:'🌊', text:'You are braver than you think.', sub:'That river was just the beginning.' },
+  { icon:'☕', text:'You make ordinary moments extraordinary.', sub:'Noodles at 2AM? Still the best thing.' },
+  { icon:'🌙', text:'You are the kind of person worth staying up for.', sub:'Every single night.' },
+  { icon:'🌺', text:'Your laugh is genuinely one of the best sounds.', sub:'I could hear it forever.' },
+  { icon:'💫', text:'You are more loved than you realise.', sub:'More than words can get across.' },
+  { icon:'🎲', text:'You bring chaos and warmth everywhere you go.', sub:'The best possible combination.' },
+  { icon:'🌿', text:'You are softer and stronger than you know.', sub:'Both at exactly the right moments.' },
+  { icon:'💕', text:'Being around you just feels like home.', sub:'Wherever that ends up being.' },
+  { icon:'🌸', text:'You are worth every muddy field.', sub:'Every single one. No hesitation.' },
+  { icon:'⭐', text:'You make people feel seen.', sub:'That\'s a rare and beautiful thing.' },
+  { icon:'🍜', text:'You give without being asked.', sub:'And that says everything about who you are.' },
+  { icon:'🌫️', text:'You are unforgettable.', sub:'A cold winter morning proved that.' },
+  { icon:'💖', text:'The world is genuinely better with you in it.', sub:'I mean that completely.' },
+  { icon:'🌸', text:'You are someone worth choosing every day.', sub:'And I do. Without question.' },
+  { icon:'🎵', text:'You are the kind of person songs are written about.', sub:'Slow, beautiful, worth replaying.' },
+  { icon:'✨', text:'Your kindness doesn\'t go unnoticed.', sub:'It\'s one of the first things people feel.' },
+  { icon:'🌙', text:'You are exactly enough.', sub:'More than enough. Always.' },
+  { icon:'💫', text:'You are my favourite what-if that became real.', sub:'And I\'m so glad it did.' },
+  { icon:'🌺', text:'You handle hard things with more grace than you credit yourself.', sub:'I see it even when you don\'t.' },
+  { icon:'🌿', text:'You are the kind of person people come back to.', sub:'Always. For a reason.' },
+  { icon:'☕', text:'You are warm in the way that actually matters.', sub:'Not just in what you say — in how you make people feel.' },
+  { icon:'💕', text:'You are loved for exactly who you are.', sub:'Not a version of you. You.' },
+  { icon:'🌸', text:'One year in and you\'re still my favourite person.', sub:'That\'s saying something.' },
+  { icon:'⭐', text:'You are someone I\'d find in every universe.', sub:'Some things are just inevitable.' },
+  { icon:'🎀', text:'You deserve every good thing coming your way.', sub:'All of it. Without guilt.' },
+  { icon:'🌊', text:'You are resilient in quiet ways nobody talks about.', sub:'But I notice.' },
+  { icon:'💖', text:'You are the reason this year was worth everything.', sub:'Every second of it.' },
+  { icon:'🌸', text:'You are my favourite story.', sub:'And we\'re just getting started.' },
+];
+const _cd = new Date();
+const _ci = (_cd.getFullYear()*366 + _cd.getMonth()*31 + _cd.getDate()) % compliments.length;
+const _c = compliments[_ci];
+document.getElementById('complimentDay').textContent = _cd.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+document.getElementById('complimentIcon').textContent = _c.icon;
+document.getElementById('complimentText').textContent = _c.text;
+document.getElementById('complimentSub').textContent = _c.sub;
 </script>
 </body>
 </html>
