@@ -2175,14 +2175,50 @@ if (mapEl) {
     drawNext();
   }
 
-  // Trigger on scroll into view
-  const pObs = new IntersectionObserver(en => {
-    if (en[0].isIntersecting) {
-      setTimeout(animatePath, 600);
-      pObs.disconnect();
-    }
-  }, { threshold: 0.25 });
-  pObs.observe(mapEl);
+// Start Journey button
+  const btnWrap = document.createElement('div');
+  btnWrap.style.cssText = 'text-align:center;margin-top:1.2rem;';
+  btnWrap.innerHTML = `
+    <button id="startJourneyBtn" style="
+      background:transparent;
+      border:1px solid var(--rose);
+      color:var(--rose);
+      font-family:'EB Garamond',serif;
+      font-size:.85rem;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      padding:.75rem 2rem;
+      border-radius:100px;
+      cursor:pointer;
+      transition:all .3s;
+    ">✦ Start Our Journey</button>
+  `;
+  mapEl.insertAdjacentElement('afterend', btnWrap);
+
+  const journeyBtn = document.getElementById('startJourneyBtn');
+  journeyBtn.addEventListener('mouseenter', () => {
+    journeyBtn.style.background = 'var(--rose)';
+    journeyBtn.style.color = '#fff';
+  });
+  journeyBtn.addEventListener('mouseleave', () => {
+    journeyBtn.style.background = 'transparent';
+    journeyBtn.style.color = 'var(--rose)';
+  });
+  journeyBtn.addEventListener('click', () => {
+    if (pathAnimDone) return;
+    journeyBtn.textContent = '🌸 Reliving it...';
+    journeyBtn.disabled = true;
+    journeyBtn.style.opacity = '.5';
+    journeyBtn.style.cursor = 'not-allowed';
+    animatePath();
+    // after animation ends, update button
+    const checkDone = setInterval(() => {
+      if (pathAnimDone) {
+        clearInterval(checkDone);
+        journeyBtn.textContent = '❤️ Journey complete';
+      }
+    }, 300);
+  });
 
   // Legend
   const leg = document.getElementById('mapLegend');
