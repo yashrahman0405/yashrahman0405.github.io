@@ -12,6 +12,10 @@
   .music-player {
   display: none !important;
 }
+  #loader,
+#pwScreen{
+  display: none !important;
+}
 /* ══ VARIABLES ══ */
 :root{
   --rose:#c9836a; --amber:#d4956a; --dusty-rose:#e8c4b0;
@@ -831,6 +835,116 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
 .gb-vip-title{font-family:'Playfair Display',serif;font-style:italic;font-size:1.15rem;color:var(--amber);margin:2rem 0 1rem;text-align:center;display:flex;align-items:center;gap:.6rem;}
 .gb-vip-title::before,.gb-vip-title::after{content:'';flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(212,149,106,.35),transparent);}
 .gb-vip-title span{white-space:nowrap;padding:0 .4rem;}
+
+/* ══ TITLE CASE — READABLE TEXT ONLY ══ */
+.section-body,
+.tl-body,
+.tl-title,
+.memory-text,
+.memory-title,
+.gift-sub,
+.hb-note,
+.promise-text,
+.flip-back-text,
+.ifw-why,
+.ifw-answer,
+.book-text,
+.gb-message,
+.gb-name,
+.wish-input,
+.bucket-text,
+.bucket-by,
+.anniv-sub,
+.hero-tagline,
+.daily-msg,
+.daily-sub,
+.compliment-text,
+.compliment-sub,
+.stat-label,
+.letter-body,
+.letter-salutation,
+.letter-sign,
+.chat-msg,
+.dist-msg,
+.weather-desc,
+.weather-romantic,
+.yt-text,
+.p-then,
+.rc-back,
+.ft-sub,
+.ft-label,
+.pull-quote,
+.gift-message,
+.anniv-text,
+.tt-tag,
+.ifw-label,
+.parallel-card,
+.section-title,
+.hero-names,
+.ticker-track span,
+.nickname-tag {
+  text-transform: capitalize;
+}
+
+/* ══ MAP ENHANCED ══ */
+#map {
+  height: 420px;
+  border: none;
+  border-radius: 12px;
+  margin-top: 1.8rem;
+  z-index: 1;
+  box-shadow: 0 8px 40px rgba(201,131,106,.18), 0 0 0 1px rgba(201,131,106,.22);
+  overflow: hidden;
+}
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+  margin-top: 1.1rem;
+  justify-content: center;
+}
+.map-legend-item {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: .76rem;
+  color: var(--warm-brown);
+  background: var(--card);
+  border: 1px solid rgba(201,131,106,.2);
+  padding: .28rem .75rem;
+  border-radius: 100px;
+}
+.map-legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+/* Leaflet popup overrides */
+.leaflet-popup-content-wrapper {
+  background: #1a0d08 !important;
+  border: 1px solid rgba(201,131,106,.45) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 28px rgba(0,0,0,.55) !important;
+  color: var(--dusty-rose) !important;
+  padding: 0 !important;
+}
+.leaflet-popup-content {
+  margin: 0 !important;
+  padding: .9rem 1.1rem !important;
+  min-width: 160px;
+}
+.leaflet-popup-tip { background: #1a0d08 !important; }
+.leaflet-popup-close-button { color: var(--rose) !important; top: 6px !important; right: 8px !important; }
+.map-popup-title {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--amber);
+  margin-bottom: .25rem;
+}
+.map-popup-desc {
+  font-size: .82rem;
+  color: rgba(232,196,176,.7);
+  line-height: 1.5;
+}
+.map-popup-emoji { font-size: 1.3rem; margin-bottom: .35rem; display: block; }
 </style>
 </head>
 <body>
@@ -1078,9 +1192,13 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
       <span class="section-label">Chapter One</span>
       <h2 class="section-title">How it <em>began</em></h2>
       <div class="section-body">
-        <p>It wasn't planned. The best things never are.</p><br>
-        <p>A sudden trip to Nawabganj — cold winter air thick with fog, the fields pale and still, the kind of quiet that only villages get when the season turns. The kind of cold that makes YOU ❤️ want to be close to someone. I didn't know yet that this trip would become the story I'd tell for the rest of my life.</p><br>
-        <p>She wasn't into me. But somewhere in the mist and the chai and the cold morning light, I was already completely, quietly in love with her. I'm so glad we went.</p>
+        <p>It wasn't planned. Emneo Jibone Plan Kore Kokhono Kichu Hoynah Etto Shundor.</p><br>
+        <p>A sudden trip to Nawabganj — Sheeter Batash Kuasha Diye Bhora Rasta, Gesilam Toh Raat Er Bela Shob Kichu Shantooo R Ekdom Sthirrr chilo, Ahemmm Amon Sheet Chilo Mane The kind of cold that makes you want to be close to someone 😭❤️❤️. But Tkhn Toh Kichui Jantam Nah Ar Nah Prem E Porar Jonno Ready Chilam I didn't know that this trip would become the story I'd tell for the rest of my life ♥😌.</p><br>
+        <p>First er dige toh apni amake patta e den nai 👉🏻👈🏻 ar hoyto konodin oi bhabhe bhaben o nai 🥺. But Amiii oidin raat ei first tomake jokhon dekhsilam ami tokhon e bhabsilam tomake nijer bou banabo ami jmnei hok banaboi ❤️🥺, I was already madly in love with you baby. I'm so glad and greatful odin raat e ami nawabganj gesilam. ❤️</p>
+        <p>Amar Jibon Change hoye gese oidin raat e ❤️</p>
+        <p>Alhamdulillahhhhh ❤️❤️❤️</p>
+        <p>Konodin bhabi nai tumi asoleo amake bhalobashba or even patta diba tumi etto shundor jaan pakhi ami amar shopneo tomake niye bhabte bhoy paitam obastob kolponar moto bhabsi tomake niye shob shomay kintu allah ki bhabhe jani amar obastob kolponar manush take amar bastob baniye dilo ❤️🥺</p>
+        <p>Alhamdulillahhh Alhamdulillahhhhh Alhamdulillahhh ❤️ <p>
       </div>
     </div>
   </div>
@@ -1229,6 +1347,7 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
   <div class="section-inner">
     <span class="section-label">Where it happened</span>
     <h2 class="section-title">Our <em>journey</em></h2>
+    <p class="section-body" style="margin-bottom:1.2rem;">Every place that made us. Tap a pin to relive it.</p>
     <div id="map"></div>
     <div class="map-legend" id="mapLegend"></div>
   </div>
@@ -1575,8 +1694,10 @@ document.querySelectorAll('.swatch').forEach(sw=>{
 // Close panel on outside interaction
 function _maybeCloseColorPanel(e){
   if(_colorJustOpened)return;
+  const panel = document.getElementById('colorPanel');
+  if(!panel) return;
   if(!e.target.closest('#colorPanel')&&!e.target.closest('#colorBtn')){
-    document.getElementById('colorPanel').classList.remove('open');
+    panel.classList.remove('open');
   }
 }
 document.addEventListener('click',_maybeCloseColorPanel);
@@ -1935,31 +2056,142 @@ function lbPrev(){let n=(lbIdx-1+6)%6;while(!photoSrcs[n]&&n!==lbIdx)n=(n-1+6)%6
 function lbNext(){let n=(lbIdx+1)%6;while(!photoSrcs[n]&&n!==lbIdx)n=(n+1)%6;openLightbox(n);}
 
 /* ─── MAP ─── */
-const mapEl=document.getElementById('map');
-if(mapEl){
-  const map=L.map('map',{scrollWheelZoom:false}).setView([23.6610,90.1621],13);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:18}).addTo(map);
-  const mkI=(c,sz=18)=>L.divIcon({html:`<div style="width:${sz}px;height:${sz}px;background:${c};border-radius:50%;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.4);"></div>`,iconSize:[sz,sz],className:''});
-  const core=[
-    {lat:23.6610,lng:90.1621,color:'#c9836a',title:'Nawabganj',desc:'Where everything began 🌸'},
-    {lat:23.659,lng:90.158,color:'#8fa89a',title:'The River',desc:'She swam. I slipped in mud. 🌊'},
-    {lat:23.663,lng:90.165,color:'#d4956a',title:'The Flower Field',desc:'I picked flowers for her here 🌸'},
-    {lat:23.660,lng:90.162,color:'#e8c4b0',title:'Her Home',desc:'Noodles, chaa & Monopoly 🎲'},
+const mapEl = document.getElementById('map');
+if (mapEl) {
+  const map = L.map('map', {
+    scrollWheelZoom: false,
+    zoomControl: false,
+    attributionControl: false,
+  }).setView([23.6610, 90.1621], 13);
+
+  // Add zoom control top-right
+  L.control.zoom({ position: 'topright' }).addTo(map);
+  L.control.attribution({ position: 'bottomright', prefix: '' })
+    .addAttribution('<span style="opacity:.35;font-size:.65rem;">© OpenStreetMap</span>')
+    .addTo(map);
+
+  // Dark romantic tile layer
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    maxZoom: 19,
+    subdomains: 'abcd',
+  }).addTo(map);
+
+  // Custom pin maker
+  const mkI = (color, emoji, sz = 38) => L.divIcon({
+    html: `<div style="
+      width:${sz}px;height:${sz}px;
+      background:${color};
+      border-radius:50% 50% 50% 0;
+      transform:rotate(-45deg);
+      border:3px solid rgba(255,255,255,.9);
+      box-shadow:0 3px 14px rgba(0,0,0,.5);
+      display:flex;align-items:center;justify-content:center;
+    "><span style="transform:rotate(45deg);font-size:${sz*.38}px;line-height:1;">${emoji}</span></div>`,
+    iconSize: [sz, sz],
+    iconAnchor: [sz / 2, sz],
+    popupAnchor: [0, -sz],
+    className: '',
+  });
+
+  const core = [
+    { lat: 23.739172, lng: 90.367341, color: '#c97070', emoji: '🏠', title: 'Amar Basha', desc: 'Jeikahn thike etto dur er poth er shuru ❤️' },
+    { lat: 23.6610,   lng: 90.1621,   color: '#c9836a', emoji: '🌫️', title: 'Nawabganj', desc: 'Amar shobche priyo jayga — jeikhane amar ❤️' },
+    { lat: 23.66018,  lng: 90.16551,  color: '#7a9cc9', emoji: '🌙', title: "Munna Mamar Basha", desc: 'First amar Toru Pakhi ke jeikhane dekhlam ❤️🥺' },
+    { lat: 23.65534,  lng: 90.16324,  color: '#e8c4b0', emoji: '🍜', title: "Tory Er Basha ❤️", desc: 'Noodles, chaa & Monopoly r etto gula memories' },
+    { lat: 23.659,    lng: 90.158,    color: '#8fa89a', emoji: '🌊', title: 'The River', desc: 'She swam. I slipped in mud. 🤭❤️' },
+    { lat: 23.663,    lng: 90.165,    color: '#d4956a', emoji: '🌸', title: 'The Flower Field', desc: 'I picked flowers for her here — before she even said yes 🌸' },
   ];
-  const extra=[
-    {lat:0,lng:0,color:'#c97070',title:'Place 5',desc:'YOU ❤️r description here'},
-    {lat:0,lng:0,color:'#7a9cc9',title:'Place 6',desc:'YOU ❤️r description here'},
-    {lat:0,lng:0,color:'#9cc97a',title:'Place 7',desc:'YOU ❤️r description here'},
-    {lat:0,lng:0,color:'#c9c97a',title:'Place 8',desc:'YOU ❤️r description here'},
-  ];
-  const all=[...core,...extra.filter(m=>m.lat!==0)];
-  const coords=[];
-  all.forEach(m=>{L.marker([m.lat,m.lng],{icon:mkI(m.color)}).addTo(map).bindPopup(`<b style="font-family:Playfair Display,serif;">${m.title}</b><br><span style="font-size:.82rem;">${m.desc}</span>`);coords.push([m.lat,m.lng]);});
-  const path=L.polyline([],{color:'#c9836a',weight:2,opacity:.55,dashArray:'5,7'}).addTo(map);
-  let pIdx=0;function animPath(){if(pIdx>=coords.length)return;path.addLatLng(coords[pIdx++]);setTimeout(animPath,380);}
-  const pObs=new IntersectionObserver(en=>{if(en[0].isIntersecting){setTimeout(animPath,500);pObs.disconnect();}},{threshold:.25});pObs.observe(mapEl);
-  const leg=document.getElementById('mapLegend');
-  all.forEach(m=>{const item=document.createElement('div');item.className='map-legend-item';item.innerHTML=`<div class="map-legend-dot" style="background:${m.color};"></div>${m.title}`;leg.appendChild(item);});
+
+  const markers = [];
+  const coords = core.map(m => [m.lat, m.lng]);
+
+  core.forEach((m, i) => {
+    const marker = L.marker([m.lat, m.lng], { icon: mkI(m.color, m.emoji) })
+      .addTo(map)
+      .bindPopup(`
+        <span class="map-popup-emoji">${m.emoji}</span>
+        <div class="map-popup-title">${m.title}</div>
+        <div class="map-popup-desc">${m.desc}</div>
+      `, { maxWidth: 220 });
+    markers.push(marker);
+  });
+
+  // Animated dashed path using requestAnimationFrame
+  const fullPath = L.polyline([], {
+    color: '#c9836a',
+    weight: 2.5,
+    opacity: 0,
+    dashArray: '7,10',
+    lineCap: 'round',
+  }).addTo(map);
+
+  // Glowing "head" dot that travels along path
+  const headDot = L.circleMarker(coords[0], {
+    radius: 6,
+    fillColor: '#e8c4b0',
+    color: '#c9836a',
+    weight: 2,
+    fillOpacity: 0,
+    opacity: 0,
+  }).addTo(map);
+
+  let pathAnimDone = false;
+
+  function animatePath() {
+    if (pathAnimDone) return;
+    const STEPS = 90;           // steps between each pair of points
+    const DELAY_MS = 28;        // ms per step
+    let segIdx = 0;
+    let step = 0;
+    const allPoints = [];
+
+    // Pre-interpolate all points
+    for (let s = 0; s < coords.length - 1; s++) {
+      const [lat1, lng1] = coords[s];
+      const [lat2, lng2] = coords[s + 1];
+      for (let t = 0; t <= STEPS; t++) {
+        allPoints.push([
+          lat1 + (lat2 - lat1) * (t / STEPS),
+          lng1 + (lng2 - lng1) * (t / STEPS),
+        ]);
+      }
+    }
+
+    fullPath.setStyle({ opacity: 0.65 });
+    headDot.setStyle({ fillOpacity: 1, opacity: 1 });
+
+    let idx = 0;
+    function drawNext() {
+      if (idx >= allPoints.length) {
+        headDot.setStyle({ fillOpacity: 0, opacity: 0 });
+        pathAnimDone = true;
+        return;
+      }
+      fullPath.addLatLng(allPoints[idx]);
+      headDot.setLatLng(allPoints[idx]);
+      idx++;
+      setTimeout(drawNext, DELAY_MS);
+    }
+    drawNext();
+  }
+
+  // Trigger on scroll into view
+  const pObs = new IntersectionObserver(en => {
+    if (en[0].isIntersecting) {
+      setTimeout(animatePath, 600);
+      pObs.disconnect();
+    }
+  }, { threshold: 0.25 });
+  pObs.observe(mapEl);
+
+  // Legend
+  const leg = document.getElementById('mapLegend');
+  core.forEach(m => {
+    const item = document.createElement('div');
+    item.className = 'map-legend-item';
+    item.innerHTML = `<div class="map-legend-dot" style="background:${m.color};"></div>${m.emoji} ${m.title}`;
+    leg.appendChild(item);
+  });
 }
 
 /* ─── FLIP CARDS ─── */
