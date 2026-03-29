@@ -2054,169 +2054,459 @@ function lbNext(){let n=(lbIdx+1)%6;while(!photoSrcs[n]&&n!==lbIdx)n=(n+1)%6;ope
 /* ─── MAP ─── */
 const mapEl = document.getElementById('map');
 if (mapEl) {
+  console.log('[MAP] init start');
+
+  const mapWrapper = document.createElement('div');
+  mapWrapper.id = 'mapWrapper';
+  mapWrapper.style.cssText = `
+    position:relative;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 8px 40px rgba(201,131,106,.18),0 0 0 1px rgba(201,131,106,.22);
+    margin-top:1.8rem;
+  `;
+  mapEl.parentNode.insertBefore(mapWrapper, mapEl);
+  mapWrapper.appendChild(mapEl);
+  mapEl.style.borderRadius = '0';
+  mapEl.style.margin = '0';
+  mapEl.style.boxShadow = 'none';
+
+  function setMapHeight() {
+    const w = window.innerWidth;
+    mapEl.style.height = w < 480 ? '300px' : w < 768 ? '360px' : '420px';
+    if (typeof map !== 'undefined') map.invalidateSize({ animate: false });
+  }
+
   const map = L.map('map', {
     scrollWheelZoom: false,
     zoomControl: false,
     attributionControl: false,
+    dragging: true,
+    tap: false,
+    touchZoom: false,
+    doubleClickZoom: false,
   }).setView([23.6610, 90.1621], 13);
 
-  // Add zoom control top-right
-  L.control.zoom({ position: 'topright' }).addTo(map);
   L.control.attribution({ position: 'bottomright', prefix: '' })
-    .addAttribution('<span style="opacity:.35;font-size:.65rem;">© OpenStreetMap</span>')
+    .addAttribution('<span style="opacity:.3;font-size:.6rem;">© OpenStreetMap</span>')
     .addTo(map);
 
-  // Dark romantic tile layer
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
     maxZoom: 19,
     subdomains: 'abcd',
   }).addTo(map);
 
-  // Custom pin maker
-  const mkI = (color, emoji, sz = 38) => L.divIcon({
-    html: `<div style="
-      width:${sz}px;height:${sz}px;
-      background:${color};
-      border-radius:50% 50% 50% 0;
-      transform:rotate(-45deg);
-      border:3px solid rgba(255,255,255,.9);
-      box-shadow:0 3px 14px rgba(0,0,0,.5);
-      display:flex;align-items:center;justify-content:center;
-    "><span style="transform:rotate(45deg);font-size:${sz*.38}px;line-height:1;">${emoji}</span></div>`,
-    iconSize: [sz, sz],
-    iconAnchor: [sz / 2, sz],
-    popupAnchor: [0, -sz],
-    className: '',
+  setMapHeight();
+  window.addEventListener('resize', () => {
+    setMapHeight();
+    updatePinPositions();
   });
 
   const core = [
-    { lat: 23.739172, lng: 90.367341, color: '#c97070', emoji: '🏠', title: 'Amar Basha', desc: 'Jeikahn thike etto dur er poth er shuru ❤️' },
-    { lat: 23.6610,   lng: 90.1621,   color: '#c9836a', emoji: '🌫️', title: 'Nawabganj', desc: 'Amar shobche priyo jayga — jeikhane amar ❤️' },
-    { lat: 23.66018,  lng: 90.16551,  color: '#7a9cc9', emoji: '🌙', title: "Munna Mamar Basha", desc: 'First amar Toru Pakhi ke jeikhane dekhlam ❤️🥺' },
-    { lat: 23.65534,  lng: 90.16324,  color: '#e8c4b0', emoji: '🍜', title: "Tory Er Basha ❤️", desc: 'Noodles, chaa & Monopoly r etto gula memories' },
-    { lat: 23.659,    lng: 90.158,    color: '#8fa89a', emoji: '🌊', title: 'The River', desc: 'She swam. I slipped in mud. 🤭❤️' },
-    { lat: 23.663,    lng: 90.165,    color: '#d4956a', emoji: '🌸', title: 'The Flower Field', desc: 'I picked flowers for her here — before she even said yes 🌸' },
+{ lat:23.739172, lng:90.367341, color:'#c97070', emoji:'🏠', title:'Amar Basha', 
+  desc:'11 Feb — Ekhanei theke journey shuru. Excitement, nervousness, aar ekta unknown love er dike jatra ❤️' },
+
+{ lat:23.6610, lng:90.1621, color:'#c9836a', emoji:'🛣️', title:'Nawabganj Arrival', 
+  desc:'Long ride er por ekhane pouchailam — amar priyo jayga, karon ekhanei she chilo ❤️' },
+
+{ lat:23.66018, lng:90.16551, color:'#7a9cc9', emoji:'✨', title:'Munna Mamar Basha — First Sight', 
+  desc:'Ekhanei first Tory ke dekhlam… love at first sight. Completely, madly lost in her eyes ❤️🥺' },
+
+{ lat:23.65534, lng:90.16324, color:'#e8c4b0', emoji:'🎲', title:"Tory Er Basha — Sleepless Night", 
+  desc:'Ludo, Monopoly whole night, zero sleep. She made noodles & chaa — best memories of my life, amar forever moments ❤️' },
+
+{ lat:23.66018, lng:90.16551, color:'#7a9cc9', emoji:'🍳', title:'Munna Mamar Basha — Morning Nasta', 
+  desc:'Shokal bela breakfast together… tarpor she theke alada howar shuru, mon ta ekto heavy hoye gelo 💔' },
+
+{ lat:23.659, lng:90.158, color:'#8fa89a', emoji:'🌊', title:'The River Adventure', 
+  desc:'She swam gracefully, ami o try korlam 😭 uthte giye wet mud e slip kore pura embarrassing but funny memory 🤭❤️' },
+
+{ lat:23.66018, lng:90.16551, color:'#7a9cc9', emoji:'🚿', title:'Munna Mamar Basha — After Swim', 
+  desc:'River er por ekhane shower, rest, aar shobai mile dinner — calm moments after chaos 🌙' },
+
+{ lat:23.663, lng:90.165, color:'#d4956a', emoji:'🌸', title:'The Flower Field — Love Moment', 
+  desc:'Tar jonno flower tulchilam before she even said yes… she still kept one flower till today 😭❤️ ekhanei completely in love hoye jai' },
+
+{ lat:23.66018, lng:90.16551, color:'#7a9cc9', emoji:'🍪', title:'Munna Mamar Basha — Last Evening', 
+  desc:'Snacks, dinner, aar last moments together… memories gula heart e permanently likha hoye gelo ❤️' },
+
+{ lat:23.6610, lng:90.1621, color:'#c9836a', emoji:'🌆', title:'Leaving Nawabganj', 
+  desc:'12 Feb night — jayga ta pichone pore gelo, kintu amar heart ekhanei rekhe ashchilam ❤️' },
+
+{ lat:23.739172, lng:90.367341, color:'#c97070', emoji:'🏠', title:'Back Home', 
+  desc:'Bari phirlam… kintu ami ager moto chilam na. Amar best memories aar amar love ekhanei shuru ❤️' },
   ];
 
-  const markers = [];
   const coords = core.map(m => [m.lat, m.lng]);
 
-  core.forEach((m, i) => {
-    const marker = L.marker([m.lat, m.lng], { icon: mkI(m.color, m.emoji) })
-      .addTo(map)
-      .bindPopup(`
-        <span class="map-popup-emoji">${m.emoji}</span>
-        <div class="map-popup-title">${m.title}</div>
-        <div class="map-popup-desc">${m.desc}</div>
-      `, { maxWidth: 220 });
-    markers.push(marker);
+  // ── OVERLAY LAYER: pins live here, above the map pane, z-index 1000+ ──
+  const overlayDiv = document.createElement('div');
+  overlayDiv.style.cssText = `
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    z-index:500;
+  `;
+  mapWrapper.appendChild(overlayDiv);
+
+  // ── TOOLTIP ──
+  const tooltip = document.createElement('div');
+  tooltip.style.cssText = `
+    position:absolute;
+    background:rgba(14,6,3,.96);
+    border:1px solid rgba(201,131,106,.6);
+    border-radius:10px;
+    padding:.8rem 1rem;
+    min-width:160px;max-width:220px;
+    pointer-events:none;
+    z-index:600;
+    display:none;
+    box-shadow:0 8px 28px rgba(0,0,0,.6);
+    backdrop-filter:blur(6px);
+    transition:opacity .2s;
+  `;
+  overlayDiv.appendChild(tooltip);
+
+  let tooltipTimer = null;
+  let activeIdx = -1;
+
+function showTooltip(idx, px, py) {
+    console.log('[MAP] showTooltip idx='+idx+' px='+px+' py='+py);
+    const m = core[idx];
+    tooltip.innerHTML = `
+      <div style="font-size:1.3rem;margin-bottom:.3rem;">${m.emoji}</div>
+      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:.95rem;color:#d4956a;margin-bottom:.2rem;">${m.title}</div>
+      <div style="font-size:.78rem;color:rgba(232,196,176,.75);line-height:1.5;">${m.desc}</div>
+    `;
+    tooltip.style.display = 'block';
+    tooltip.style.opacity = '1';
+    activeIdx = idx;
+    clearTimeout(tooltipTimer);
+    tooltipTimer = setTimeout(hideTooltip, 5000);
+    // position is now updated every frame via updateTooltipPosition
+    updateTooltipPosition();
+  }
+
+  function updateTooltipPosition() {
+    if (activeIdx < 0 || tooltip.style.display === 'none') return;
+    const m = core[activeIdx];
+    const pt = map.latLngToContainerPoint(L.latLng(m.lat, m.lng));
+    const tw = tooltip.offsetWidth;
+    const th = tooltip.offsetHeight;
+    let left = pt.x - tw / 2;
+    let top = pt.y - th - 16;
+    const ww = mapWrapper.offsetWidth;
+    left = Math.max(8, Math.min(left, ww - tw - 8));
+    if (top < 8) top = pt.y + 20;
+    tooltip.style.left = left + 'px';
+    tooltip.style.top = top + 'px';
+  }
+
+  function hideTooltip() {
+    tooltip.style.opacity = '0';
+    setTimeout(() => { tooltip.style.display = 'none'; }, 200);
+    activeIdx = -1;
+  }
+
+  // ── PIN DIVS — rendered directly in overlayDiv ──
+  const pinEls = [];
+
+  function createPins() {
+    core.forEach((m, i) => {
+      const pin = document.createElement('div');
+      pin.style.cssText = `
+        position:absolute;
+        width:60px;height:60px;
+        transform:translate(-50%, -100%);
+        cursor:pointer;
+        pointer-events:all;
+        display:flex;align-items:flex-end;justify-content:center;
+        -webkit-tap-highlight-color:transparent;
+        z-index:550;
+      `;
+      pin.innerHTML = `
+        <div style="
+          width:40px;height:40px;
+          background:${m.color};
+          border-radius:50% 50% 50% 0;
+          transform:rotate(-45deg);
+          border:3px solid rgba(255,255,255,.95);
+          box-shadow:0 3px 16px rgba(0,0,0,.55);
+          display:flex;align-items:center;justify-content:center;
+          pointer-events:none;
+        ">
+          <span style="transform:rotate(45deg);font-size:16px;line-height:1;pointer-events:none;">${m.emoji}</span>
+        </div>
+      `;
+
+      function onTap(e) {
+        e.stopPropagation();
+        if (e.cancelable) e.preventDefault();
+        console.log('[MAP] pin tapped idx='+i);
+        const rect = mapWrapper.getBoundingClientRect();
+        const pt = map.latLngToContainerPoint(L.latLng(m.lat, m.lng));
+        if (activeIdx === i && tooltip.style.display !== 'none') {
+          console.log('[MAP] hiding tooltip');
+          hideTooltip();
+        } else {
+          showTooltip(i, pt.x, pt.y);
+        }
+      }
+
+      pin.addEventListener('click', onTap);
+      pin.addEventListener('touchend', onTap, { passive: false });
+
+      overlayDiv.appendChild(pin);
+      pinEls.push(pin);
+      console.log('[MAP] pin created idx='+i);
+    });
+  }
+
+  function updatePinPositions() {
+    core.forEach((m, i) => {
+      const pt = map.latLngToContainerPoint(L.latLng(m.lat, m.lng));
+      pinEls[i].style.left = pt.x + 'px';
+      pinEls[i].style.top = pt.y + 'px';
+    });
+  }
+
+  createPins();
+
+  // Update pin positions whenever map moves or zooms
+  map.on('move zoom moveend zoomend', updatePinPositions);
+  map.on('move zoom moveend zoomend', updateTooltipPosition);
+  map.whenReady(() => {
+    console.log('[MAP] map ready, updating pins');
+    updatePinPositions();
   });
 
-  // Animated dashed path using requestAnimationFrame
+  // ── PATH + HEAD DOT (Leaflet layers) ──
   const fullPath = L.polyline([], {
     color: '#c9836a',
     weight: 2.5,
     opacity: 0,
     dashArray: '7,10',
     lineCap: 'round',
+    interactive: false,
   }).addTo(map);
 
-  // Glowing "head" dot that travels along path
   const headDot = L.circleMarker(coords[0], {
-    radius: 6,
-    fillColor: '#e8c4b0',
+    radius: 8,
+    fillColor: '#f5ede0',
     color: '#c9836a',
-    weight: 2,
+    weight: 2.5,
     fillOpacity: 0,
     opacity: 0,
+    interactive: false,
   }).addTo(map);
 
-  let pathAnimDone = false;
+  let journeyRunning = false;
 
-  function animatePath() {
-    if (pathAnimDone) return;
-    const STEPS = 90;           // steps between each pair of points
-    const DELAY_MS = 28;        // ms per step
-    let segIdx = 0;
-    let step = 0;
-    const allPoints = [];
-
-    // Pre-interpolate all points
+  function buildPoints(steps) {
+    const pts = [];
     for (let s = 0; s < coords.length - 1; s++) {
       const [lat1, lng1] = coords[s];
       const [lat2, lng2] = coords[s + 1];
-      for (let t = 0; t <= STEPS; t++) {
-        allPoints.push([
-          lat1 + (lat2 - lat1) * (t / STEPS),
-          lng1 + (lng2 - lng1) * (t / STEPS),
+      for (let t = 0; t <= steps; t++) {
+        pts.push([
+          lat1 + (lat2 - lat1) * (t / steps),
+          lng1 + (lng2 - lng1) * (t / steps),
         ]);
       }
     }
-
-    fullPath.setStyle({ opacity: 0.65 });
-    headDot.setStyle({ fillOpacity: 1, opacity: 1 });
-
-    let idx = 0;
-    function drawNext() {
-      if (idx >= allPoints.length) {
-        headDot.setStyle({ fillOpacity: 0, opacity: 0 });
-        pathAnimDone = true;
-        return;
-      }
-      fullPath.addLatLng(allPoints[idx]);
-      headDot.setLatLng(allPoints[idx]);
-      idx++;
-      setTimeout(drawNext, DELAY_MS);
-    }
-    drawNext();
+    return pts;
   }
 
-// Start Journey button
-  const btnWrap = document.createElement('div');
-  btnWrap.style.cssText = 'text-align:center;margin-top:1.2rem;';
-  btnWrap.innerHTML = `
-    <button id="startJourneyBtn" style="
-      background:transparent;
-      border:1px solid var(--rose);
-      color:var(--rose);
-      font-family:'EB Garamond',serif;
-      font-size:.85rem;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-      padding:.75rem 2rem;
-      border-radius:100px;
-      cursor:pointer;
-      transition:all .3s;
-    ">✦ Start Our Journey</button>
-  `;
-  mapEl.insertAdjacentElement('afterend', btnWrap);
+  function resetView() {
+    hideTooltip();
+    const bounds = L.latLngBounds(coords);
+    setTimeout(() => {
+      map.invalidateSize({ animate: false });
+      map.flyToBounds(bounds, { padding: [40, 40], duration: 1.2 });
+    }, 100);
+  }
 
-  const journeyBtn = document.getElementById('startJourneyBtn');
+  // ── STOP JOURNEY BUTTON ──
+  const exitBtn = document.createElement('button');
+  exitBtn.textContent = '✕ Stop Journey';
+  exitBtn.style.cssText = `
+    display:none;
+    position:absolute;top:.8rem;left:50%;transform:translateX(-50%);
+    z-index:700;
+    background:rgba(13,8,5,.9);
+    border:1px solid rgba(201,131,106,.55);
+    color:#e8c4b0;
+    font-family:'EB Garamond',serif;
+    font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;
+    padding:.5rem 1.3rem;border-radius:100px;cursor:pointer;
+    backdrop-filter:blur(8px);white-space:nowrap;
+    box-shadow:0 4px 18px rgba(0,0,0,.45);
+    pointer-events:all;
+    -webkit-tap-highlight-color:transparent;
+  `;
+  overlayDiv.appendChild(exitBtn);
+
+  exitBtn.addEventListener('click', () => {
+    console.log('[MAP] stop journey clicked');
+    journeyRunning = false;
+    hideTooltip();
+    headDot.setStyle({ fillOpacity:0, opacity:0 });
+    exitBtn.style.display = 'none';
+    journeyBtn.textContent = '✦ Start Our Journey';
+    journeyBtn.disabled = false;
+    journeyBtn.style.opacity = '1';
+    journeyBtn.style.cursor = 'pointer';
+    resetView();
+  });
+
+  // ── ZOOM SLIDER ──
+  const sliderWrap = document.createElement('div');
+  sliderWrap.style.cssText = `
+    display:flex;align-items:center;gap:.7rem;
+    margin-top:.9rem;padding:0 .2rem;
+  `;
+  sliderWrap.innerHTML = `
+    <span style="font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;
+      color:var(--mist);white-space:nowrap;">🔍 Zoom</span>
+    <input id="mapZoomSlider" type="range" min="11" max="18" step="0.5" value="13" style="
+      flex:1;-webkit-appearance:none;appearance:none;
+      height:3px;border-radius:100px;
+      background:linear-gradient(to right,var(--rose) 0%,var(--dusty-rose) 100%);
+      outline:none;cursor:pointer;
+    ">
+    <span id="mapZoomVal" style="font-size:.7rem;color:var(--mist);min-width:2ch;">13</span>
+  `;
+
+  const thumbCSS = document.createElement('style');
+  thumbCSS.textContent = `
+    #mapZoomSlider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;
+      border-radius:50%;background:var(--rose);border:2px solid #fff;
+      box-shadow:0 2px 8px rgba(0,0,0,.3);cursor:pointer;}
+    #mapZoomSlider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;
+      background:var(--rose);border:2px solid #fff;cursor:pointer;}
+  `;
+  document.head.appendChild(thumbCSS);
+
+  mapEl.insertAdjacentElement('afterend', sliderWrap);
+
+  const zoomSlider = document.getElementById('mapZoomSlider');
+  const zoomVal = document.getElementById('mapZoomVal');
+
+  zoomSlider.addEventListener('input', () => {
+    const z = parseFloat(zoomSlider.value);
+    zoomVal.textContent = z;
+    map.setZoom(z, { animate: true });
+  });
+  map.on('zoomend', () => {
+    const z = Math.round(map.getZoom() * 2) / 2;
+    zoomSlider.value = z;
+    zoomVal.textContent = z;
+  });
+
+  // ── START JOURNEY BUTTON ──
+  const btnWrap = document.createElement('div');
+  btnWrap.style.cssText = 'text-align:center;margin-top:1rem;';
+  sliderWrap.insertAdjacentElement('afterend', btnWrap);
+
+  const journeyBtn = document.createElement('button');
+  journeyBtn.id = 'startJourneyBtn';
+  journeyBtn.textContent = '✦ Start Our Journey';
+  journeyBtn.style.cssText = `
+    background:transparent;border:1px solid var(--rose);color:var(--rose);
+    font-family:'EB Garamond',serif;font-size:.85rem;letter-spacing:.18em;
+    text-transform:uppercase;padding:.75rem 2rem;border-radius:100px;
+    cursor:pointer;transition:all .3s;-webkit-tap-highlight-color:transparent;
+  `;
+  btnWrap.appendChild(journeyBtn);
+
   journeyBtn.addEventListener('mouseenter', () => {
-    journeyBtn.style.background = 'var(--rose)';
-    journeyBtn.style.color = '#fff';
+    if (!journeyBtn.disabled) { journeyBtn.style.background='var(--rose)'; journeyBtn.style.color='#fff'; }
   });
   journeyBtn.addEventListener('mouseleave', () => {
-    journeyBtn.style.background = 'transparent';
-    journeyBtn.style.color = 'var(--rose)';
+    if (!journeyBtn.disabled) { journeyBtn.style.background='transparent'; journeyBtn.style.color='var(--rose)'; }
   });
+
   journeyBtn.addEventListener('click', () => {
-    if (pathAnimDone) return;
+    if (journeyRunning) return;
+    console.log('[MAP] journey started');
+    journeyRunning = true;
+    hideTooltip();
+    fullPath.setLatLngs([]);
+
     journeyBtn.textContent = '🌸 Reliving it...';
     journeyBtn.disabled = true;
     journeyBtn.style.opacity = '.5';
     journeyBtn.style.cursor = 'not-allowed';
-    animatePath();
-    // after animation ends, update button
-    const checkDone = setInterval(() => {
-      if (pathAnimDone) {
-        clearInterval(checkDone);
-        journeyBtn.textContent = '❤️ Journey complete';
+    journeyBtn.style.background = 'transparent';
+    journeyBtn.style.color = 'var(--rose)';
+    exitBtn.style.display = 'flex';
+
+    const STEPS = 80;
+    const DELAY_MS = 45;
+    const allPoints = buildPoints(STEPS);
+
+    fullPath.setStyle({ opacity: 0.7 });
+    headDot.setLatLng(coords[0]);
+    headDot.setStyle({ fillOpacity:1, opacity:1 });
+
+    let idx = 0;
+    let lastSeg = -1;
+
+    map.flyTo(coords[0], 15, { animate:true, duration:1.2, easeLinearity:0.4 });
+    console.log('[MAP] flying to first coord');
+
+    setTimeout(function tick() {
+      if (!journeyRunning) {
+        console.log('[MAP] journey stopped mid-way');
+        return;
       }
-    }, 300);
+
+      if (idx >= allPoints.length) {
+        console.log('[MAP] journey complete');
+        headDot.setStyle({ fillOpacity:0, opacity:0 });
+        journeyRunning = false;
+        exitBtn.style.display = 'none';
+        resetView();
+        setTimeout(() => {
+          journeyBtn.textContent = '↺ Replay Journey';
+          journeyBtn.disabled = false;
+          journeyBtn.style.opacity = '1';
+          journeyBtn.style.cursor = 'pointer';
+        }, 1500);
+        return;
+      }
+
+      const pt = allPoints[idx];
+      fullPath.addLatLng(pt);
+      headDot.setLatLng(pt);
+
+      // Camera follows dot
+      map.panTo(pt, { animate:true, duration:0.08, easeLinearity:1, noMoveStart:true });
+
+      // Show tooltip at each new pin
+const seg = Math.floor(idx / (STEPS + 1));
+      if (seg !== lastSeg) {
+        lastSeg = seg;
+        console.log('[MAP] crossing segment', seg);
+        if (seg > 0 && seg < core.length) {
+          const containerPt = map.latLngToContainerPoint(L.latLng(core[seg].lat, core[seg].lng));
+          showTooltip(seg, containerPt.x, containerPt.y);
+          // Pause the dot for 5s while tooltip is visible
+          setTimeout(function resumeTick() {
+            if (!journeyRunning) return;
+            idx++;
+            setTimeout(tick, DELAY_MS);
+          }, 5000);
+          return; // don't increment idx or schedule tick — resumeTick handles it
+        }
+      }
+
+      idx++;
+      setTimeout(tick, DELAY_MS);
+    }, 1400);
   });
 
-  // Legend
+  // ── LEGEND ──
   const leg = document.getElementById('mapLegend');
   core.forEach(m => {
     const item = document.createElement('div');
@@ -2224,8 +2514,9 @@ if (mapEl) {
     item.innerHTML = `<div class="map-legend-dot" style="background:${m.color};"></div>${m.emoji} ${m.title}`;
     leg.appendChild(item);
   });
-}
 
+  console.log('[MAP] init complete');
+}
 /* ─── FLIP CARDS ─── */
 document.querySelectorAll('.flip-card').forEach(c=>{
   c.addEventListener('click',e=>{e.stopPropagation();c.classList.toggle('flipped');});
@@ -2427,3 +2718,4 @@ document.getElementById('complimentSub').textContent = _c.sub;
 </script>
 </body>
 </html>
+
