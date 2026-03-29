@@ -9,6 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <style>
+  * { text-transform: capitalize; }
   .music-player {
   display: none !important;
 }
@@ -160,19 +161,27 @@ body::before{
 
 /* ══ FIXED SIDE BUTTONS ══ */
 .fixed-btn{
-  position:fixed;right:1.2rem;z-index:20;
-  width:46px;height:46px;
-  background:var(--nav-bg);border:1px solid var(--dusty-rose);
-  border-radius:50%;font-size:1.1rem;cursor:pointer;
+  width:52px;height:52px;
+  background:var(--nav-bg);border:none;
+  font-size:1.3rem;cursor:pointer;
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 3px 16px rgba(0,0,0,.1);transition:all .25s;
+  transition:all .25s;
   -webkit-tap-highlight-color:transparent;user-select:none;
+  position:static;
+  border-bottom:1px solid rgba(201,131,106,.15);
 }
-.fixed-btn:active{transform:scale(.9);}
-#themeToggle{bottom:4.8rem;}
-#storybookBtn{bottom:8.6rem;}
-#ambientBtn{bottom:12.4rem;}
-#colorBtn{bottom:16.2rem;}
+.fixed-btn:last-child{border-bottom:none;}
+.fixed-btn:active{background:rgba(201,131,106,.15);transform:scale(.9);}
+#themeToggle,#storybookBtn,#ambientBtn{bottom:auto;}
+
+.fixed-btn-group{
+  position:fixed;right:1.2rem;bottom:2rem;z-index:20;
+  display:flex;flex-direction:column;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 4px 24px rgba(0,0,0,.13),0 0 0 1px rgba(201,131,106,.22);
+  backdrop-filter:blur(10px);
+}
 
 /* ══ COLOR PANEL ══ */
 .color-panel{
@@ -284,7 +293,7 @@ nav{
 .mobile-menu a.active{color:var(--rose);}
 
 /* ══ TICKER ══ */
-.ticker-wrap{background:var(--ticker-bg);overflow:hidden;white-space:nowrap;padding:.55rem 0;}
+.ticker-wrap{background:var(--ticker-bg);overflow:hidden;white-space:nowrap;padding:.55rem 0;width:100%;display:block;margin-top:52px;position:relative;z-index:9;}
 .ticker-track{display:inline-block;animation:ticker 38s linear infinite;}
 .ticker-track span{font-family:'Great Vibes',cursive;font-size:1.1rem;color:var(--dusty-rose);margin:0 1.4rem;}
 .ticker-track span.sep{color:var(--rose);font-family:serif;font-size:.85rem;}
@@ -541,9 +550,7 @@ nav{
 .polaroid:hover,.polaroid:active{transform:rotate(0deg) scale(1.05);z-index:10;box-shadow:5px 10px 28px rgba(42,26,16,.18);}
 .polaroid-img{width:100%;aspect-ratio:1;background:linear-gradient(135deg,var(--dusty-rose),#d4a898);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.35rem;color:var(--warm-brown);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;position:relative;overflow:hidden;}
 .polaroid-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
-.polaroid-img input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
-.polaroid-caption{position:absolute;bottom:.35rem;left:.3rem;right:.3rem;text-align:center;font-family:'Great Vibes',cursive;font-size:1rem;color:#5c3520;padding:0 .3rem;border:none;background:transparent;outline:none;width:calc(100% - .6rem);cursor:text;}
-.polaroid-caption:focus{border-bottom:1px solid var(--rose);}
+.polaroid-caption{position:absolute;bottom:.35rem;left:.3rem;right:.3rem;text-align:center;font-family:'Great Vibes',cursive;font-size:1rem;color:#5c3520;padding:0 .3rem;display:block;}
 
 /* ══ LIGHTBOX ══ */
 .lightbox{position:fixed;inset:0;z-index:52;background:rgba(10,5,2,.93);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;padding:1.5rem;}
@@ -941,6 +948,216 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
   line-height: 1.5;
 }
 .map-popup-emoji { font-size: 1.3rem; margin-bottom: .35rem; display: block; }
+
+/* ── MYSTERY FLIP CARDS ── */
+.mystery-flip-section {
+  background: var(--alt);
+}
+.mystery-flip-section .section-inner {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 4.5rem 1.5rem;
+}
+ 
+/* Progress tracker */
+.flip-progress-bar {
+  display: flex;
+  gap: .4rem;
+  justify-content: center;
+  margin: .6rem 0 1.8rem;
+  flex-wrap: wrap;
+}
+.flip-pip {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(201,131,106,.2);
+  border: 1px solid rgba(201,131,106,.35);
+  transition: background .4s, transform .3s, box-shadow .3s;
+}
+.flip-pip.done {
+  background: var(--rose);
+  box-shadow: 0 0 6px rgba(201,131,106,.5);
+  transform: scale(1.15);
+}
+.flip-hint-text {
+  font-size: .68rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--mist);
+  margin-bottom: 1.6rem;
+  display: block;
+  text-align: center;
+  transition: opacity .4s;
+}
+ 
+/* The grid */
+.flip-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.1rem;
+  margin-top: .5rem;
+}
+@media(max-width:768px) { .flip-grid { grid-template-columns: repeat(2, 1fr); } }
+@media(max-width:380px) { .flip-grid { grid-template-columns: repeat(2, 1fr); gap: .7rem; } }
+ 
+/* Individual card */
+.flip-card {
+  height: 180px;
+  perspective: 900px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  position: relative;
+}
+.flip-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform .65s cubic-bezier(.4,0,.2,1);
+}
+.flip-card.flipped .flip-inner {
+  transform: rotateY(180deg);
+}
+ 
+/* FRONT — mystery */
+.flip-front, .flip-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 1.3rem;
+  text-align: center;
+}
+.flip-front {
+  background: linear-gradient(135deg, var(--cream), var(--dusty-rose));
+  border: 1px solid rgba(201,131,106,.5);
+  transition: box-shadow .3s, transform .15s;
+}
+.flip-card:hover .flip-front {
+  box-shadow: 0 6px 20px rgba(201,131,106,.28);
+}
+.flip-card:active .flip-front {
+  transform: scale(.97);
+}
+.flip-front-lock {
+  font-size: 2.2rem;
+  margin-bottom: .3rem;
+  display: block;
+  animation: lockPulse 2.5s ease-in-out infinite;
+}
+.flip-card.flipped .flip-front-lock {
+  animation: none;
+}
+@keyframes lockPulse {
+  0%,100% { transform: scale(1); opacity: .9; }
+  50% { transform: scale(1.12); opacity: 1; }
+}
+.flip-front-num {
+  font-family: 'Playfair Display', serif;
+  font-size: .7rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--rose);
+  opacity: .6;
+}
+.flip-front-tap {
+  font-size: .62rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--warm-brown);
+  opacity: .4;
+  margin-top: .3rem;
+}
+ 
+/* BACK — wrong message */
+.flip-back {
+  background: var(--deep);
+  transform: rotateY(180deg);
+}
+.flip-back-icon {
+  font-size: 1.6rem;
+  margin-bottom: .4rem;
+  display: block;
+}
+.flip-back-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: .96rem;
+  line-height: 1.55;
+  color: var(--dusty-rose);
+}
+ 
+/* REVEAL STATE — all cards show 🌸 before the banner */
+.flip-card.reveal-state .flip-back {
+  background: linear-gradient(135deg, #1a0d08, #2a1005);
+}
+.flip-card.reveal-state .flip-back-icon {
+  font-size: 2.4rem;
+  animation: revealBeat 1.2s ease infinite;
+}
+@keyframes revealBeat {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.25); }
+}
+.flip-card.reveal-state .flip-back-text {
+  display: none;
+}
+ 
+/* REVEAL BANNER */
+.reveal-banner {
+  display: none;
+  text-align: center;
+  margin-top: 2.2rem;
+  animation: bannerFadeUp .9s ease forwards;
+}
+.reveal-banner.show {
+  display: block;
+}
+@keyframes bannerFadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.reveal-banner-divider {
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--rose), transparent);
+  margin: .8rem auto;
+}
+.reveal-banner-main {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(2.2rem, 7vw, 4rem);
+  color: var(--rose);
+  line-height: 1.3;
+}
+.reveal-banner-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(1rem, 3vw, 1.25rem);
+  color: var(--warm-brown);
+  margin-top: .6rem;
+  max-width: 480px;
+  line-height: 1.8;
+  margin-left: auto;
+  margin-right: auto;
+}
+ 
+/* Glow ring on sync flip */
+.flip-card.sync-flash .flip-inner {
+  filter: drop-shadow(0 0 10px rgba(201,131,106,.55));
+}
+ 
+/* "All done" state — hide hint */
+.flip-hint-text.all-done {
+  opacity: 0;
+  pointer-events: none;
+}
+
 </style>
 </head>
 <body>
@@ -984,24 +1201,7 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
   </div>
 </div>
 
-<!-- STORYBOOK -->
-<div class="storybook-overlay" id="storybookOverlay">
-  <div class="book">
-    <button class="book-close" onclick="closeStorybook()">✕ close</button>
-    <div class="book-pages">
-      <div class="book-page active" id="bp0"><div class="book-page-num">Page 1</div><div class="book-chapter">It began with a trip</div><p class="book-text">Nobody planned it. A sudden winter trip to Nawabganj — fog on the fields, cold air, the kind of quiet that only exists in villages in December. I went because I had to. I stayed because of her.</p></div>
-      <div class="book-page" id="bp1"><div class="book-page-num">Page 2</div><div class="book-chapter">The night we didn't sleep</div><p class="book-text">Ludo. Monopoly. Noodles at 2AM she made without being asked. We stayed up all night talking about everything and nothing, the hours disappearing like they were embarrassed to interrupt us.</p></div>
-      <div class="book-page" id="bp2"><div class="book-page-num">Page 3</div><div class="book-chapter">The river, the mud, the flowers</div><p class="book-text">She swam. I watched from the bank, quietly happy just to be there. Then I slipped in the mud getting up. A spectacular, dignified fall. She laughed. Later I picked flowers for her in a field that smelled like winter and hope.</p></div>
-      <div class="book-page" id="bp3"><div class="book-page-num">Page 4</div><div class="book-chapter">She wasn't into me yet</div><p class="book-text">I knew how I felt long before she did. I picked those flowers for a girl who hadn't said yes yet, carried them across a muddy field, and handed them over like it was the most natural thing in the world. Because for me, it was.</p></div>
-      <div class="book-page" id="bp4"><div class="book-page-num">Page 5</div><div class="book-chapter">One whole year</div><p class="book-text">And now here we are. A year of mornings and late nights, of being found when we got separated, of building something that belongs to just us. She is my favourite story. This is only the beginning of it.</p></div>
-    </div>
-    <div class="book-nav">
-      <button class="book-btn" id="bookPrev" onclick="bookNav(-1)" disabled>← Prev</button>
-      <div class="book-dots" id="bookDots"></div>
-      <button class="book-btn" id="bookNext" onclick="bookNav(1)">Next →</button>
-    </div>
-  </div>
-</div>
+
 
 <!-- LOADER -->
 <div id="loader">
@@ -1030,9 +1230,11 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
 </div>
 
 <!-- FIXED BUTTONS -->
-<button class="fixed-btn" id="themeToggle" onclick="toggleTheme()">🌙</button>
-<button class="fixed-btn" id="storybookBtn" onclick="openStorybook()">📖</button>
-<button class="fixed-btn" id="ambientBtn" onclick="toggleAmbient()">🎵</button>
+<!-- FIXED BUTTONS -->
+<div class="fixed-btn-group">
+  <button class="fixed-btn" id="themeToggle" onclick="toggleTheme()">🌙</button>
+  <button class="fixed-btn" id="ambientBtn" onclick="toggleAmbient()">🎵</button>
+</div>
 
 
 
@@ -1107,7 +1309,7 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
 <!-- WEATHER -->
 <div class="weather-bar reveal" id="weather-section">
   <div class="weather-inner">
-    <div><div class="weather-location">🌍 Nawabganj, Dhaka — right now</div><div class="weather-romantic" id="weatherRomantic">loading...</div></div>
+    <div><div class="weather-location">🌍 Nawabganj, Dhaka, right now</div><div class="weather-romantic" id="weatherRomantic">loading...</div></div>
     <div style="display:flex;align-items:center;gap:.9rem;"><span class="weather-icon" id="weatherIcon">🌤️</span><div><div class="weather-temp" id="weatherTemp">—°C</div><div class="weather-desc" id="weatherDesc">Loading...</div></div></div>
     <div class="weather-extra" id="weatherExtra"></div>
   </div>
@@ -1189,7 +1391,7 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
       <h2 class="section-title">How it <em>began</em></h2>
       <div class="section-body">
         <p>It wasn't planned. Emneo Jibone Plan Kore Kokhono Kichu Hoynah Etto Shundor.</p><br>
-        <p>A sudden trip to Nawabganj — Sheeter Batash Kuasha Diye Bhora Rasta, Gesilam Toh Raat Er Bela Shob Kichu Shantooo R Ekdom Sthirrr chilo, Ahemmm Amon Sheet Chilo Mane The kind of cold that makes you want to be close to someone 😭❤️❤️. But Tkhn Toh Kichui Jantam Nah Ar Nah Prem E Porar Jonno Ready Chilam I didn't know that this trip would become the story I'd tell for the rest of my life ♥😌.</p><br>
+        <p>A sudden trip to Nawabganj, Sheeter Batash Kuasha Diye Bhora Rasta, Gesilam Toh Raat Er Bela Shob Kichu Shantooo R Ekdom Sthirrr chilo, Ahemmm Amon Sheet Chilo Mane The kind of cold that makes you want to be close to someone 😭❤️❤️. But Tkhn Toh Kichui Jantam Nah Ar Nah Prem E Porar Jonno Ready Chilam I didn't know that this trip would become the story I'd tell for the rest of my life ♥😌.</p><br>
         <p>First er dige toh apni amake patta e den nai 👉🏻👈🏻 ar hoyto konodin oi bhabhe bhaben o nai 🥺. But Amiii oidin raat ei first tomake jokhon dekhsilam ami tokhon e bhabsilam tomake nijer bou banabo ami jmnei hok banaboi ❤️🥺, I was already madly in love with you baby. I'm so glad and greatful odin raat e ami nawabganj gesilam. ❤️</p>
         <p>Amar Jibon Change hoye gese oidin raat e ❤️</p>
         <p>Alhamdulillahhhhh ❤️❤️❤️</p>
@@ -1205,35 +1407,51 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
   <div class="section-inner">
     <span class="section-label">Chapter Two</span>
     <h2 class="section-title">The day that <em>changed everything</em></h2>
-    <p class="section-body">We never had an official first date. What we had was better — an entire day that just kept going.</p>
+    <p class="section-body">Offial bhabhe toh date bola jabe nah ei din ke kintu unofficial first date toh mana e jayyy ❤😉. And to be honest it was better What we had was better karon dekho date hoile kotokhon thakte partam ? 2 ghonta 3ghonta jauuuu 5ghonta dhorsii tao toh kom e onek 😭😭, oidin toh puraaa ekta raat r ekta din paisilam tooo date er thike onek onek better chilo ar oidin tay allah er rohomot borkot duitai chilo mone hoitesilo j din ta sesh e hoitese nah etttooo ettooo memory banaisi jaann tmiiiiiiiii meye tomar jonnoi amar nawabganj eto priyo hoise shona ar jayga tao mon thike boli asoleo onek shundor eije gelam j rasta dekhte dekhtei shomay sesh hoye gesilo etto shundor lagse amar kache jaan ar ei shundor jayga tar ekta shundorrrrr pori er prem e pore gelam ami ❤❤❤🤭 Alhamdulillahhhhhhhhhhhhhhhhh ❤❤.</p>
     <div class="timeline" id="timeline">
-      <div class="tl-item"><div class="tl-time">Late night</div><div class="tl-title">The Graveyard Walk</div><div class="tl-body">We walked past a graveyard at night, making jokes like two people who are either very brave or very comfortable with each other. Definitely the second one.</div></div>
-      <div class="tl-item"><div class="tl-time">Her home</div><div class="tl-title">Ludo, Monopoly & Pure Chaos</div><div class="tl-body">Ludo first. Then Monopoly — <em>dhoni howar mojar khela.</em> She bankrupted everyone in the first hour and somehow acted surprised about it. I laughed until it hurt.</div></div>
-      <div class="tl-item"><div class="tl-time">2AM kitchen</div><div class="tl-title">Noodles & Chaa</div><div class="tl-body">She made us noodles and chaa without being asked. Simple, warm, perfect. There's something quietly romantic about someone making food for YOU ❤️ at 2AM like it's nothing.</div></div>
-      <div class="tl-item"><div class="tl-time">All night</div><div class="tl-title">We Didn't Sleep</div><div class="tl-body">We stayed up all night. I don't remember every word. I just remember not wanting any of it to stop.</div></div>
-      <div class="tl-item"><div class="tl-time">Morning</div><div class="tl-title">Separated & Reunited</div><div class="tl-body">We moved houses and got separated. Worst few minutes of the whole day. Then we found each other again and everything felt lighter.</div></div>
-      <div class="tl-item"><div class="tl-time">The river</div><div class="tl-title">The River & The Mud Incident 😭</div><div class="tl-body">She swam. I watched from the bank, quietly happy just to be there. Then getting up, I slipped in the wet mud. A full, spectacular, completely dignified fall. Mortifying. Worth it forever.</div></div>
-      <div class="tl-item"><div class="tl-time">Flower field</div><div class="tl-title">I Picked Flowers for Her</div><div class="tl-body">We went to a flower field. I picked some for her and we walked together, laughing at nothing. She wasn't into me yet. I was completely, irrevocably in love — picking flowers like they were the most important things I'd ever held.</div></div>
+      <div class="tl-item"><div class="tl-time">Munna Mamar Basha Thike tomar basha porjono raat e</div><div class="tl-title">Tmr Sathe Haata Poth</div><div class="tl-body"> Munna mamar basha thike ber hoilam raat er dige tarpor toh ar ki kono auto rickshaw kichui pailam nah hatte hatte kon porjonto aisha porsilam jani 🤔 ektaa mor chilo rastar eita mone ase ohh areeee jauyar poth e toh ekta koboristan o porsilo mone ase jaannnn🌚🤣❤❤ ki ki hoisilo oitar smne diye ashar shomay ❤😂 tarpor pouchailam tomar bashayyy</div></div>
+      <div class="tl-item"><div class="tl-time">Tomar Bashay Shararaat ❤</div><div class="tl-title">Ludo, Monopoly arrrr hajar hajar bochor er memories ek raat e ❤😂</div><div class="tl-body">Ghum ashe nai eita bolte parbo nah ghum toh ekbar ashchilo, kintuuuu kono bolod goru e oi raat e ghumay raat ta nosto korbe baba ami toh nah, maf chai 🙏🏻🙏🏻. First e Ludo, tarpor shuru hoilo Monopoly, jeita ke amar toh <em>dhoni houyar mojar khela.</em> boltei shanti lage then abar majkhane jatra biroti hishabe noodles, chaa, ar etttooo gula cuteness adhaaa raat e. Tkhn toh fojor er shomay hoye gesilo, aazan diye disilo. monopoly khelsi kintu eita ke best bolar karon jano ? monopoly er majkhane amar tomar sathe kotto shundor r cute ekta bonding hoisilo mone ase tumi amake shob pore dita cards o pore diso abr atkay gesilam bachay o diso game khela sikhay o diso onekta tarporrr abar oder duijon er biruddhe na amra duijon plan kore o khelsilam mone ase hehe jaan ❤🤭. Chmesitry toh amader first din thikei bhalo tumi jai bolooo. Amra shararaat e jege khelte khelte kotto kichu niye kotha boltesilam—issshhh, abar kichu niye o boltesilam nah, huthat kore shobai ekdom chuppp 😂.Ei shob korte kortei ghorir kata kkhn shokal banay fello kheyal e kori nai. Ami toh jano birokto hoisilam onek shokal hoye gesilo jkhn dekhi 😭. </div></div>
+      <div class="tl-item"><div class="tl-time">Ranna Ghor er Adventure</div><div class="tl-title">Noodles ar Chaaaaaaa ❤</div><div class="tl-body">eita toh bolsi e kintu eita niye alada kore nah likhle amar mon bhorto nah and to be honest tumi porte na chaile pora lagbe nah kichui jaan ami likhsi emnei mon chaise likhe felsi ki ar korbo sharadin jalai tao mon bhore nah aro kotha bolte mon chay tarpor eije aisha eibhabhe likha likhi korte thaki jeikhanei pari akhn website e kortesi majhe moddhe nijer chat e kori kagoj e likhi notes app e likhi aro onekkk kichu ase re shona ❤. jai hok chaa er kothay firot ashiiiii. chaa banaiso pore dekho j dudh e nai pore to ami goru khujchilam mone ase dudh ber kore ante chaisilam 🤣🤣🤣❤ tarpore katakuti korla noodles er jonno tomato morich piyaj ar kisu toh kato nai 🤔❤. noodles kintu purata khaisi jaannnnn piyaj baade ami piyaj khai na kmn jani lage ❤😂. tarpor chaa te ashiiiii ektu kora chilo mani kintu ami kora e khai shotti jeita bashay banaileo amon e khai ar rong chaa toh amar bhaloi pochonder hehe ❤🤭 eitaooo milse dekhsooo jaannnnn ❤❤🤭😭. chaa ta best chilo promise kosom dile toh ragg koro ami dite parle eikhane ekta kosom ditam j shotti onek moja chilo chaa ta ar tar thike boro kotha ke dise dekhte hobe nah ? oi chaa er tohhh mullo e alada baba re oitar kono mullo hoyna shona uuhhuuu ❤🙏🏻. amar jibon er bestest best chaaaa hehe paam martesi nah don't worry asolei mon thike bollam ❤</div></div>
+      <div class="tl-item"><div class="tl-time">Shokal Bela</div><div class="tl-title">Separated & Reunited 🥺❤</div><div class="tl-body">Shokal bela toh uthe gelam munna mamar bashayyy oikhane giye tomake toh ar pai na 🙂🙂. jauyar sathe sathe onekkhon khujchi pai nai pore nasta khauyar jonno jorr korse oikhaneo tomar oppekkha korsi j hoyto akhn ashba akhn ashba tumi r ashla nahhh pocha pore tushi chachi ke jiggesh korsilam bolse j tumi agei kheye felso ektu khushi hoilam j khaiso abr ektu kosto o paisilam j tomake haray fellam eksathe nasta tao korte parlam nah and tomar harano shomay tuku was the Worst part of the whole day. Then we found each other again and everything felt lighter. nodi te jauyar age hoyto apnr dekha paisilam bhalo bhabhe ta chara ektu ektu korei dekhsi j eikhane jaiteso oikhane jaiteso tarpore toh eksathe hoye gesilam eksathe oije nodi te gelam naa ar nodi thike ashar pore toh eksathei chilam jauya porjonto jaannn ❤❤🥺. eijonnoi kosto ta lagtesilo 10gun beshi eto shomay  kataisilam last er dige ar ekta dinnn thakle ki moja ta j hoito amar abbu toh raji o hoye gesilo dida rao raji chilo ei shajib chacchur zaara apur exam tai aisha porlo pore ar keo thakte chailo o nah 🙂</div></div>
+      <div class="tl-item"><div class="tl-time">Nodi ❤</div><div class="tl-title">Nodi ar bheja matir kahini 😭❤</div><div class="tl-body">Apni kotto shundor kore shatar katlen, ami first e kichukhon obak hoye haaa hoye chilam. Tumi shatar katte paro dekhe ishhhhh, ami toh oikhaneo etttooo impress hoisilam. Lojja o paitesilam abar ettto gula thanda o lagtesilo nijer theke 3 size boro t-shirt disilo Munna mama 😂😭. ami pori small ba medium majhe moddhe large pori slim fit shirt gula ar munna mama disilo xxl 😭😭😂 First e jkhn olpo ektu nodi te namsilam, tkhn toh just nodi tai dekhtesilam, ar fake fake tomake ektu dekhtesilam. I was just happy je ajker din e ami eikhane tmr sathe eita experience korte partesi 🥺❤.Tarpore ektu vashar chesta korlam, then uthar shomay abar arek kahini bheja maati te tupush kore pislay pore 😂🤣🤣. Apni heshe disilen hehe ❤🤭. Bhaloi lagsilo pore j, at least tmr attention toh paisi ❤😭.</div></div>
+      <div class="tl-item"><div class="tl-time">Fuler Khet ❤</div><div class="tl-title">Apnr Jonno Jeikhan thike ful chirlam ar  JEikhane Ekdom dube gelam apnr bhitore ❤</div><div class="tl-body">Tarpore bashay giye fresh hoye bikel e baire gelam oije fuler math tay gesilam. Ami r tumiiii... eikhanei ja houyar shob hoise. Ami toh baba etokhon e tmr proti bhoyanok attracted chilam already. Crush mrush nah dhurrr, actual bhalobasha. Amar jibon e prothom bar emon lagtesilo 🥺❤.Oidin oi ful gular sathe amio bhalobasha onubhob korsilam. Etttooo gula feelings truck nah, bullet train er moto aisha amake falay dilo sharajibon er jonno ❤😌.Rod e tomar chokh, tomar chul, tomar gaayer rong shada golden color er ekta shade er moto lage (#ffda9e) eije ei color ta. Chokh gula jol jol kortesilo, chul gula shine kortesilo. Eishob dekhar pore amar pokkhe ar ekta second o possible chilo nah nijeke shamlay rakha.Ami jaan, tkhn thekei sesh hoye gesilam ❤.Tarpore tomar jonno ful chirlam etttooo gula. Ekta toh jotno kore rekhe disilen apnii, madam. Bashay eshe text e jkhn shunlam tumi ful ta rekhe diso ami akash theke porsi 😭.Ohh, ar eidin e first tomar scent paisi jaan ❤❤❤ Chul er smell o paisi duibar raat e ar UNO khelar shomay 🥺.Ar scent ta kkhn paisi… eita rohossho e thakuk 😉 Ekdin dekha kore bolbo, pakhi ❤🤭"</div></div>
     </div>
   </div>
 </div>
 
 <!-- FLIP CARDS -->
-<div class="reveal" style="background:var(--alt);">
+<div class="reveal mystery-flip-section">
   <div class="section-inner">
-    <span class="section-label">From my heart</span>
-    <h2 class="section-title">Reasons I <em>love YOU ❤️</em></h2>
-    <p style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--mist);">tap each card ✦</p>
-    <div class="flip-grid">
-      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">😂</span><span class="flip-front-num">01</span></div><div class="flip-back"><p class="flip-back-text">The way YOU ❤️ laugh — completely unfiltered. It's the best sound I know.</p></div></div></div>
-      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">🍜</span><span class="flip-front-num">02</span></div><div class="flip-back"><p class="flip-back-text">YOU ❤️ made noodles at 2AM without being asked. That's exactly the kind of person YOU ❤️ are.</p></div></div></div>
-      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">🌊</span><span class="flip-front-num">03</span></div><div class="flip-back"><p class="flip-back-text">YOU ❤️ dove into that river like it was nothing. YOU ❤️ are so much braver than YOU ❤️ know.</p></div></div></div>
-      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">🌙</span><span class="flip-front-num">04</span></div><div class="flip-back"><p class="flip-back-text">That YOU ❤️ stayed up all night with me and it still never felt like enough time.</p></div></div></div>
-      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">🌸</span><span class="flip-front-num">05</span></div><div class="flip-back"><p class="flip-back-text">The look on YOU ❤️r face in the flower field. I was already completely lost before that.</p></div></div></div>
-      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">🎲</span><span class="flip-front-num">06</span></div><div class="flip-back"><p class="flip-back-text">The way YOU ❤️ play Monopoly like world peace depends on bankrupting everyone at the table.</p></div></div></div>
-      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">💬</span><span class="flip-front-num">07</span></div><div class="flip-back"><p class="flip-back-text">YOU ❤️ make even the hardest conversations feel safe. That's rare. That's everything.</p></div></div></div>
-      <div class="flip-card"><div class="flip-inner"><div class="flip-front"><span class="flip-front-icon">🫂</span><span class="flip-front-num">08</span></div><div class="flip-back"><p class="flip-back-text">A year in and I still choose YOU ❤️ first, every single day. That's my favourite reason.</p></div></div></div>
+    <span class="section-label">A little mystery</span>
+    <h2 class="section-title">Find the <em>reason I love you</em></h2>
+ 
+    <!-- pip tracker -->
+    <div class="flip-progress-bar" id="flipPips">
+      <div class="flip-pip" id="pip0"></div>
+      <div class="flip-pip" id="pip1"></div>
+      <div class="flip-pip" id="pip2"></div>
+      <div class="flip-pip" id="pip3"></div>
+      <div class="flip-pip" id="pip4"></div>
+      <div class="flip-pip" id="pip5"></div>
+      <div class="flip-pip" id="pip6"></div>
+      <div class="flip-pip" id="pip7"></div>
     </div>
+    <span class="flip-hint-text" id="flipHint">flip every card to find what's hidden ✦</span>
+ 
+    <div class="flip-grid" id="mysteryFlipGrid"></div>
+ 
+    <!-- Final reveal banner -->
+    <div class="reveal-banner" id="revealBanner">
+      <div class="reveal-banner-divider"></div>
+      <div class="reveal-banner-main">The reason I love you<br>is <em style="color:var(--amber)">you</em> ❤️</div>
+      <div class="reveal-banner-sub">
+        Not what you do. Not how you make noodles at 2AM.<br>
+        Not the river, or the flowers, or the Monopoly chaos.<br>
+        Just you. Exactly as you are. Always.
+      </div>
+      <div class="reveal-banner-divider"></div>
+    </div>
+ 
   </div>
 </div>
 
@@ -1241,7 +1459,7 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
 <div id="starfield-section">
   <span class="section-label" style="color:var(--dusty-rose);">tap a star · write a wish</span>
   <h2 class="section-title" style="color:var(--cream);">The reasons I <em style="color:var(--dusty-rose);">fell for YOU ❤️</em></h2>
-  <p style="font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(232,196,176,.45);font-size:.98rem;">Tap any star. Write a wish — it becomes a star in our sky forever.</p>
+  <p style="font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(232,196,176,.45);font-size:.98rem;">Tap any star. Write a wish , it becomes a star in our sky forever.</p>
   <canvas id="starCanvas" width="800" height="320"></canvas>
   <div class="sf-legend">
     <div class="sf-legend-item"><div class="sf-legend-dot" style="background:#e8d0a0;"></div>reasons</div>
@@ -1269,14 +1487,14 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
     <span class="section-label">Chapter Three</span>
     <h2 class="section-title">Our year, <em>month by month</em></h2>
     <div class="year-timeline">
-      <div class="yt-row"><div class="yt-content"><div class="yt-month">March 2025 — It began 🌸</div><div class="yt-text">The trip. The night. The flowers. Everything started here. The best accident of my life.</div></div><div class="yt-dot"></div><div class="yt-spacer"></div></div>
+      <div class="yt-row"><div class="yt-content"><div class="yt-month">March 2025 , It began 🌸</div><div class="yt-text">The trip. The night. The flowers. Everything started here. The best accident of my life.</div></div><div class="yt-dot"></div><div class="yt-spacer"></div></div>
       <div class="yt-row"><div class="yt-spacer"></div><div class="yt-dot"></div><div class="yt-content"><div class="yt-month">April 2025</div><div class="yt-text">The first month of actually being us. Still figuring it out. Already sure about her.</div></div></div>
       <div class="yt-row"><div class="yt-content"><div class="yt-month">May 2025</div><div class="yt-text">Something about this month stays with me.</div></div><div class="yt-dot"></div><div class="yt-spacer"></div></div>
       <div class="yt-row"><div class="yt-spacer"></div><div class="yt-dot"></div><div class="yt-content"><div class="yt-month">June 2025</div><div class="yt-text">Halfway through the year and still finding new things to love about her.</div></div></div>
       <div class="yt-row"><div class="yt-content"><div class="yt-month">July–August 2025</div><div class="yt-text">Long hot days. Her laugh making everything cooler.</div></div><div class="yt-dot"></div><div class="yt-spacer"></div></div>
       <div class="yt-row"><div class="yt-spacer"></div><div class="yt-dot"></div><div class="yt-content"><div class="yt-month">September–October 2025</div><div class="yt-text">The season turning. Something shifting between us in the best way.</div></div></div>
       <div class="yt-row"><div class="yt-content"><div class="yt-month">November–December 2025</div><div class="yt-text">Winter coming back around. Almost a full year. Grateful for all of it.</div></div><div class="yt-dot"></div><div class="yt-spacer"></div></div>
-      <div class="yt-row"><div class="yt-spacer"></div><div class="yt-dot"></div><div class="yt-content"><div class="yt-month">March 2026 — One year 🎉</div><div class="yt-text">Happy anniversary, my love. Here's to every year after this one.</div></div></div>
+      <div class="yt-row"><div class="yt-spacer"></div><div class="yt-dot"></div><div class="yt-content"><div class="yt-month">March 2026 , One year 🎉</div><div class="yt-text">Happy anniversary, my love. Here's to every year after this one.</div></div></div>
     </div>
   </div>
 </div>
@@ -1314,29 +1532,46 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
     <span class="gift-hint" id="giftHint">tap to unwrap ✦</span>
     <div class="gift-reveal" id="giftReveal">
       <div class="gift-message">Happy Anniversary, Tory 🌸</div>
-      <div class="gift-sub">A whole year of YOU ❤️. Of us. Of picking flowers in muddy fields and staying up all night and finding each other again when we got separated. I wouldn't change a single second of it.<br><br>Here's to forever more. — Yash</div>
+      <div class="gift-sub">A whole year of YOU ❤️. Of us. Of picking flowers in muddy fields and staying up all night and finding each other again when we got separated. I wouldn't change a single second of it.<br><br>Here's to forever more. , Yash</div>
     </div>
   </div>
 </div>
 
-<!-- PHOTOS -->
-<!-- To hardcode photos, set src as relative file paths like: photos/nawabganj.jpg -->
+<!-- PHOTOS — hardcoded. Put images in a photos/ folder next to this HTML.
+     Rename files to match, or change the src values. -->
 <div id="photos-section" class="reveal">
   <div class="section-inner">
     <span class="section-label">Chapter Four</span>
     <h2 class="section-title">Our <em>gallery</em></h2>
-    <p class="section-body">Tap any polaroid to add a photo. Tap the caption to rename it.</p>
+    <p class="section-body">Moments from our first year together 🌸</p>
     <div class="polaroid-grid">
-      <div class="polaroid" onclick="openLightbox(0)"><div class="polaroid-img" id="pol0"><span style="font-size:1.2rem;">🌿</span><span style="font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;">add photo</span><input type="file" accept="image/*" onchange="addPhoto(this,0)" onclick="event.stopPropagation()"></div><input class="polaroid-caption" id="cap0" value="Nawabganj ✦" onclick="event.stopPropagation()"></div>
-      <div class="polaroid" onclick="openLightbox(1)"><div class="polaroid-img" id="pol1"><span style="font-size:1.2rem;">🌸</span><span style="font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;">add photo</span><input type="file" accept="image/*" onchange="addPhoto(this,1)" onclick="event.stopPropagation()"></div><input class="polaroid-caption" id="cap1" value="Flower field" onclick="event.stopPropagation()"></div>
-      <div class="polaroid" onclick="openLightbox(2)"><div class="polaroid-img" id="pol2"><span style="font-size:1.2rem;">🌊</span><span style="font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;">add photo</span><input type="file" accept="image/*" onchange="addPhoto(this,2)" onclick="event.stopPropagation()"></div><input class="polaroid-caption" id="cap2" value="River day ✦" onclick="event.stopPropagation()"></div>
-      <div class="polaroid" onclick="openLightbox(3)"><div class="polaroid-img" id="pol3"><span style="font-size:1.2rem;">☕</span><span style="font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;">add photo</span><input type="file" accept="image/*" onchange="addPhoto(this,3)" onclick="event.stopPropagation()"></div><input class="polaroid-caption" id="cap3" value="2AM noodles" onclick="event.stopPropagation()"></div>
-      <div class="polaroid" onclick="openLightbox(4)"><div class="polaroid-img" id="pol4"><span style="font-size:1.2rem;">🎲</span><span style="font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;">add photo</span><input type="file" accept="image/*" onchange="addPhoto(this,4)" onclick="event.stopPropagation()"></div><input class="polaroid-caption" id="cap4" value="Monopoly chaos" onclick="event.stopPropagation()"></div>
-      <div class="polaroid" onclick="openLightbox(5)"><div class="polaroid-img" id="pol5"><span style="font-size:1.2rem;">💐</span><span style="font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;">add photo</span><input type="file" accept="image/*" onchange="addPhoto(this,5)" onclick="event.stopPropagation()"></div><input class="polaroid-caption" id="cap5" value="Us ♡" onclick="event.stopPropagation()"></div>
+      <div class="polaroid" onclick="openLightbox(0)">
+        <div class="polaroid-img" id="pol0"><img src="photos/photo1.jpg" alt="Nawabganj"></div>
+        <span class="polaroid-caption" id="cap0">Nawabganj ✦</span>
+      </div>
+      <div class="polaroid" onclick="openLightbox(1)">
+        <div class="polaroid-img" id="pol1"><img src="photos/photo2.jpg" alt="Flower field"></div>
+        <span class="polaroid-caption" id="cap1">Flower field 🌸</span>
+      </div>
+      <div class="polaroid" onclick="openLightbox(2)">
+        <div class="polaroid-img" id="pol2"><img src="photos/photo3.jpg" alt="River day"></div>
+        <span class="polaroid-caption" id="cap2">River day ✦</span>
+      </div>
+      <div class="polaroid" onclick="openLightbox(3)">
+        <div class="polaroid-img" id="pol3"><img src="photos/photo4.jpg" alt="2AM noodles"></div>
+        <span class="polaroid-caption" id="cap3">2AM noodles ☕</span>
+      </div>
+      <div class="polaroid" onclick="openLightbox(4)">
+        <div class="polaroid-img" id="pol4"><img src="photos/photo5.jpg" alt="Monopoly chaos"></div>
+        <span class="polaroid-caption" id="cap4">Monopoly chaos 🎲</span>
+      </div>
+      <div class="polaroid" onclick="openLightbox(5)">
+        <div class="polaroid-img" id="pol5"><img src="photos/photo6.jpg" alt="Us"></div>
+        <span class="polaroid-caption" id="cap5">Us ♡</span>
+      </div>
     </div>
   </div>
 </div>
-<div class="lightbox" id="lightbox" onclick="closeLightbox()"><div class="lb-inner" onclick="event.stopPropagation()"><button class="lb-close" onclick="closeLightbox()">✕</button><img class="lb-img" id="lbImg" src="" alt=""><p class="lb-caption" id="lbCaption"></p><div class="lb-nav"><button onclick="lbPrev()">← Prev</button><button onclick="lbNext()">Next →</button></div></div></div>
 
 <!-- MAP -->
 <div id="map-section" class="reveal">
@@ -1358,7 +1593,7 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
       <div class="chat-header"><div class="chat-avatar">🌸</div><div><div class="chat-header-name">Tory</div><div class="chat-status" id="chatStatus">online</div></div></div>
       <div class="chat-body" id="chatBody">
         <div class="typing-indicator" id="typingIndicator"><div class="typing-dots"><span></span><span></span><span></span></div></div>
-        <div class="chat-msg recv" data-time="10:31 AM"><div>Add YOU ❤️r first texts here — edit the HTML 🌸</div><div class="chat-time">10:31 AM</div></div>
+        <div class="chat-msg recv" data-time="10:31 AM"><div>Add YOU ❤️r first texts here , edit the HTML 🌸</div><div class="chat-time">10:31 AM</div></div>
         <div class="chat-msg sent" data-time="10:32 AM"><div>The messages that started everything. YOU ❤️ know which ones.</div><div class="chat-time">10:32 AM</div></div>
         <div class="chat-msg recv" data-time="10:33 AM"><div>The one that made YOU ❤️ smile for an hour after reading it.</div><div class="chat-time">10:33 AM</div></div>
         <div class="chat-msg sent" data-time="10:35 AM"><div>And the reply that made her think maybe... just maybe.</div><div class="chat-time">10:35 AM</div></div>
@@ -1385,7 +1620,7 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
   </div>
 </div>
 
-<!-- LOVE LETTER — LOCKED -->
+<!-- LOVE LETTER , LOCKED -->
 <div id="letter-section" class="reveal" style="background:radial-gradient(ellipse at center,#ede0d4,var(--bg));text-align:center;">
   <div class="section-inner" style="max-width:660px;">
     <span class="section-label">From me, to YOU ❤️</span>
@@ -1396,7 +1631,7 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
         <span class="envelope-seal">🌸</span>
         <div class="envelope-body">
           <p class="letter-salutation">My dearest Tory,</p>
-          <p class="letter-body">A year ago I went on a trip I didn't plan and found the person I wasn't looking for. YOU ❤️ made noodles at 2AM. YOU ❤️ swam in a cold river without hesitating. YOU ❤️ played Monopoly like it was a professional sport. And in a flower field on a winter morning, before YOU ❤️'d even said yes to me, I picked flowers for YOU ❤️ — because that's what YOU ❤️ do when someone already has YOU ❤️r whole heart.<br><br>Thank YOU ❤️ for this year. Thank YOU ❤️ for every conversation, every late night, every moment of being found after getting separated. YOU ❤️ are my favourite thing that ever happened to me.<br><br>Happy anniversary. Here's to all the years after this one.</p>
+          <p class="letter-body">A year ago I went on a trip I didn't plan and found the person I wasn't looking for. YOU ❤️ made noodles at 2AM. YOU ❤️ swam in a cold river without hesitating. YOU ❤️ played Monopoly like it was a professional sport. And in a flower field on a winter morning, before YOU ❤️'d even said yes to me, I picked flowers for YOU ❤️ , because that's what YOU ❤️ do when someone already has YOU ❤️r whole heart.<br><br>Thank YOU ❤️ for this year. Thank YOU ❤️ for every conversation, every late night, every moment of being found after getting separated. YOU ❤️ are my favourite thing that ever happened to me.<br><br>Happy anniversary. Here's to all the years after this one.</p>
           <p class="letter-sign">— Yash, always 🌸</p>
         </div>
       </div>
@@ -1710,13 +1945,15 @@ function toggleAmbient(){
 }
 
 /* ─── COUNTDOWN + ANNIVERSARY ─── */
+let _annivTriggered=false;
 function tick(){
   const diff=ANNIVERSARY-new Date();
   if(diff<=0||isAnniversary()){
     document.getElementById('countdown').style.display='none';
     document.querySelector('.countdown-label').style.display='none';
     document.getElementById('annivBanner').classList.add('show');
-    launchConfetti();triggerFireworks();return;
+    if(!_annivTriggered){_annivTriggered=true;launchConfetti();triggerFireworks();}
+    return;
   }
   const d=Math.floor(diff/86400000),h=Math.floor((diff%86400000)/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
   document.getElementById('cd-d').textContent=String(d).padStart(2,'0');
@@ -1724,7 +1961,7 @@ function tick(){
   document.getElementById('cd-m').textContent=String(m).padStart(2,'0');
   document.getElementById('cd-s').textContent=String(s).padStart(2,'0');
 }
-tick();setInterval(tick,1000);
+setTimeout(()=>{tick();setInterval(tick,1000);},500);
 
 /* ─── TIME TOGETHER — live ─── */
 function tickTT(){
@@ -2025,15 +2262,6 @@ function openLetter(){
   document.getElementById('envelope').classList.add('open');
 }
 
-/* ─── STORYBOOK ─── */
-let bPage=0;const bTotal=5;
-function initBook(){const dots=document.getElementById('bookDots');dots.innerHTML='';for(let i=0;i<bTotal;i++){const d=document.createElement('div');d.className='book-dot'+(i===0?' active':'');d.onclick=()=>goBook(i);dots.appendChild(d);}}
-function goBook(n){document.getElementById('bp'+bPage).classList.remove('active');bPage=n;document.getElementById('bp'+bPage).classList.add('active');document.querySelectorAll('.book-dot').forEach((d,i)=>d.classList.toggle('active',i===bPage));document.getElementById('bookPrev').disabled=bPage===0;document.getElementById('bookNext').disabled=bPage===bTotal-1;}
-function bookNav(dir){goBook(Math.max(0,Math.min(bTotal-1,bPage+dir)));}
-function openStorybook(){document.getElementById('storybookOverlay').classList.add('open');}
-function closeStorybook(){document.getElementById('storybookOverlay').classList.remove('open');}
-initBook();
-
 /* ─── HEARTBEAT ─── */
 const hbC=document.getElementById('hbCanvas'),hbX=hbC.getContext('2d');let hbT=0;
 function resizeHB(){hbC.width=Math.min(680,window.innerWidth-20);hbC.height=window.innerWidth<768?72:120;}resizeHB();window.addEventListener('resize',resizeHB);
@@ -2042,10 +2270,14 @@ drawHB();
 
 /* ─── PHOTOS — file path based ─── */
 // To hardcode: replace null with relative path e.g. 'photos/nawabganj.jpg'
-const photoSrcs=[null,null,null,null,null,null];
-(function preloadPhotos(){photoSrcs.forEach((src,idx)=>{if(!src)return;const s=document.getElementById('pol'+idx);if(!s)return;s.innerHTML='';const img=document.createElement('img');img.src=src;s.appendChild(img);});})();
-function addPhoto(input,idx){if(!input.files[0])return;const r=new FileReader();r.onload=e=>{photoSrcs[idx]=e.target.result;const s=document.getElementById('pol'+idx);s.innerHTML='';const img=document.createElement('img');img.src=e.target.result;s.appendChild(img);};r.readAsDataURL(input.files[0]);}
-let lbIdx=0;
+const photoSrcs=[
+  'photos/photo1.jpg',
+  'photos/photo2.jpg',
+  'photos/photo3.jpg',
+  'photos/photo4.jpg',
+  'photos/photo5.jpg',
+  'photos/photo6.jpg',
+];
 function openLightbox(idx){if(!photoSrcs[idx])return;lbIdx=idx;document.getElementById('lbImg').src=photoSrcs[idx];document.getElementById('lbCaption').textContent=document.getElementById('cap'+idx)?.value||'';document.getElementById('lightbox').classList.add('open');}
 function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
 function lbPrev(){let n=(lbIdx-1+6)%6;while(!photoSrcs[n]&&n!==lbIdx)n=(n-1+6)%6;openLightbox(n);}
@@ -2556,6 +2788,10 @@ async function toggleBucket(id,done){try{await sb(`bucket_list?id=eq.${id}`,{met
 function renderGbCard(w, i, isVip=false){
   return `<div class="gb-card${isVip?' vip':''}" style="animation-delay:${i*.06}s">
     ${isVip?'<span class="gb-crown">👑</span>':''}
+    ${w.photo_url
+      ? `<img src="${esc(w.photo_url)}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;margin-bottom:.5rem;">`
+      : ''
+    }
     <span class="gb-emoji">${esc(w.emoji||'🌸')}</span>
     <div class="gb-name">${esc(w.name)}</div>
     <div class="gb-message">${esc(w.message)}</div>
@@ -2715,6 +2951,141 @@ document.getElementById('complimentDay').textContent = _cd.toLocaleDateString('e
 document.getElementById('complimentIcon').textContent = _c.icon;
 document.getElementById('complimentText').textContent = _c.text;
 document.getElementById('complimentSub').textContent = _c.sub;
+
+(function() {
+  /* ─ wrong messages pool (8 unique) ─ */
+  const wrongMessages = [
+    { icon: '🔍', text: 'Not under this one... try the next card ✨' },
+    { icon: '🌙', text: 'So close, jaan. But nope, keep going 🌸' },
+    { icon: '💭', text: 'Hmm, not here. Maybe the one next to it?' },
+    { icon: '🌊', text: 'Nope! But you\'re getting warmer... 💕' },
+    { icon: '🎲', text: 'Almost! Try a different card, shona 🌸' },
+    { icon: '✨', text: 'Nah, not this one. Still looking? 👀' },
+    { icon: '🌺', text: 'Not here either... one card left, jaan 🌸' },
+    { icon: '💫', text: 'This isn\'t it — but the last card is ❤️' },
+  ];
+ 
+  /* Shuffle the wrong messages so assignment is random each page load */
+  const shuffled = [...wrongMessages].sort(() => Math.random() - .5);
+ 
+  const grid = document.getElementById('mysteryFlipGrid');
+  const hint = document.getElementById('flipHint');
+  const banner = document.getElementById('revealBanner');
+  const pips = Array.from({ length: 8 }, (_, i) => document.getElementById('pip' + i));
+ 
+  let flippedCards = new Set();
+  let revealed = false;
+ 
+  /* Build cards */
+  for (let i = 0; i < 8; i++) {
+    const msg = shuffled[i];
+ 
+    const card = document.createElement('div');
+    card.className = 'flip-card';
+    card.id = 'mfc' + i;
+    card.setAttribute('data-idx', i);
+ 
+    card.innerHTML = `
+      <div class="flip-inner">
+        <div class="flip-front">
+          <span class="flip-front-lock">🔒</span>
+          <span class="flip-front-num">Card ${String(i + 1).padStart(2, '0')}</span>
+          <span class="flip-front-tap">tap to reveal</span>
+        </div>
+        <div class="flip-back">
+          <span class="flip-back-icon">${msg.icon}</span>
+          <p class="flip-back-text">${msg.text}</p>
+        </div>
+      </div>`;
+ 
+    card.addEventListener('click', () => handleFlip(card, i));
+    card.addEventListener('touchend', e => { e.preventDefault(); handleFlip(card, i); }, { passive: false });
+ 
+    grid.appendChild(card);
+  }
+ 
+  function handleFlip(card, idx) {
+    if (revealed) return;
+    if (flippedCards.has(idx)) {
+      /* Allow un-flip if not all done yet */
+      card.classList.remove('flipped');
+      flippedCards.delete(idx);
+      pips[idx].classList.remove('done');
+      updateHint();
+      return;
+    }
+ 
+    card.classList.add('flipped');
+    flippedCards.add(idx);
+    pips[idx].classList.add('done');
+    updateHint();
+ 
+    if (flippedCards.size === 8) {
+      triggerGrandReveal();
+    }
+  }
+ 
+  function updateHint() {
+    const n = flippedCards.size;
+    if (n === 0) hint.textContent = 'flip every card to find what\'s hidden ✦';
+    else if (n < 7) hint.textContent = `${8 - n} card${8 - n > 1 ? 's' : ''} left... keep going 🌸`;
+    else if (n === 7) hint.textContent = 'one card left — this is the one ❤️';
+  }
+ 
+  function triggerGrandReveal() {
+    revealed = true;
+    hint.classList.add('all-done');
+ 
+    const cards = Array.from(grid.querySelectorAll('.flip-card'));
+ 
+    /* Step 1: 700ms pause — let the last card settle */
+    setTimeout(() => {
+ 
+      /* Step 2: All cards flip back to front simultaneously */
+      cards.forEach(c => {
+        c.style.transition = 'none'; /* override individual pointer events */
+        c.classList.remove('flipped');
+        c.style.pointerEvents = 'none';
+      });
+ 
+      /* Force reflow */
+      void grid.offsetWidth;
+ 
+      /* Step 3: 550ms later, all flip to reveal state together */
+      setTimeout(() => {
+        cards.forEach(c => {
+          /* Switch back content to 🌸 */
+          c.classList.add('reveal-state');
+          const icon = c.querySelector('.flip-back-icon');
+          if (icon) icon.textContent = '🌸';
+        });
+ 
+        /* Sync flip — all at once, staggered by a tiny cascade (30ms each) for wave effect */
+        cards.forEach((c, i) => {
+          setTimeout(() => {
+            c.classList.add('flipped', 'sync-flash');
+          }, i * 55);
+        });
+ 
+        /* Remove flash class after animation */
+        setTimeout(() => {
+          cards.forEach(c => c.classList.remove('sync-flash'));
+        }, 8 * 55 + 700);
+ 
+        /* Step 4: Banner appears after all cards are flipped */
+        setTimeout(() => {
+          banner.classList.add('show');
+          /* Scroll banner into view */
+          banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          /* Small confetti burst if available on parent page */
+          if (typeof launchConfetti === 'function') launchConfetti();
+        }, 8 * 55 + 500);
+ 
+      }, 550);
+ 
+    }, 700);
+  }
+})();
 </script>
 </body>
 </html>
