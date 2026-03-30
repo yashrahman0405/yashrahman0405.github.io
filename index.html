@@ -552,16 +552,153 @@ nav{
 .polaroid-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
 .polaroid-caption{position:absolute;bottom:.35rem;left:.3rem;right:.3rem;text-align:center;font-family:'Great Vibes',cursive;font-size:1rem;color:#5c3520;padding:0 .3rem;display:block;}
 
-/* ══ LIGHTBOX ══ */
-.lightbox{position:fixed;inset:0;z-index:52;background:rgba(10,5,2,.93);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;padding:1.5rem;}
-.lightbox.open{opacity:1;pointer-events:all;}
-.lb-inner{position:relative;max-width:580px;width:100%;text-align:center;}
-.lb-img{width:100%;max-height:68vh;object-fit:contain;border:5px solid #fff;box-shadow:0 16px 50px rgba(0,0,0,.5);}
-.lb-caption{font-family:'Great Vibes',cursive;font-size:1.8rem;color:var(--dusty-rose);margin-top:.9rem;}
-.lb-close{position:absolute;top:-.9rem;right:-.9rem;width:34px;height:34px;background:var(--rose);border:none;border-radius:50%;color:#fff;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.lb-nav{display:flex;justify-content:center;gap:.9rem;margin-top:1rem;}
-.lb-nav button{background:transparent;border:1px solid var(--dusty-rose);color:var(--dusty-rose);padding:.45rem 1.2rem;cursor:pointer;font-family:'EB Garamond',serif;font-size:.88rem;transition:all .2s;border-radius:100px;}
-.lb-nav button:active{background:var(--rose);border-color:var(--rose);color:#fff;}
+/* ══ LIGHTBOX — Polaroid Style ══ */
+.lightbox {
+  position: fixed; inset: 0; z-index: 52;
+  background: rgba(8, 4, 2, 0.92);
+  backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity .35s ease;
+  padding: 1.5rem;
+}
+.lightbox.open { opacity: 1; pointer-events: all; }
+
+.lb-inner {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0;
+  animation: lbPolaroidIn .45s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes lbPolaroidIn {
+  from { transform: scale(.82) rotate(-3deg); opacity: 0; }
+  to   { transform: scale(1)   rotate(0deg);  opacity: 1; }
+}
+
+/* The big polaroid frame */
+.lb-polaroid {
+  background: #fff;
+  padding: 1rem 1rem 3.8rem;
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.65),
+    0 0 0 1px rgba(255,255,255,.06);
+  position: relative;
+  max-width: min(520px, 92vw);
+  width: 100%;
+}
+
+.lb-img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  display: block;
+  background: linear-gradient(135deg, var(--dusty-rose), #d4a898);
+}
+
+/* Caption inside the polaroid white border */
+.lb-caption {
+  position: absolute;
+  bottom: .7rem; left: 0; right: 0;
+  text-align: center;
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(1.3rem, 4vw, 1.8rem);
+  color: #5c3520;
+  padding: 0 1rem;
+  pointer-events: none;
+}
+
+/* Close button — top right of overlay */
+.lb-close {
+  position: fixed; top: 1.2rem; right: 1.2rem;
+  width: 40px; height: 40px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 50%;
+  color: rgba(255,255,255,.7);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s;
+  backdrop-filter: blur(4px);
+  z-index: 53;
+}
+.lb-close:hover { background: rgba(201,131,106,.35); color: #fff; border-color: var(--rose); }
+
+/* Nav arrows */
+.lb-nav {
+  display: flex; justify-content: center; gap: 1rem;
+  margin-top: 1.3rem;
+}
+.lb-nav button {
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(201,131,106,.35);
+  color: var(--dusty-rose);
+  padding: .55rem 1.6rem;
+  cursor: pointer;
+  font-family: 'EB Garamond', serif;
+  font-size: .9rem;
+  letter-spacing: .08em;
+  transition: all .22s;
+  border-radius: 100px;
+  backdrop-filter: blur(4px);
+}
+.lb-nav button:hover, .lb-nav button:active {
+  background: var(--rose);
+  border-color: var(--rose);
+  color: #fff;
+}
+
+/* Dot indicators */
+.lb-dots {
+  display: flex; gap: .45rem; justify-content: center;
+  margin-top: .9rem;
+}
+.lb-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(201,131,106,.25);
+  border: 1px solid rgba(201,131,106,.4);
+  cursor: pointer;
+  transition: all .2s;
+}
+.lb-dot.active {
+  background: var(--rose);
+  transform: scale(1.25);
+}
+
+/* Keyboard hint */
+.lb-hint {
+  font-size: .6rem; letter-spacing: .18em; text-transform: uppercase;
+  color: rgba(255,255,255,.2);
+  margin-top: .9rem;
+  text-align: center;
+}
+
+/* Film strip decoration */
+.lb-film {
+  position: absolute;
+  top: 0; bottom: 0; width: 28px;
+  display: flex; flex-direction: column; justify-content: space-around; align-items: center;
+  background: rgba(0,0,0,.55);
+  pointer-events: none;
+}
+.lb-film::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 12px,
+    rgba(255,255,255,.07) 12px,
+    rgba(255,255,255,.07) 20px
+  );
+}
+.lb-film.lb-film-l { left: -32px; }
+.lb-film.lb-film-r { right: -32px; }
+
+@media(max-width: 640px) {
+  .lb-film { display: none; }
+  .lb-close { top: .7rem; right: .7rem; width: 36px; height: 36px; }
+}
 
 /* ══ MAP ══ */
 #map{height:380px;border:1px solid var(--dusty-rose);border-radius:2px;margin-top:1.8rem;z-index:1;}
@@ -570,24 +707,264 @@ nav{
 .map-legend-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
 
 /* ══ CHAT ══ */
-.chat-wrap{max-width:460px;margin:2rem auto 0;background:linear-gradient(to bottom,#e5ddd5,#d5c8be);border-radius:10px;overflow:hidden;box-shadow:0 6px 26px rgba(0,0,0,.13);}
-.chat-header{background:#075E54;padding:.75rem 1rem;display:flex;align-items:center;gap:.7rem;}
-.chat-avatar{width:34px;height:34px;background:var(--dusty-rose);border-radius:50%;font-size:.95rem;display:flex;align-items:center;justify-content:center;}
-.chat-header-name{font-family:'Playfair Display',serif;font-style:italic;color:#fff;font-size:.95rem;}
-.chat-status{font-size:.68rem;color:rgba(255,255,255,.58);}
-.chat-body{padding:1rem;display:flex;flex-direction:column;gap:.55rem;min-height:160px;}
-.chat-msg{max-width:80%;padding:.55rem .85rem;border-radius:8px;font-family:'EB Garamond',serif;font-size:.93rem;line-height:1.5;opacity:0;transition:opacity .4s ease,transform .4s ease;transform:translateY(7px);}
-.chat-msg.msg-visible{opacity:1;transform:translateY(0);}
-.chat-msg.sent{background:#dcf8c6;align-self:flex-end;border-bottom-right-radius:2px;color:#1a1a1a;}
-.chat-msg.recv{background:#fff;align-self:flex-start;border-bottom-left-radius:2px;color:#1a1a1a;}
-.chat-time{font-size:.62rem;color:rgba(0,0,0,.38);text-align:right;margin-top:2px;}
-.chat-msg.sent .chat-time::after{content:' ✓✓';color:#4fc3f7;}
-.typing-indicator{background:#fff;align-self:flex-start;border-radius:8px;border-bottom-left-radius:2px;padding:.55rem .85rem;display:none;}
-.typing-indicator.show{display:block;}
-.typing-dots{display:flex;gap:4px;align-items:center;height:16px;}
-.typing-dots span{width:7px;height:7px;background:#aaa;border-radius:50%;animation:typingDot .9s ease infinite;}
-.typing-dots span:nth-child(2){animation-delay:.2s;}.typing-dots span:nth-child(3){animation-delay:.4s;}
-@keyframes typingDot{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-6px);}}
+.chat-wrap {
+  max-width: 460px;
+  margin: 2rem auto 0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 20px 60px rgba(30,10,4,.28),
+    0 0 0 1px rgba(201,131,106,.18);
+  background: linear-gradient(160deg, #1a0c06 0%, #110805 60%, #0d0705 100%);
+}
+
+.chat-header {
+  background: linear-gradient(90deg, #1e0e08, #2a1208);
+  padding: .9rem 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  border-bottom: 1px solid rgba(201,131,106,.18);
+}
+
+.chat-avatar {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, #c9836a, #e8c4b0);
+  border-radius: 50%;
+  font-size: 1.05rem;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid rgba(201,131,106,.35);
+  box-shadow: 0 0 12px rgba(201,131,106,.2);
+  flex-shrink: 0;
+}
+
+.chat-header-name {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  color: var(--dusty-rose);
+  font-size: .97rem;
+  line-height: 1.2;
+}
+
+.chat-status {
+  font-size: .62rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--rose);
+  opacity: .65;
+  margin-top: .1rem;
+}
+
+.chat-body {
+  padding: 1.2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  min-height: 180px;
+  background: linear-gradient(180deg, transparent, rgba(201,131,106,.02));
+}
+
+/* Date divider */
+.chat-date-divider {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  margin: .4rem 0 .6rem;
+}
+
+.chat-date-divider::before,
+.chat-date-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(201,131,106,.12);
+}
+
+.chat-date-badge {
+  background: rgba(201,131,106,.07);
+  border: 1px solid rgba(201,131,106,.18);
+  border-radius: 100px;
+  font-size: .62rem;
+  letter-spacing: .08em;
+  color: var(--rose);
+  padding: .2rem .9rem;
+  white-space: nowrap;
+  font-family: 'EB Garamond', serif;
+}
+
+/* Messages */
+.chat-msg {
+  max-width: 82%;
+  padding: .65rem 1rem;
+  border-radius: 14px;
+  font-family: 'EB Garamond', serif;
+  font-size: 1rem;
+  line-height: 1.55;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .42s ease, transform .42s ease;
+  word-break: break-word;
+}
+
+.chat-reaction {
+  font-size: 1rem;
+  margin-top: .25rem;
+  display: inline-block;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(201,131,106,.2);
+  border-radius: 100px;
+  padding: .1rem .45rem;
+  line-height: 1.4;
+  align-self: flex-end;
+}
+.chat-msg.sent .chat-reaction { align-self: flex-end; }
+.chat-msg.recv .chat-reaction { align-self: flex-start; }
+
+/* Reply preview inside a message */
+.chat-reply-preview {
+  border-left: 3px solid rgba(255,255,255,.4);
+  background: rgba(0,0,0,.18);
+  border-radius: 6px 6px 0 0;
+  padding: .35rem .6rem;
+  margin-bottom: .4rem;
+  font-size: .78rem;
+  opacity: .75;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  font-style: italic;
+}
+
+.chat-msg.sent .chat-reply-preview {
+  border-left-color: rgba(255,255,255,.5);
+  color: rgba(255,248,242,.8);
+}
+
+.chat-msg.recv .chat-reply-preview {
+  border-left-color: var(--rose);
+  color: rgba(232,196,176,.65);
+}
+
+.chat-msg.msg-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Sent — Yash (right, rose gradient) */
+.chat-msg.sent {
+  align-self: flex-end;
+  background: linear-gradient(135deg, #c9836a, #d4956a);
+  color: #fff8f2;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 4px 14px rgba(201,131,106,.22);
+}
+
+/* Received — Tory (left, dark glass) */
+.chat-msg.recv {
+  align-self: flex-start;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(201,131,106,.18);
+  color: var(--dusty-rose);
+  border-bottom-left-radius: 4px;
+  backdrop-filter: blur(4px);
+}
+
+.chat-meta {
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+  justify-content: flex-end;
+  margin-top: .25rem;
+}
+
+.chat-time {
+  font-size: .6rem;
+  opacity: .5;
+  color: inherit;
+  font-style: italic;
+}
+
+/* Typing indicator */
+.typing-indicator {
+  align-self: flex-start;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(201,131,106,.15);
+  padding: .55rem .8rem;
+  border-radius: 14px;
+  border-bottom-left-radius: 4px;
+  display: none;
+}
+
+.typing-indicator.show { display: block; }
+
+.typing-dots {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  height: 14px;
+}
+
+.typing-dots span {
+  width: 6px; height: 6px;
+  background: var(--rose);
+  border-radius: 50%;
+  opacity: .55;
+  animation: typingDot .9s ease infinite;
+}
+
+.typing-dots span:nth-child(2) { animation-delay: .2s; }
+.typing-dots span:nth-child(3) { animation-delay: .4s; }
+
+@keyframes typingDot {
+  0%, 60%, 100% { transform: translateY(0); opacity: .35; }
+  30% { transform: translateY(-5px); opacity: 1; }
+}
+
+/* Play button */
+.chat-play-wrap {
+  text-align: center;
+  margin-top: 1.4rem;
+}
+
+.chat-play-btn {
+  background: transparent;
+  border: 1px solid var(--rose);
+  color: var(--rose);
+  font-family: 'EB Garamond', serif;
+  font-size: .85rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  padding: .75rem 2.2rem;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all .3s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.chat-play-btn:hover {
+  background: var(--rose);
+  color: var(--cream);
+  box-shadow: 0 4px 20px rgba(201,131,106,.28);
+}
+
+.chat-play-btn:disabled {
+  opacity: .38;
+  cursor: not-allowed;
+  background: transparent;
+  color: var(--rose);
+  box-shadow: none;
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .chat-msg.sent {
+  box-shadow: 0 4px 18px rgba(201,131,106,.35);
+}
+
+[data-theme="dark"] .chat-msg.recv {
+  background: rgba(255,255,255,.04);
+  border-color: rgba(201,131,106,.15);
+}
 
 /* ══ BENGALI ══ */
 .bengali-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1.1rem;margin-top:2.2rem;}
@@ -1443,11 +1820,12 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
     <!-- Final reveal banner -->
     <div class="reveal-banner" id="revealBanner">
       <div class="reveal-banner-divider"></div>
-      <div class="reveal-banner-main">The reason I love you<br>is <em style="color:var(--amber)">you</em> ❤️</div>
+      <div class="reveal-banner-main">The reason I love you<br>is <em style="color:var(--amber)">youuuuuu Tory </em> 🌸❤️</div>
       <div class="reveal-banner-sub">
-        Not what you do. Not how you make noodles at 2AM.<br>
-        Not the river, or the flowers, or the Monopoly chaos.<br>
-        Just you. Exactly as you are. Always.
+        Ami tomake bhalobashi karon Tumi Nijei Pakhi ❤.<br>
+        Not the river, or the flowers, or the even oidin raat er Monopoly er adda.<br>
+        the reason is Just you baby ❤🥺. Exactly tumi jmn ei rokom e chaisi allah er kache shara ta jibon bhore ami ar amar toh shonar kopal shoonar bhaggo allah amake khujte day nai uni nijei amar jibon er prothom bhalobasha ke amar mon moto diye dise Alhamdulillahhh❤. <br>
+        tumi please amon e thaiko shona pakhi ❤🥺🤭. Amon na thakle judi change hou eksathe change hobo promise jaan ❤. kintu amader moddhe ja ase ta chirokal same thakbe eita amar onek agei bujha hoye gese ❤😌
       </div>
       <div class="reveal-banner-divider"></div>
     </div>
@@ -1486,16 +1864,7 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
   <div class="section-inner">
     <span class="section-label">Chapter Three</span>
     <h2 class="section-title">Our year, <em>month by month</em></h2>
-    <div class="year-timeline">
-      <div class="yt-row"><div class="yt-content"><div class="yt-month">March 2025 , It began 🌸</div><div class="yt-text">The trip. The night. The flowers. Everything started here. The best accident of my life.</div></div><div class="yt-dot"></div><div class="yt-spacer"></div></div>
-      <div class="yt-row"><div class="yt-spacer"></div><div class="yt-dot"></div><div class="yt-content"><div class="yt-month">April 2025</div><div class="yt-text">The first month of actually being us. Still figuring it out. Already sure about her.</div></div></div>
-      <div class="yt-row"><div class="yt-content"><div class="yt-month">May 2025</div><div class="yt-text">Something about this month stays with me.</div></div><div class="yt-dot"></div><div class="yt-spacer"></div></div>
-      <div class="yt-row"><div class="yt-spacer"></div><div class="yt-dot"></div><div class="yt-content"><div class="yt-month">June 2025</div><div class="yt-text">Halfway through the year and still finding new things to love about her.</div></div></div>
-      <div class="yt-row"><div class="yt-content"><div class="yt-month">July–August 2025</div><div class="yt-text">Long hot days. Her laugh making everything cooler.</div></div><div class="yt-dot"></div><div class="yt-spacer"></div></div>
-      <div class="yt-row"><div class="yt-spacer"></div><div class="yt-dot"></div><div class="yt-content"><div class="yt-month">September–October 2025</div><div class="yt-text">The season turning. Something shifting between us in the best way.</div></div></div>
-      <div class="yt-row"><div class="yt-content"><div class="yt-month">November–December 2025</div><div class="yt-text">Winter coming back around. Almost a full year. Grateful for all of it.</div></div><div class="yt-dot"></div><div class="yt-spacer"></div></div>
-      <div class="yt-row"><div class="yt-spacer"></div><div class="yt-dot"></div><div class="yt-content"><div class="yt-month">March 2026 , One year 🎉</div><div class="yt-text">Happy anniversary, my love. Here's to every year after this one.</div></div></div>
-    </div>
+    <div class="year-timeline" id="yearTimeline"></div>
   </div>
 </div>
 
@@ -1589,15 +1958,26 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
   <div class="section-inner" style="max-width:660px;">
     <span class="section-label">How it started</span>
     <h2 class="section-title">Our <em>first conversations</em></h2>
+
     <div class="chat-wrap" id="chatWrap">
-      <div class="chat-header"><div class="chat-avatar">🌸</div><div><div class="chat-header-name">Tory</div><div class="chat-status" id="chatStatus">online</div></div></div>
-      <div class="chat-body" id="chatBody">
-        <div class="typing-indicator" id="typingIndicator"><div class="typing-dots"><span></span><span></span><span></span></div></div>
-        <div class="chat-msg recv" data-time="10:31 AM"><div>Add YOU ❤️r first texts here , edit the HTML 🌸</div><div class="chat-time">10:31 AM</div></div>
-        <div class="chat-msg sent" data-time="10:32 AM"><div>The messages that started everything. YOU ❤️ know which ones.</div><div class="chat-time">10:32 AM</div></div>
-        <div class="chat-msg recv" data-time="10:33 AM"><div>The one that made YOU ❤️ smile for an hour after reading it.</div><div class="chat-time">10:33 AM</div></div>
-        <div class="chat-msg sent" data-time="10:35 AM"><div>And the reply that made her think maybe... just maybe.</div><div class="chat-time">10:35 AM</div></div>
+      <div class="chat-header">
+        <div class="chat-avatar">🌸</div>
+        <div>
+          <div class="chat-header-name">Tory 🌸</div>
+          <div class="chat-status" id="chatStatus">tap play to replay ✦</div>
+        </div>
       </div>
+      <div class="chat-body" id="chatBody">
+        <div class="typing-indicator" id="typingIndicator">
+          <div class="typing-dots"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-play-wrap">
+      <button class="chat-play-btn" id="chatPlayBtn" onclick="startChatAnimation()">
+        💬 Play Conversation
+      </button>
     </div>
   </div>
 </div>
@@ -1699,16 +2079,20 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
     <span class="section-label">Our soundtrack</span>
     <h2 class="section-title">Songs that <em>remind me of YOU ❤️</em></h2>
     <div style="display:flex;flex-direction:column;gap:.9rem;margin-top:1.3rem;max-width:580px;">
-      <div class="song-block"><div class="song-block-header"><span style="font-size:1.2rem;">🎵</span><div><div style="font-family:'Playfair Display',serif;font-style:italic;font-size:.97rem;color:var(--deep);">Our song</div><div style="font-size:.82rem;color:var(--mist);">The one that plays and I think of YOU ❤️ instantly</div></div></div>
-      <iframe class="spotify-frame" src="https://open.spotify.com/embed/track/TRACK_ID_S1?utm_source=generator&theme=0" height="76" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
-      <div class="song-block"><div class="song-block-header"><span style="font-size:1.2rem;">🎵</span><div><div style="font-family:'Playfair Display',serif;font-style:italic;font-size:.97rem;color:var(--deep);">The night song</div><div style="font-size:.82rem;color:var(--mist);">What was playing that night in Nawabganj</div></div></div>
-      <iframe class="spotify-frame" src="https://open.spotify.com/embed/track/TRACK_ID_S2?utm_source=generator&theme=0" height="76" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
-      <div class="song-block"><div class="song-block-header"><span style="font-size:1.2rem;">🎵</span><div><div style="font-family:'Playfair Display',serif;font-style:italic;font-size:.97rem;color:var(--deep);">Add a song</div><div style="font-size:.82rem;color:var(--mist);">A song that's just ours</div></div></div>
-      <iframe class="spotify-frame" src="https://open.spotify.com/embed/track/TRACK_ID_S3?utm_source=generator&theme=0" height="76" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
+      <div class="song-block"><div class="song-block-header"><span style="font-size:1.2rem;">🎵</span><div><div style="font-family:'Playfair Display',serif;font-style:italic;font-size:.97rem;color:var(--deep);">Our song ❤</div><div style="font-size:.82rem;color:var(--mist);">The one that plays and I think of YOU ❤️ instantly</div></div></div>
+      <iframe class="spotify-frame" src="https://open.spotify.com/embed/track/18xxOCfmxqBD5YgTFpzp5d?si=195a4287ab7a47ba?utm_source=generator&theme=0" height="76" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
+      <div class="song-block"><div class="song-block-header"><span style="font-size:1.2rem;">🎵</span><div><div style="font-family:'Playfair Display',serif;font-style:italic;font-size:.97rem;color:var(--deep);">Last Jeita Eksathe gaisilam amra ❤</div><div style="font-size:.82rem;color:var(--mist);">Auto te eksathe amra ja gacchilam last </div></div></div>
+      <iframe class="spotify-frame" src="https://open.spotify.com/embed/track/7illVkphGKNyGPfJH8t53U?si=b564841c59e24ae0?utm_source=generator&theme=0" height="76" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
+      <div class="song-block"><div class="song-block-header"><span style="font-size:1.2rem;">🎵</span><div><div style="font-family:'Playfair Display',serif;font-style:italic;font-size:.97rem;color:var(--deep);">Agamibar Eksathe Gabooo ❤</div><div style="font-size:.82rem;color:var(--mist);">A song that's just ours</div></div></div>
+      <iframe class="spotify-frame" src="https://open.spotify.com/embed/track/7GGxvHpnzVFa8uKJRHoGKC?si=ae46f0ec4cd6425d?utm_source=generator&theme=0" height="76" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
     </div>
     <div class="spotify-dark" style="margin-top:1.8rem;">
       <div class="spotify-logo"><svg viewBox="0 0 24 24" fill="#1ed760" width="16" height="16"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg><span>Our Playlist</span></div>
-      <iframe class="spotify-frame" src="https://open.spotify.com/embed/playlist/PLAYLIST_ID_MAIN?utm_source=generator&theme=0" height="360" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+      <iframe class="spotify-frame" src="https://open.spotify.com/embed/playlist/524gb2FUyQLGzAjeaRQkiv?si=17bd1031caca475f?utm_source=generator&theme=0" height="360" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+        <div class="spotify-dark" style="margin-top:1.8rem;">
+      <div class="spotify-logo"><span>Our Playlist</span></div>
+      <iframe class="spotify-frame" src="https://audiomack.com//embed/yash45t/playlist/for-tory" height="360" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
     </div>
   </div>
 </div>
@@ -1819,6 +2203,28 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
   </div>
 </div>
 
+
+<!-- LIGHTBOX — Polaroid Style -->
+<div class="lightbox" id="lightbox" onclick="handleLbOverlayClick(event)">
+  <button class="lb-close" onclick="closeLightbox()" aria-label="Close">✕</button>
+  <div class="lb-inner" id="lbInner">
+    <!-- film strip left -->
+    <div class="lb-film lb-film-l"></div>
+    <div class="lb-polaroid">
+      <img class="lb-img" id="lbImg" src="" alt="">
+      <div class="lb-caption" id="lbCaption"></div>
+    </div>
+    <!-- film strip right -->
+    <div class="lb-film lb-film-r"></div>
+    <nav class="lb-nav">
+      <button onclick="lbPrev()">← Prev</button>
+      <button onclick="lbNext()">Next →</button>
+    </nav>
+    <div class="lb-dots" id="lbDots"></div>
+    <p class="lb-hint">← → keys to navigate · esc to close</p>
+  </div>
+</div>
+
 <footer>
   <span class="footer-names">Yash &amp; Tory</span>
   <p>March 30, 2025 → March 30, 2026 · Nawabganj, Dhaka, Bangladesh</p>
@@ -1826,29 +2232,6 @@ footer small{display:block;margin-top:.9rem;font-size:.72rem;opacity:.38;}
   <small>Made with love, by Yash — for Tory. Every single word.</small>
 </footer>
 
-<!-- DEBUG PANEL — tap Y&T logo 5x to open -->
-<div class="debug-panel" id="debugPanel">
-  <div class="debug-title">🛠 Debug Menu <button class="debug-close" onclick="document.getElementById('debugPanel').classList.remove('open')">✕</button></div>
-  <div class="debug-section">🔐 Auth</div>
-  <button class="debug-btn" onclick="dbg_skipPw()">Skip password screen</button>
-  <div class="debug-section">🎉 Anniversary</div>
-  <button class="debug-btn success" onclick="dbg_triggerAnniv()">Trigger anniversary mode</button>
-  <button class="debug-btn" onclick="dbg_confetti()">Launch confetti</button>
-  <button class="debug-btn" onclick="dbg_fireworks()">Launch fireworks</button>
-  <div class="debug-section">🔒 Locks</div>
-  <button class="debug-btn" onclick="dbg_unlockGift()">Unlock gift box now</button>
-  <button class="debug-btn" onclick="dbg_unlockLetter()">Open love letter now</button>
-  <div class="debug-section">🌟 Starfield</div>
-  <button class="debug-btn" onclick="dbg_addWishY()">Add test wish (Yash)</button>
-  <button class="debug-btn" onclick="dbg_addWishT()">Add test wish (Tory)</button>
-  <button class="debug-btn" onclick="dbg_shootingStar()">Spawn shooting star</button>
-  <div class="debug-section">🎨 Theme</div>
-  <button class="debug-btn" onclick="dbg_toggleTheme()">Toggle dark/light mode</button>
-  <div class="debug-section">📋 Info</div>
-  <button class="debug-btn" onclick="dbg_showInfo()">Show timing info</button>
-  <button class="debug-btn danger" onclick="dbg_resetAll()">Reset all local state</button>
-  <div class="debug-status" id="debugStatus">ready</div>
-</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
@@ -2083,25 +2466,131 @@ window.addEventListener('scroll',()=>{
 const tlObs=new IntersectionObserver(en=>{en.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll('.tl-item').forEach((it,i)=>setTimeout(()=>it.classList.add('tl-v'),i*130));}});},{threshold:.05});
 document.querySelectorAll('.timeline').forEach(t=>tlObs.observe(t));
 
-/* ─── CHAT TYPING ANIMATION ─── */
-let chatDone=false;
-const chatObs=new IntersectionObserver(en=>{en.forEach(e=>{
-  if(e.isIntersecting&&!chatDone){
-    chatDone=true;
-    const msgs=Array.from(document.querySelectorAll('#chatBody .chat-msg'));
-    const typer=document.getElementById('typingIndicator');
-    let idx=0;
-    function next(){
-      if(idx>=msgs.length)return;
-      const m=msgs[idx];
-      if(m.classList.contains('recv')){typer.classList.add('show');setTimeout(()=>{typer.classList.remove('show');m.classList.add('msg-visible');idx++;setTimeout(next,650);},850);}
-      else{m.classList.add('msg-visible');idx++;setTimeout(next,650);}
-    }
-    setTimeout(next,350);
-  }
-});},{threshold:.3});
-const cw=document.getElementById('chatWrap');if(cw)chatObs.observe(cw);
+/* ─── CHAT — JS-defined messages ─── */
+const CHAT_MESSAGES = [
+  { date: '15 February 2025', 
+    type: 'recv', text: 'Hii', time: '09:13 PM' },
+  { type: 'recv', text: '[PHOTO] | (jei ful ta disilam first oitar chobi) |', time: '09:15 PM', reaction: '❤️'},
+  { type: 'recv', text: 'akhono ase amar kase', time: '09:15 PM' },
+  { 
+    type: 'sent', 
+    text: 'Heyyy', 
+    time: '09:15 PM',
+    replyTo: 'Hii'   
+  },
+  { 
+    type: 'recv', 
+    text: 'Ki obostha tumar', 
+    time: '09:15 PM',
+  },
+  { 
+    type: 'sent', 
+    text: 'Klk e chinta kortesilam', 
+    time: '09:16 PM',
+    replyTo: 'akhono ase amar kase'   
+  },
+  { 
+    type: 'sent', 
+    text: 'rakhso na haray felso', 
+    time: '09:16 PM', 
+  },
+  { 
+    type: 'recv', 
+    text: 'Raikha disi', 
+    time: '09:16 PM',
+    reaction: '❤️'
+  },
+  { 
+    type: 'sent', 
+    text: 'AItoh Bhaloii 👍🏻', 
+    time: '09:17 PM',
+    replyTo: 'ki obostha tumar'   
+  },
+  { 
+    type: 'sent', 
+    text: 'Tomar ki obostha ??', 
+    time: '09:17 PM',  
+  },
+  { 
+    type: 'recv', 
+    text: 'asba kobe bolo', 
+    time: '09:17 PM',  
+  },
+  { 
+    type: 'sent', 
+    text: 'Yayy 🕺🏻✨', 
+    time: '09:18 PM',
+    replyTo: 'Raikha Disi'   
+  },
+  { 
+    type: 'sent', 
+    text: 'Abr chuti paile try marbo ne 🥸 ', 
+    time: '09:18 PM',
+    replyTo: 'Raikha Disi'   
+  },
+  { 
+    type: 'recv', 
+    text: 'Alhamdulillah ', 
+    time: '09:18 PM',
+    replyTo: 'Tomar ki obostha ??'   
+  },
+    { 
+    type: 'recv', 
+    text: 'ok', 
+    time: '09:19 PM',
+    replyTo: 'Abr chuti paile try marbo ne 🥸'   
+  },
+];
 
+let chatDone = false, chatPlaying = false;
+
+function startChatAnimation() {
+  if (chatPlaying) return;
+  if (chatDone) {
+    document.getElementById('chatBody').innerHTML = '<div class="typing-indicator" id="typingIndicator"><div class="typing-dots"><span></span><span></span><span></span></div></div>';
+    chatDone = false;
+  }
+  chatPlaying = true;
+  const btn = document.getElementById('chatPlayBtn');
+  btn.disabled = true; btn.textContent = '💬 Playing...';
+  playChatMsg(0, null);
+}
+
+function playChatMsg(idx, prevDate) {
+  if (idx >= CHAT_MESSAGES.length) {
+    chatDone = true; chatPlaying = false;
+    const btn = document.getElementById('chatPlayBtn');
+    btn.textContent = '↺ Replay'; btn.disabled = false;
+    document.getElementById('chatStatus').textContent = 'online ✦';
+    return;
+  }
+  const msg = CHAT_MESSAGES[idx];
+  const body = document.getElementById('chatBody');
+  const typer = document.getElementById('typingIndicator');
+  if (msg.date && msg.date !== prevDate) {
+    const d = document.createElement('div'); d.className = 'chat-date-divider';
+    d.innerHTML = `<span class="chat-date-badge">${msg.date}</span>`;
+    body.insertBefore(d, typer);
+  }
+  const isRecv = msg.type === 'recv';
+  if (isRecv) { typer.classList.add('show'); document.getElementById('chatStatus').textContent = 'typing...'; }
+  const wait = isRecv ? 900 + msg.text.length * 16 : 0;
+  setTimeout(() => {
+    if (isRecv) { typer.classList.remove('show'); document.getElementById('chatStatus').textContent = 'online ✦'; }
+    const el = document.createElement('div');
+    el.className = `chat-msg ${msg.type}`;
+    const replyHtml = msg.replyTo
+      ? `<div class="chat-reply-preview">↩ ${msg.replyTo}</div>`
+      : '';
+    const reactionHtml = msg.reaction
+      ? `<div class="chat-reaction">${msg.reaction}</div>`
+      : '';
+    el.innerHTML = `${replyHtml}<div>${msg.text}</div><div class="chat-meta"><span class="chat-time">${msg.time}</span>${!isRecv ? '<span class="chat-time">✓✓</span>' : ''}</div>${reactionHtml}`;
+    body.insertBefore(el, typer);
+    requestAnimationFrame(() => requestAnimationFrame(() => { el.classList.add('msg-visible'); el.scrollIntoView({ behavior:'smooth', block:'nearest' }); }));
+    setTimeout(() => playChatMsg(idx + 1, msg.date || prevDate), isRecv ? 380 : 480);
+  }, wait);
+}
 /* ─── CONFETTI ─── */
 function playSfx(id,vol=0.45){
   try{const a=document.getElementById(id);if(!a)return;a.currentTime=0;a.volume=vol;a.play().catch(()=>{});}catch(e){}
@@ -2120,7 +2609,7 @@ function spawnBurst(){const x=Math.random()*fwC.width,y=Math.random()*fwC.height
 function animFW(){if(!fwC.classList.contains('active'))return;fwX.clearRect(0,0,fwC.width,fwC.height);fwP.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.05;p.life-=.016;fwX.globalAlpha=p.life;fwX.fillStyle=p.color;fwX.beginPath();fwX.arc(p.x,p.y,p.size,0,Math.PI*2);fwX.fill();});fwP=fwP.filter(p=>p.life>0);fwX.globalAlpha=1;requestAnimationFrame(animFW);}
 
 /* ─── DEBUG MENU ─── */
-const starReasons=['YOU ❤️r laugh. I could listen to it forever.','YOU ❤️ made food for me without being asked.','The way YOU ❤️ dove into that river without hesitating.','YOU ❤️ stayed up all night with me just talking.','The look on YOU ❤️r face in the flower field.','YOU ❤️ make every hard thing feel a little lighter.','YOU ❤️r complete, joyful chaos at Monopoly.','The way YOU ❤️ held my hand that first time.','YOU ❤️ are brave in ways YOU ❤️ don\'t even see.','Every time we got separated and found each other.','YOU ❤️ are my favourite kind of trouble.','YOU ❤️r warmth. YOU ❤️ make everywhere feel like home.','The way YOU ❤️ laugh at my jokes even when they\'re bad.','YOU ❤️ chose me back. That changed everything.','Nawabganj in winter. Because of YOU ❤️.'];
+const starReasons = [];
 const sfC=document.getElementById('starCanvas'),sfX=sfC.getContext('2d');
 let sfStars=[],sfWishStars=[],sfShooting=[],sfAnimId,sfHov=null,wishWho='Yash';
 // 3 distinct colours: reasons=silver-white, Yash wishes=warm gold, Tory wishes=teal
@@ -2137,7 +2626,7 @@ function initSF(){
   sfC.height=window.innerWidth<480?240:320;
   sfStars=starReasons.map(reason=>({
     x:22+Math.random()*(sfC.width-44),y:16+Math.random()*(sfC.height-32),
-    r:2.5+Math.random()*3,pulse:Math.random()*Math.PI*2,speed:.016+Math.random()*.012,
+    r:4+Math.random()*5,pulse:Math.random()*Math.PI*2,speed:.016+Math.random()*.012,
     reason,type:'reason',conns:[],
   }));
   sfStars.forEach((s,i)=>{sfStars.forEach((t,j)=>{if(i===j)return;if(Math.hypot(s.x-t.x,s.y-t.y)<110&&s.conns.length<2&&t.conns.length<2)s.conns.push(j);});});
@@ -2156,19 +2645,28 @@ function drawSF(){
   // Reason stars — silver/white
   sfStars.forEach(s=>{
     s.pulse+=s.speed;const g=Math.sin(s.pulse)*.5+.5;const isH=(sfHov===s);
-    const r=isH?s.r*2.8:s.r*(1+g*.5);const c=SFC.reason;
-    const grd=sfX.createRadialGradient(s.x,s.y,0,s.x,s.y,r*6);
-    grd.addColorStop(0,`rgba(${c.glow},${isH?.35:.05+g*.1})`);grd.addColorStop(1,`rgba(${c.glow},0)`);
-    sfX.beginPath();sfX.arc(s.x,s.y,r*6,0,Math.PI*2);sfX.fillStyle=grd;sfX.fill();
-    sfX.beginPath();sfX.arc(s.x,s.y,r,0,Math.PI*2);sfX.fillStyle=isH?`rgba(255,252,245,1)`:`rgba(${c.core},${.5+g*.5})`;sfX.fill();
+    const r=isH?s.r*3.2:s.r*(1+g*.6);const c=SFC.reason;
+    const grd=sfX.createRadialGradient(s.x,s.y,0,s.x,s.y,r*10);
+    grd.addColorStop(0,`rgba(${c.glow},${isH?.55:.18+g*.22})`);
+    grd.addColorStop(0.4,`rgba(${c.glow},${isH?.25:.06+g*.1})`);
+    grd.addColorStop(1,`rgba(${c.glow},0)`);
+    sfX.beginPath();sfX.arc(s.x,s.y,r*10,0,Math.PI*2);sfX.fillStyle=grd;sfX.fill();
+    sfX.shadowBlur=isH?28:14;sfX.shadowColor=`rgba(255,240,200,.9)`;
+    sfX.beginPath();sfX.arc(s.x,s.y,r,0,Math.PI*2);sfX.fillStyle=isH?`rgba(255,255,245,1)`:`rgba(${c.core},${.75+g*.25})`;sfX.fill();
+    sfX.shadowBlur=0;
     if(isH){[0,Math.PI/2,Math.PI,Math.PI*1.5].forEach(a=>{sfX.beginPath();sfX.moveTo(s.x+Math.cos(a)*(r*2),s.y+Math.sin(a)*(r*2));sfX.lineTo(s.x+Math.cos(a)*(r*5),s.y+Math.sin(a)*(r*5));sfX.strokeStyle=`rgba(255,248,230,.5)`;sfX.lineWidth=.8;sfX.stroke();});}
   });
   // Wish stars — Yash=gold, Tory=teal
   sfWishStars.forEach(s=>{
     s.pulse+=.022;const g=Math.sin(s.pulse)*.5+.5;const isH=(sfHov===s);
     const c=s.who==='Tory'?SFC.tory:SFC.yash;const r=s.r*(1+g*.4);
-    sfX.beginPath();sfX.arc(s.x,s.y,r*7,0,Math.PI*2);sfX.fillStyle=`rgba(${c.glow},${isH?.18:.03+g*.07})`;sfX.fill();
-    sfX.beginPath();sfX.arc(s.x,s.y,r,0,Math.PI*2);sfX.fillStyle=`rgba(${c.core},${isH?.98:.42+g*.55})`;sfX.fill();
+    const wGrd=sfX.createRadialGradient(s.x,s.y,0,s.x,s.y,r*9);
+    wGrd.addColorStop(0,`rgba(${c.glow},${isH?.35:.12+g*.16})`);
+    wGrd.addColorStop(1,`rgba(${c.glow},0)`);
+    sfX.beginPath();sfX.arc(s.x,s.y,r*9,0,Math.PI*2);sfX.fillStyle=wGrd;sfX.fill();
+    sfX.shadowBlur=isH?22:10;sfX.shadowColor=`rgba(${c.core},.8)`;
+    sfX.beginPath();sfX.arc(s.x,s.y,r,0,Math.PI*2);sfX.fillStyle=`rgba(${c.core},${isH?.98:.6+g*.38})`;sfX.fill();
+    sfX.shadowBlur=0;
     if(isH){[0,Math.PI/2].forEach(a=>{sfX.beginPath();sfX.moveTo(s.x+Math.cos(a)*(r*2),s.y+Math.sin(a)*(r*2));sfX.lineTo(s.x+Math.cos(a)*(r*4.5),s.y+Math.sin(a)*(r*4.5));sfX.strokeStyle=`rgba(${c.core},.5)`;sfX.lineWidth=.7;sfX.stroke();});}
   });
   sfAnimId=requestAnimationFrame(drawSF);
@@ -2223,7 +2721,7 @@ async function loadWishes(){
     if(!Array.isArray(data))return;
     sfWishStars=data.map(w=>({
       x:22+Math.random()*(sfC.width-44),y:16+Math.random()*(sfC.height-32),
-      r:1.6+Math.random()*2,pulse:Math.random()*Math.PI*2,
+      r:3+Math.random()*3.5,pulse:Math.random()*Math.PI*2,
       reason:(w.who==='Tory'?'💫 ':'✨ ')+w.text,type:'wish',who:w.who||'Yash',
     }));
     updateWishCount(data.length);
@@ -2235,7 +2733,7 @@ async function addWish(){
   try{
     await sb('wishes',{method:'POST',body:JSON.stringify({text:val,who:wishWho})});
     inp.value='';
-    sfWishStars.push({x:22+Math.random()*(sfC.width-44),y:16+Math.random()*(sfC.height-32),r:1.6+Math.random()*2,pulse:Math.random()*Math.PI*2,reason:(wishWho==='Tory'?'💫 ':'✨ ')+val,type:'wish',who:wishWho});
+    sfWishStars.push({x:22+Math.random()*(sfC.width-44),y:16+Math.random()*(sfC.height-32),r:3+Math.random()*3.5,pulse:Math.random()*Math.PI*2,reason:(wishWho==='Tory'?'💫 ':'✨ ')+val,type:'wish',who:wishWho});
     updateWishCount(sfWishStars.length);
     sfPopup.className='star-popup '+(wishWho==='Tory'?'tory-pop':'yash-pop');
     playSfx('sfxPop',0.4);
@@ -2268,9 +2766,8 @@ function resizeHB(){hbC.width=Math.min(680,window.innerWidth-20);hbC.height=wind
 function drawHB(){hbX.clearRect(0,0,hbC.width,hbC.height);hbX.strokeStyle='#c9836a';hbX.lineWidth=2;hbX.shadowBlur=7;hbX.shadowColor='#c9836a';hbX.beginPath();const W=hbC.width,H=hbC.height,mid=H/2;for(let x=0;x<W;x++){const p=(x/W*4+hbT)%1;let y=mid;if(p<.05)y=mid;else if(p<.1)y=mid-(p-.05)/.05*H*.35;else if(p<.15)y=mid-(1-(p-.1)/.05)*H*.35;else if(p<.2)y=mid+(p-.15)/.05*H*.2;else if(p<.25)y=mid+(1-(p-.2)/.05)*H*.2;else y=mid;x===0?hbX.moveTo(x,y):hbX.lineTo(x,y);}hbX.stroke();hbX.shadowBlur=0;hbT+=.005;requestAnimationFrame(drawHB);}
 drawHB();
 
-/* ─── PHOTOS — file path based ─── */
-// To hardcode: replace null with relative path e.g. 'photos/nawabganj.jpg'
-const photoSrcs=[
+/* ─── PHOTOS — Polaroid Lightbox ─── */
+const photoSrcs = [
   'photos/photo1.jpg',
   'photos/photo2.jpg',
   'photos/photo3.jpg',
@@ -2278,10 +2775,85 @@ const photoSrcs=[
   'photos/photo5.jpg',
   'photos/photo6.jpg',
 ];
-function openLightbox(idx){if(!photoSrcs[idx])return;lbIdx=idx;document.getElementById('lbImg').src=photoSrcs[idx];document.getElementById('lbCaption').textContent=document.getElementById('cap'+idx)?.value||'';document.getElementById('lightbox').classList.add('open');}
-function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
-function lbPrev(){let n=(lbIdx-1+6)%6;while(!photoSrcs[n]&&n!==lbIdx)n=(n-1+6)%6;openLightbox(n);}
-function lbNext(){let n=(lbIdx+1)%6;while(!photoSrcs[n]&&n!==lbIdx)n=(n+1)%6;openLightbox(n);}
+const photoCaptions = [
+  'Nawabganj ✦',
+  'Flower field 🌸',
+  'River day ✦',
+  '2AM noodles ☕',
+  'Monopoly chaos 🎲',
+  'Us ♡',
+];
+const PHOTO_COUNT = photoSrcs.length;
+let lbIdx = 0;
+
+function buildLbDots() {
+  const dc = document.getElementById('lbDots');
+  dc.innerHTML = '';
+  for (let i = 0; i < PHOTO_COUNT; i++) {
+    const d = document.createElement('div');
+    d.className = 'lb-dot' + (i === lbIdx ? ' active' : '');
+    d.onclick = () => openLightbox(i);
+    dc.appendChild(d);
+  }
+}
+
+function openLightbox(idx) {
+  lbIdx = ((idx % PHOTO_COUNT) + PHOTO_COUNT) % PHOTO_COUNT;
+  const lb = document.getElementById('lightbox');
+  const img = document.getElementById('lbImg');
+  const cap = document.getElementById('lbCaption');
+  const inner = document.getElementById('lbInner');
+
+  img.src = photoSrcs[lbIdx];
+  cap.textContent = photoCaptions[lbIdx];
+
+  // Reset animation so it replays on each open
+  inner.style.animation = 'none';
+  void inner.offsetWidth;
+  inner.style.animation = '';
+
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  buildLbDots();
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function lbPrev() {
+  openLightbox((lbIdx - 1 + PHOTO_COUNT) % PHOTO_COUNT);
+}
+
+function lbNext() {
+  openLightbox((lbIdx + 1) % PHOTO_COUNT);
+}
+
+function handleLbOverlayClick(e) {
+  // Close only when clicking the dark overlay itself, not the polaroid
+  if (e.target === document.getElementById('lightbox')) closeLightbox();
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', e => {
+  const lb = document.getElementById('lightbox');
+  if (!lb.classList.contains('open')) return;
+  if (e.key === 'ArrowLeft')  { e.preventDefault(); lbPrev(); }
+  if (e.key === 'ArrowRight') { e.preventDefault(); lbNext(); }
+  if (e.key === 'Escape')     { e.preventDefault(); closeLightbox(); }
+});
+
+// Swipe support for mobile
+(function() {
+  let startX = 0;
+  const lb = document.getElementById('lightbox');
+  lb.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+  lb.addEventListener('touchend', e => {
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) diff > 0 ? lbNext() : lbPrev();
+  }, { passive: true });
+})();
 
 /* ─── MAP ─── */
 const mapEl = document.getElementById('map');
@@ -2818,7 +3390,7 @@ async function loadGuestbook(){
   }catch(e){grid.innerHTML='<p class="gb-empty">Couldn\'t load right now 🌸</p>';}
 }
 
-/* ─── DEBUG MENU — tap Y&T logo 5× to unlock ─── */
+/* ───  MENU — tap Y&T logo 5× to unlock ─── */
 let _logoTaps=0,_logoTimer=null;
 document.querySelector('.nav-logo').addEventListener('click',()=>{
   _logoTaps++;clearTimeout(_logoTimer);
@@ -2957,12 +3529,12 @@ document.getElementById('complimentSub').textContent = _c.sub;
   const wrongMessages = [
     { icon: '🔍', text: 'Not under this one... try the next card ✨' },
     { icon: '🌙', text: 'So close, jaan. But nope, keep going 🌸' },
-    { icon: '💭', text: 'Hmm, not here. Maybe the one next to it?' },
-    { icon: '🌊', text: 'Nope! But you\'re getting warmer... 💕' },
-    { icon: '🎲', text: 'Almost! Try a different card, shona 🌸' },
-    { icon: '✨', text: 'Nah, not this one. Still looking? 👀' },
-    { icon: '🌺', text: 'Not here either... one card left, jaan 🌸' },
-    { icon: '💫', text: 'This isn\'t it — but the last card is ❤️' },
+    { icon: '💭', text: 'Hmm, not here. Maybe the next one 🤔❤?' },
+    { icon: '🌊', text: 'Nope! But you\'re getting closerrrr... 💕' },
+    { icon: '🎲', text: 'Almosttttt! Try a different card, shona 🌸' },
+    { icon: '✨', text: 'Nah, not this one. Arektu Khujo Khujooo 👀' },
+    { icon: '🌺', text: 'Not this one either... one card left, jaan 🌸' },
+    { icon: '💫', text: 'Nah Nah Jaan eitao nahhh 🤭❤️' },
   ];
  
   /* Shuffle the wrong messages so assignment is random each page load */
@@ -3086,6 +3658,43 @@ document.getElementById('complimentSub').textContent = _c.sub;
     }, 700);
   }
 })();
+
+const yearEntries = [
+  { month: 'January 2025',         text: 'Matro Exam diye sesh korlam bhaloi sheet er chuti kataisilam games kheltam poetry likhtam nijer upor onek time ditam workout kortam proper khauya dauya kortam ranna banna o korsiiii oenk kichu sikhsi karo sathe tmn ekta kotha boltam nah onek introvert chilam and infact ekhono asi but apnr jonno tao onekkkk extrovert hoichi akhn tooo but janoo kokkhono bhabi nai j agami mash tay e amar jibon puratai change hoye jabe ❤❤🥺' },
+  { month: 'February 2025, Shob Shuru 🌸❤',         text: 'The trip. Odin Raat ta. Ful Gula. Nodi Ta  Everything started here. The best chapter of my life started in nawabganj it stared becasue of you shona pakhi ❤🥺.' },
+  { month: 'March 2025 , It began 🌸',         text: 'The first month of us being together jaannnn. still shobbb bujhar chesta kmne ki hoitese na hoitese kmne ki kore kicchu jani nah ar ami toh pari o nah amar feed jano couple reels o age ashto nah j oigula dekhe j sikhbo 😂😭❤. Kintuuuu I was 100% Already sure about You jaan pakhi.' },
+  { month: 'April 2025',                         text: 'Khailam Caught 🙂 april er kotha mone porlei mone pore j ei bash e bash ta khaisilamm ishhhh shobche kufa mash amar pochondo nah dhurru maf chai april er 7 tarikh naki 6 raat e tumi ghumay gesila amio text diye ghum shokal e uthe dekhi etto gula reply diso onek shundor kouta kotha o likhsila jano ami bolsilam raat e j judi amader nouka te onno ekta majhi uthe jay aamke fele tumi jano ki bolsila onno ekjon konodin o uthbe nah ar judi utha jayyyy taholeeee tumi eije 😈⚔ ei duita emoji diye bolsila j ekta tomar ekta amar ❤😭. tarpor bolsila j chobi tulso shokale oije munna mamar oikhane jaita tkhn kaj er jonno kaj e jauyar age chobi tulsila amar jonno bolso kaj sesh hoile diba pore ami reply dite dite hotat 1tar dige dekhi tmr profile picture shada hoye gese 🙂 ar tarpore ki bolbo jai hokkkk 13days 13ta din tomake chara thakte hoise amar proti ta din ektu ektu kore morsi 🙏🏻❤ amar oi shomay thikei tomake chara j thakte parbo nah bujhe gesilam jano tumi toh chila nah kintu ami taooo shara din mane asolei sharadin tomar chatt e text kortam bolle toh hashba kintu etto likhi etto likhsi upore jaite lage 2 bochor ar raat eo 12 ta thike 3-4ta porjonto toh 13 din er 13din e kotha bolsi jaan hehe ' },
+  { month: 'May 2025',                           text: 'Amar moyna pakhi tar birthday month ❤🌙✨ amar nijer birthday mash thikeo ei mash tai amar kache shobche beshi special mane ei mash er ekta dtae 4th may ei date tar jonno ami shara bochor oppekkha kori jano shonaa ohh are jano ekdin ki bhabtesilam lol tomar birthday 4tarikh ar amarta 5 ki milll dekhso jaan allah shob age thikei thik kore pathaise amader duijon ke ❤🥺. judio mash alada kintu mash ke dekhe dhurru apnr 18th birthday ta amader jonno shotti special chilo cause like birthday er age tomar sathe kotha hoisilo kotha bolte arki jaan tomar khoj paisilam tamim bhai bolsilo tumi thik aso bhalo ase tomar phone niye gese ar tomake basha thike kosto dicche 🙂' },
+  { month: 'June 2025',                          text: 'Halfway through the year and still finding new things to love about her.' },
+  { month: 'July 2025',                  text: 'Long hot days. Her laugh making everything cooler.' },
+  { month: 'August 2025,',         text: 'The trip. The night. The flowers. Everything started here. The best accident of my life.' },
+  { month: 'September 2025',             text: 'The season turning. Something shifting between us in the best way.' },
+  { month: 'October 2025',         text: 'The trip. The night. The flowers. Everything started here. The best accident of my life.' },
+  { month: 'November 2025',             text: 'Winter coming back around. Almost a full year. Grateful for all of it.' },
+  { month: 'December 2025,',         text: 'The trip. The night. The flowers. Everything started here. The best accident of my life.' },
+  { month: 'January 2026 ',         text: 'The trip. The night. The flowers. Everything started here. The best accident of my life.' },
+  { month: 'February 2026',         text: 'The trip. The night. The flowers. Everything started here. The best accident of my life.' },
+  { month: 'March 2026 , One year 🎉',           text: "Happy anniversary, my love. Here's to every year after this one." },
+  { month: 'April 2026 ,',         text: 'The trip. The night. The flowers. Everything started here. The best accident of my life.' },
+  
+];
+
+const ytContainer = document.getElementById('yearTimeline');
+yearEntries.forEach((entry, i) => {
+  const isEven = i % 2 === 1;
+  const row = document.createElement('div');
+  row.className = 'yt-row';
+
+  const content = `<div class="yt-content"><div class="yt-month">${entry.month}</div><div class="yt-text">${entry.text}</div></div>`;
+  const dot     = `<div class="yt-dot"></div>`;
+  const spacer  = `<div class="yt-spacer"></div>`;
+
+  row.innerHTML = isEven
+    ? spacer + dot + content
+    : content + dot + spacer;
+
+  ytContainer.appendChild(row);
+});
 </script>
 </body>
 </html>
